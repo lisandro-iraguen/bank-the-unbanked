@@ -8,7 +8,7 @@ you can se it [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "De
 this is an Argentine Test against Argentinean Peso
 
 
-#Technology Stack
+# Technology Stack
 1. .NET 6
 1. .NET Blazor
 2. Azure
