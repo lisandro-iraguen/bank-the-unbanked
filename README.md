@@ -6,7 +6,7 @@ In the fractured realms of **broken fiat systems** :adhesive_bandage:, Cardano e
 you can se it [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "Demo Url")
 
 This is an Argentine Test against the Argentinean Peso :shit:
-it can be extended to other countries, but for now, it is working with Argentinean Peso :shit:
+
 
 
 # Technology Stack
