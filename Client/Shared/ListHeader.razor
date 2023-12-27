@@ -1,0 +1,12 @@
+﻿<div class="content-title-group">
+    <NavLink href="@RoutePath">
+        <h2 class="title">@Title</h2>
+    </NavLink>
+
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string RoutePath { get; set; }
+
+}

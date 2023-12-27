@@ -1,0 +1,20 @@
+﻿@using Radzen
+@inject NavigationManager NavigationManager
+
+<RadzenPanelMenu>
+    <RadzenPanelMenuItem Text="Home" Icon="home" Click="goToHome" />
+    <RadzenPanelMenuItem Text="About" Icon="account_box" Click="goToAbout" />
+</RadzenPanelMenu>
+
+
+@code{
+    public void goToHome(MenuItemEventArgs e)
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+
+    public void goToAbout(MenuItemEventArgs e)
+    {
+        NavigationManager.NavigateTo("/about");
+    }
+}

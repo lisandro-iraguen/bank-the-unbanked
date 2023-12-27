@@ -1,0 +1,46 @@
+﻿@page "/products"
+@inject HttpClient http
+@inject HttpClient Http
+@inject NavigationManager navigation
+@using Data;
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using static System.Net.WebRequestMethods;
+
+<div class="content-container">
+    <ListHeader Title="Lista De Trabajos"
+                RoutePath="/products" />
+
+    @if (products == null)
+    {        
+        <div class="spinner"></div>
+    }
+    else
+    {
+        <ul class="list">
+
+            @foreach (var product in products)
+            {
+                <li role="presentation">
+                    <div class="card">
+                        <CardProductContent Name="@product.Name" Description="@product.Description" Url="@product.Url" Image="@product.Image"></CardProductContent>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    }
+
+
+</div>
+
+@code {
+
+    private IEnumerable<Post> products = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await http.GetFromJsonAsync<IEnumerable<Post>>("api/posts");
+    }
+
+}
