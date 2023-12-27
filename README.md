@@ -10,10 +10,11 @@ this is an Argentine Test against Argentinean Peso
 
 # Technology Stack
 1. .NET 6
-1. .NET Blazor
-2. Azure
-3. Azure Functions
-4. GitHub
-5. AQL Server
-6. Cardano
+2. .NET Blazor
+3. Radzen Blazor
+4. Azure
+5. Azure Functions
+6. GitHub
+7. AQL Server
+8. Cardano
    
