@@ -1,4 +1,5 @@
 ﻿@using Radzen;
+@inject IJSRuntime JS
 
 <RadzenCard class="p-1 rz-text-align-center">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
@@ -16,19 +17,19 @@
                 @if (extension.Installed && extension.Connected)
                 {
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton class="wallet-button" @onclick="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
+                        <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
                     </RadzenStack>
                 }
                 else if (extension.Installed)
                 {
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Disabled="@Connecting" @onclick="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
+                        <RadzenButton Disabled="@Connecting" Click="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
                     </RadzenStack>
                 }
                 else
                 {
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Text="Cancel" />
+                        <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">Install</RadzenButton>
                     </RadzenStack>
                 }
 

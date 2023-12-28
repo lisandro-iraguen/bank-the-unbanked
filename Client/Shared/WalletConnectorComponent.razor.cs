@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using Client.Components;
+using Data;
 using Data.Exceptions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -7,15 +8,13 @@ namespace Client.Shared
 {
     public partial class WalletConnectorComponent
     {
-        [Parameter]
-        public EventCallback OnConnectStart { get; set; }
-
-        [Parameter]
-        public EventCallback<Exception> OnConnectError { get; set; }
+     
 
         public bool Connecting { get; private set; }
 
         private List<WalletExtensionState>? _wallets = new List<WalletExtensionState>();
+        private WalletConnectorJsInterop? _walletConnectorJs;
+        public WalletExtensionState? _connectedWallet { get; private set; }
 
         public List<WalletExtension> SupportedExtensions { get; set; } = new List<WalletExtension>()
             {
@@ -34,36 +33,15 @@ namespace Client.Shared
             };
         protected override async Task OnInitializedAsync()
         {
-            var eternlWallet = new WalletExtensionState(SupportedExtensions.Find(n=>n.Key=="eternl"));
-            eternlWallet.Installed = true;
-            eternlWallet.Connected = false;
-            _wallets.Add(eternlWallet);
+    
 
-            var namilWallet = new WalletExtensionState(SupportedExtensions.Find(n => n.Key == "nami"));
-            namilWallet.Installed = true;
-            namilWallet.Connected = false;
-            _wallets.Add(namilWallet);
-
-            //if (_walletConnectorJs == null)
-            //{
-            //    _walletConnectorJs = new WalletConnectorJsInterop(JS);
-            //}
-            ////check which wallets are installed
-            ////set up initial _wallets state from above
+            if (_walletConnectorJs == null)
+            {
+                _walletConnectorJs = new WalletConnectorJsInterop(JS);
+            }
             //_selfReference = DotNetObjectReference.Create(this);
-            //_wallets = await _walletConnectorJs.Init(SupportedExtensions, _selfReference);
-
-            //Initialized = true;
-
-            await InitializePersistedWalletAsync();
-
-            //if (!Connected)
-            //{
-            //    DisconnectedButtonContent = ConnectButtonText;
-            //    IsDisconnectedButtonDisabled = false;
-            //}
-
-            return;
+            _wallets = await _walletConnectorJs.Init(SupportedExtensions);
+            await InitializePersistedWalletAsync();            
         }
         private async Task InitializePersistedWalletAsync()
         {
@@ -111,62 +89,47 @@ namespace Client.Shared
         {
             await DisconnectWalletAsync(true).ConfigureAwait(false);
 
-            if (walletKey == null)
-            {
-                _ = OnConnectError.InvokeAsync(new ArgumentNullException(nameof(walletKey))).ConfigureAwait(false);
-                return false;
-            }
+         
 
             try
             {
-                //if (!suppressEvent)
-                //    _ = OnConnectStart.InvokeAsync().ConfigureAwait(false);
+         
+                Connecting = true;
+                StateHasChanged();
 
-                //Connecting = true;
-                //StateHasChanged();
+                var result = await _walletConnectorJs!.ConnectWallet(walletKey);
+                if (result)
+                {
+                    _connectedWallet = _wallets!.First(x => x.Key == walletKey);
+                    //await RefreshConnectedWallet();
+                    _wallets!.First(x => x.Key == walletKey).Connected = true;
 
-                //var result = await _walletConnectorJs!.ConnectWallet(walletKey);
-                //if (result)
-                //{
-                //    ConnectedWallet = _wallets!.First(x => x.Key == walletKey);
-                //    await RefreshConnectedWallet();
-                //    _wallets!.First(x => x.Key == walletKey).Connected = true;
-
-                //    await SetStoredWalletKeyAsync(walletKey);
-
-                //    if (AutoCloseOnConnect)
-                //    {
-                //        PopupDialogShowing = false;
-                //    }
-                //}
-                //if (!suppressEvent)
-                //    _ = OnConnect.InvokeAsync();
-                //return result;
+                    
+                    
+                }
+             
+                return result;
             }
             //suppress all errors as it could be valid user refusal
             //(cant get enough detail out of gero wallet to ensure specific handling)
             catch (ErrorCodeException ecex)
             {
                 Console.WriteLine("Caught error code exception: " + ecex.Code + " - " + ecex.Info);
-                _ = OnConnectError.InvokeAsync(ecex);
             }
             catch (PaginateException pex)
             {
 
                 Console.WriteLine("Caught paginate exception: " + pex.MaxSize);
-                _ = OnConnectError.InvokeAsync(pex);
             }
             catch (WebWalletException wex)
             {
 
                 Console.WriteLine("Caught web wallet exception: " + wex.Data.Keys.ToString());
-                _ = OnConnectError.InvokeAsync(wex);
             }
             catch (Exception ex)
             {
 
                 Console.WriteLine("Caught exception: " + ex.Message);
-                _ = OnConnectError.InvokeAsync(ex);
             }
             finally
             {
@@ -175,6 +138,36 @@ namespace Client.Shared
             }
             return false;
         }
+
+        public async Task NavigateToNewTab(string url)
+        {           
+            await JS.InvokeAsync<object>("open", url, "_blank");
+        }
+       
+        //public async ValueTask RefreshConnectedWallet()
+        //{
+        //    var balance = await GetBalance();
+        //    if (balance != null)
+        //    {
+        //        ConnectedWallet!.TokenCount = 0;
+        //        ConnectedWallet.TokenPreservation = 0;
+        //        ConnectedWallet.NativeAssets = new();
+        //        if (balance.MultiAsset != null && balance.MultiAsset.Count > 0)
+        //        {
+        //            ConnectedWallet.TokenPreservation = balance.MultiAsset.CalculateMinUtxoLovelace();
+        //            ConnectedWallet.TokenCount = balance.MultiAsset.Sum(x => x.Value.Token.Keys.Count);
+        //            ConnectedWallet.NativeAssets = balance.MultiAsset.SelectMany(policy =>
+        //                   policy.Value.Token.Select(asset =>
+        //                       new KeyValuePair<string, ulong>(
+        //                           $"{policy.Key.ToStringHex()}{asset.Key.ToStringHex()}",
+        //                           (ulong)asset.Value)))
+        //               .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        //        }
+        //        ConnectedWallet.Balance = balance.Coin - ConnectedWallet.TokenPreservation;
+        //    }
+        //    ConnectedWallet!.Network = await GetNetworkType();
+        //    StateHasChanged();
+        //}
     }
 
 
