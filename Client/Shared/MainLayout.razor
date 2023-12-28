@@ -4,14 +4,26 @@
 
 <RadzenLayout>
     <RadzenHeader>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" Wrap="FlexWrap.NoWrap">
             <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
             <RadzenLabel Text="Header" />
+
+            <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
+                <RadzenRow Gap="1rem">
+
+                    <RadzenColumn Order="7">
+                        <RadzenButton Text="Conectar"></RadzenButton>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenRow>
+
         </RadzenStack>
+
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
         <NavMenu />
-      
+
     </RadzenSidebar>
     <RadzenBody>
         @Body
