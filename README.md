@@ -5,7 +5,8 @@ In the fractured realms of **broken fiat systems** :adhesive_bandage:, Cardano e
 
 you can se it [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "Demo Url")
 
-this is an Argentine Test against the Argentinean  Peso :heavy_dollar_sign:
+This is an Argentine Test against the Argentinean Peso :shit:
+
 
 
 # Technology Stack
