@@ -10,7 +10,7 @@ This is an Argentine Test against the Argentinean Peso :shit:
 
 
 # Technology Stack
-1. .NET 6
+1. .NET 8
 2. .NET Blazor
 3. Radzen Blazor
 4. Azure
