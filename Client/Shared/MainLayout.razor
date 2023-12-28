@@ -1,6 +1,7 @@
 ﻿@using Radzen
 @inherits LayoutComponentBase
 
+<RadzenComponents />
 
 <RadzenLayout>
     <RadzenHeader>
@@ -13,7 +14,7 @@
                 <RadzenRow Gap="1rem">
 
                     <RadzenColumn Order="7">
-                        <RadzenButton Text="Conectar" Icon="account_balance_wallet"></RadzenButton>
+                        <RadzenButton Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenRow>
