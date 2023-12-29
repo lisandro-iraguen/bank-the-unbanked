@@ -11,7 +11,7 @@ namespace Client.Shared
         [Inject]
         protected DialogService _dialogService { get; set; }
 
-        private bool sidebar1Expanded = true;
+        private bool sidebar1Expanded = false;
 
         protected override void OnInitialized()
         {

@@ -1,8 +1,21 @@
 ﻿@page "/about"
+@using Radzen;
 
 <div>
-    Developer Linkedin 
-    </div>
+    Developer List Linkedin
+</div>
 <div>
-    <a href="https://www.linkedin.com/in/lisandroiraguen/">https://www.linkedin.com/in/lisandroiraguen/</a>
+    @if (_developers is null)
+    {
+        <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else
+    {
+
+        @foreach (var dev in _developers)
+        {
+            <a href="@dev.Url">@dev.Text</a>
+        }
+    }
+
 </div>

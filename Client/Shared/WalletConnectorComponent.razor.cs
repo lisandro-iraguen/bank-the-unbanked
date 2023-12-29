@@ -1,7 +1,7 @@
 ﻿using Client.Components;
 using Client.Pages;
-using Data;
 using Data.Exceptions;
+using Data.Wallet;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
@@ -24,7 +24,7 @@ namespace Client.Shared
 
         public bool Connecting { get; private set; }
 
-        private List<WalletExtensionState>? _wallets = new List<WalletExtensionState>();
+        private List<WalletExtensionState>? _wallets = null;
         private WalletConnectorJsInterop? _walletConnectorJs;
         public WalletExtensionState? _connectedWallet { get; private set; }
 

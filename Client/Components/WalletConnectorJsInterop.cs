@@ -1,5 +1,5 @@
 ﻿using Microsoft.JSInterop;
-using Data;
+using Data.Wallet;
 
 namespace Client.Components
 {

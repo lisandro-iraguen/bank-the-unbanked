@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 
-namespace Data
+namespace Data.Wallet
 {
     public class WalletExtensionState : WalletExtension
     {
@@ -11,7 +11,7 @@ namespace Data
 
         public bool Connected { get; set; }
 
-        public string? Version { get; set; }
+        public string Version { get; set; }
 
         public ulong Balance { get; set; }
 
@@ -32,14 +32,14 @@ namespace Data
             }
         }
 
-      
+
 
         public string CoinCurrency
         {
             get
             {
-                    return "t₳";
-      
+                return "t₳";
+
             }
         }
 
@@ -77,7 +77,7 @@ namespace Data
             Enabled = copy.Enabled;
             Connected = copy.Connected;
             Version = copy.Version;
-            Balance = copy.Balance;        
+            Balance = copy.Balance;
             TokenPreservation = copy.TokenPreservation;
             TokenCount = copy.TokenCount;
             NativeAssets = copy.NativeAssets;

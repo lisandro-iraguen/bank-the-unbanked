@@ -2,40 +2,48 @@
 
 
 
-<RadzenCard class="p-1 rz-text-align-center">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-        @foreach (var extension in _wallets)
+
+        @if (_wallets is null)
         {
-            <RadzenCard>
+            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
+        else
+        {
 
-                <div>
-                    <img class="wallet-icon" src="@extension.Icon" title="@extension.Name" style="width: 65px; height: 65px;" />
-                </div>
-                <div>
-                    <span class="wallet-name">@extension.Name Wallet</span>
-                </div>
+            @foreach (var extension in _wallets)
+            {
+                <RadzenCard>
 
-                @if (extension.Installed && extension.Connected)
-                {
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
-                    </RadzenStack>
-                }
-                else if (extension.Installed)
-                {
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Disabled="@Connecting" Click="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
-                    </RadzenStack>
-                }
-                else
-                {
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">Install</RadzenButton>
-                    </RadzenStack>
-                }
+                    <div>
+                        <img class="wallet-icon" src="@extension.Icon" title="@extension.Name" style="width: 65px; height: 65px;" />
+                    </div>
+                    <div>
+                        <span class="wallet-name">@extension.Name Wallet</span>
+                    </div>
 
-            </RadzenCard>
+                    @if (extension.Installed && extension.Connected)
+                    {
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
+                            <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
+                        </RadzenStack>
+                    }
+                    else if (extension.Installed)
+                    {
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
+                            <RadzenButton Disabled="@Connecting" Click="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
+                        </RadzenStack>
+                    }
+                    else
+                    {
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
+                            <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">Install</RadzenButton>
+                        </RadzenStack>
+                    }
 
+
+                </RadzenCard>
+
+            }
         }
     </RadzenStack>
-</RadzenCard>

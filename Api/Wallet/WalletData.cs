@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data;
+using Data.Wallet;
 
-namespace Api;
+namespace Api.Wallet;
 
-public interface IWalletData
-{
-    Task<IEnumerable<WalletExtension>> GetWalletData();
- 
-}
+
 
 public class WalletData : IWalletData
 {
@@ -33,12 +29,12 @@ public class WalletData : IWalletData
             }
         };
 
-  
+
 
     public Task<IEnumerable<WalletExtension>> GetWalletData()
     {
         return Task.FromResult(walletsData.AsEnumerable());
     }
 
-    
+
 }
