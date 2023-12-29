@@ -3,13 +3,19 @@ using Data;
 using Data.Exceptions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Radzen;
 
 namespace Client.Shared
 {
     public partial class WalletConnectorComponent
     {
-     
+        [Inject]
+        protected DialogService _dialogService { get; set; }
 
+        [Inject]
+        protected IJSRuntime _javascriptRuntime { get; set; }
+
+      
         public bool Connecting { get; private set; }
 
         private List<WalletExtensionState>? _wallets = new List<WalletExtensionState>();
@@ -37,7 +43,7 @@ namespace Client.Shared
 
             if (_walletConnectorJs == null)
             {
-                _walletConnectorJs = new WalletConnectorJsInterop(JS);
+                _walletConnectorJs = new WalletConnectorJsInterop(_javascriptRuntime);
             }
             //_selfReference = DotNetObjectReference.Create(this);
             _wallets = await _walletConnectorJs.Init(SupportedExtensions);
@@ -50,15 +56,15 @@ namespace Client.Shared
 
             if (supportedWalletKeys != null && supportedWalletKeys.Length > 0)
             {
-                //   var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
+                   var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
 
-                //    if (!string.IsNullOrWhiteSpace(storedWalletKey))
-                //    {
-                //        if (!await ConnectWalletAsync(storedWalletKey, false))
-                //        {
-                //            await RemoveStoredWalletKeyAsync();
-                //        }
-                //    }
+                    if (!string.IsNullOrWhiteSpace(storedWalletKey))
+                    {
+                        if (!await ConnectWalletAsync(storedWalletKey, false))
+                        {
+                            await RemoveStoredWalletKeyAsync();
+                        }
+                    }
             }
 
             StateHasChanged();
@@ -67,27 +73,18 @@ namespace Client.Shared
 
         public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
-            //await _walletConnectorJs!.Disconnect();
-            //while (_wallets!.Any(x => x.Connected))
-            //{
-            //    _wallets!.First(x => x.Connected).Connected = false;
-            //}
-            //ConnectedWallet = null;
-
-            //await RemoveStoredWalletKeyAsync();
-
-            //if (AutoCloseOnDisconnect)
-            //{
-            //    PopupDialogShowing = false;
-            //}
-            //if (!suppressEvent)
-            //    await OnDisconnect.InvokeAsync();
+            await _walletConnectorJs!.DisposeAsync();
+            while (_wallets!.Any(x => x.Connected))
+            {
+                _wallets!.First(x => x.Connected).Connected = false;
+            }
+           
             return;
         }
 
         public async ValueTask<bool> ConnectWalletAsync(string walletKey, bool suppressEvent = false)
         {
-            await DisconnectWalletAsync(true).ConfigureAwait(false);
+            //await DisconnectWalletAsync(true).ConfigureAwait(false);
 
          
 
@@ -104,8 +101,6 @@ namespace Client.Shared
                     //await RefreshConnectedWallet();
                     _wallets!.First(x => x.Key == walletKey).Connected = true;
 
-                    
-                    
                 }
              
                 return result;
@@ -135,15 +130,46 @@ namespace Client.Shared
             {
                 Connecting = false;
                 StateHasChanged();
+                _dialogService.Close();
             }
             return false;
         }
 
         public async Task NavigateToNewTab(string url)
         {           
-            await JS.InvokeAsync<object>("open", url, "_blank");
+            await _javascriptRuntime.InvokeAsync<object>("open", url, "_blank");
         }
-       
+        private async Task<string> GetStoredWalletKeyAsync(params string[] supportedWalletKeys)
+        {
+            var result = string.Empty;
+
+            //try
+            //{
+            //    if (_localStorage != null && supportedWalletKeys != null)
+            //    {
+            //        var walletKey = await _localStorage.GetItemAsStringAsync(_connectedWalletKey);
+
+            //        if (!string.IsNullOrWhiteSpace(walletKey) && supportedWalletKeys.Any(w => w.Equals(walletKey, StringComparison.OrdinalIgnoreCase)))
+            //        {
+            //            result = walletKey;
+            //        }
+            //    }
+            //}
+            //catch (Exception err)
+            //{
+            //    Console.WriteLine(err.Message);
+            //}
+
+            return result;
+        }
+        private async Task RemoveStoredWalletKeyAsync()
+        {
+            //if (PersistConnectedWallet && _localStorage != null)
+            //{
+            //    await _localStorage.RemoveItemAsync(_connectedWalletKey);
+            //}
+        }
+
         //public async ValueTask RefreshConnectedWallet()
         //{
         //    var balance = await GetBalance();

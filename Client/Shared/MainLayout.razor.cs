@@ -10,6 +10,7 @@ namespace Client.Shared
     {
         [Inject]
         protected DialogService _dialogService { get; set; }
+
         private bool sidebar1Expanded = true;
 
         protected override void OnInitialized()
@@ -26,6 +27,7 @@ namespace Client.Shared
             
         }
 
+        
         private RenderFragment RenderDialogContent(DialogService service)
         {
          
