@@ -5,7 +5,7 @@ In the fractured realms of **broken fiat systems**, Cardano emerges as a beacon,
 
 you can se it [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "Demo Url")
 
-This is an Test against the Argentinean Peso :shit:
+This is Test against the Argentinean Peso :shit:
 
 
 
@@ -17,4 +17,5 @@ This is an Test against the Argentinean Peso :shit:
 5. Azure Functions
 6. GitHub
 8. Cardano
-   
+
+working on **Cardano Preview Testnet**
