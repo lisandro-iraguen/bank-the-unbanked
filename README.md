@@ -16,6 +16,5 @@ This is an Argentine Test against the Argentinean Peso :shit:
 4. Azure
 5. Azure Functions
 6. GitHub
-7. SQL Server
 8. Cardano
    
