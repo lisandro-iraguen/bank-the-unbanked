@@ -1,5 +1,6 @@
 ﻿using Radzen;
 using Microsoft.AspNetCore.Components;
+using System.Runtime.InteropServices;
 
 
 
@@ -15,19 +16,19 @@ namespace Client.Shared
 
         protected override void OnInitialized()
         {
-            
+            _dialogService.OnClose += Close;
         }
-
-        
         public async Task OpenWalletConnectors()
         {
 
             var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderDialogContent);
-            Console.WriteLine(dialogResult);
             
         }
 
-        
+        private void Close(dynamic obj)
+        {
+            StateHasChanged();
+        }
         private RenderFragment RenderDialogContent(DialogService service)
         {
          

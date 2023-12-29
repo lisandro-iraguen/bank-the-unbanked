@@ -98,8 +98,8 @@ namespace Client.Shared
                 {
                     _connectedWallet = _wallets!.First(x => x.Key == walletKey);
                     //await RefreshConnectedWallet();
-                    _wallets!.First(x => x.Key == walletKey).Connected = true;
-
+                    _connectedWallet.Connected = true;
+                    WalletSingleton.Instance = _connectedWallet;                   
                 }
              
                 return result;

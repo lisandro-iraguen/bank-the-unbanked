@@ -2,26 +2,26 @@
 
 
 
-    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
 
-        @if (_wallets is null)
+    @if (_wallets is null)
+    {
+        <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else
+    {
+
+        @foreach (var extension in _wallets)
         {
-            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-        }
-        else
-        {
+            <RadzenCard>
 
-            @foreach (var extension in _wallets)
-            {
-                <RadzenCard>
-
-                    <div>
-                        <img class="wallet-icon" src="@extension.Icon" title="@extension.Name" style="width: 65px; height: 65px;" />
-                    </div>
-                    <div>
-                        <span class="wallet-name">@extension.Name Wallet</span>
-                    </div>
-
+                <div style="text-align:center">
+                    <img class="wallet-icon" src="@extension.Icon" title="@extension.Name" style="width: 65px; height: 65px;" />
+                </div>
+                <div style="text-align:center">
+                    <span class="wallet-name">@extension.Name Wallet</span>
+                </div>
+                <div>
                     @if (extension.Installed && extension.Connected)
                     {
                         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
@@ -40,10 +40,10 @@
                             <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">Install</RadzenButton>
                         </RadzenStack>
                     }
+                </div>
 
+            </RadzenCard>
 
-                </RadzenCard>
-
-            }
         }
-    </RadzenStack>
+    }
+</RadzenStack>
