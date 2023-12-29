@@ -12,16 +12,16 @@
             <RadzenLabel Text="banco" />
 
             <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
-                <RadzenRow Gap="1rem">
+                <RadzenRow Gap="2rem">
 
                     <RadzenColumn Order="7">
                         @if(WalletSingleton.Instance == null)
                         {
-                            <RadzenButton Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+                            <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
                         }
                         else
                         {
-                            <RadzenButton Text="@WalletSingleton.Instance.Name" Icon="account_balance_wallet"></RadzenButton>
+                            <RadzenButton class="rz-m-2" Text="@WalletSingleton.Instance.Name" Icon="account_balance_wallet"></RadzenButton>
                         }
                     </RadzenColumn>
                 </RadzenRow>
@@ -35,7 +35,9 @@
 
     </RadzenSidebar>
     <RadzenBody>
+        <CascadingValue Value="actionWrapper">
         @Body
+        </CascadingValue>
     </RadzenBody>
     <RadzenFooter>
         <Copyright />

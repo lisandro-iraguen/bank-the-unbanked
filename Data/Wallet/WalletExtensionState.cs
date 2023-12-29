@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CardanoSharp.Wallet.Enums;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Data.Wallet
@@ -65,6 +66,7 @@ namespace Data.Wallet
         public int TokenCount { get; set; }
 
         public Dictionary<string, ulong> NativeAssets { get; set; } = new();
+        public NetworkType Network { get; set; }
 
         public WalletExtensionState()
         {

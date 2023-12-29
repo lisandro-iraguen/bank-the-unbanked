@@ -52,7 +52,33 @@ namespace Client.Components
                 throw new JSException(ex.Message);
             }
         }
+        public async ValueTask<string> GetBalance()
+        {
+         
+            try
+            {
+                var balance = await _jsWalletConnector!.InvokeAsync<string>("getBalance");
+                return balance;
+            }
+            catch (JSException ex)
+            {
+                throw new JSException(ex.Message);
+            }
+        }
 
+
+        public async ValueTask<int> GetNetworkId()
+        {
+            try
+            {
+                var networkId = await _jsWalletConnector!.InvokeAsync<int>("getNetworkId");
+                return networkId;
+            }
+            catch (JSException ex)
+            {
+                throw new JSException(ex.Message);
+            }
+        }
 
         public async ValueTask DisposeAsync()
         {

@@ -1,11 +1,17 @@
-﻿using Client.Components;
+﻿using CardanoSharp.Wallet.Enums;
+using CardanoSharp.Wallet.Extensions;
+using CardanoSharp.Wallet.Extensions.Models.Transactions;
+using CardanoSharp.Wallet.Models.Transactions;
+using Client.Components;
 using Client.Pages;
 using Data.Exceptions;
 using Data.Wallet;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using PeterO.Cbor2;
 using Radzen;
 using System.Net.Http.Json;
+using Utils;
 using static System.Net.WebRequestMethods;
 
 namespace Client.Shared
@@ -28,7 +34,10 @@ namespace Client.Shared
         private WalletConnectorJsInterop? _walletConnectorJs;
         public WalletExtensionState? _connectedWallet { get; private set; }
 
-        public List<WalletExtension> SupportedExtensions { get; set; } 
+        public List<WalletExtension> SupportedExtensions { get; set; }
+        public bool Initialized { get; private set; }
+        public bool Connected { get; private set; }
+
         protected override async Task OnInitializedAsync()
         {
             try
@@ -84,8 +93,9 @@ namespace Client.Shared
         public async ValueTask<bool> ConnectWalletAsync(string walletKey, bool suppressEvent = false)
         {
             //await DisconnectWalletAsync(true).ConfigureAwait(false);
+            Initialized = true;
 
-         
+
 
             try
             {
@@ -96,9 +106,13 @@ namespace Client.Shared
                 var result = await _walletConnectorJs!.ConnectWallet(walletKey);
                 if (result)
                 {
+                    Connected = true ;
+
                     _connectedWallet = _wallets!.First(x => x.Key == walletKey);
-                    //await RefreshConnectedWallet();
-                    _connectedWallet.Connected = true;
+                    await RefreshConnectedWallet();
+                    _connectedWallet.Connected = Connected;
+                     
+                     
                     WalletSingleton.Instance = _connectedWallet;                   
                 }
              
@@ -141,58 +155,90 @@ namespace Client.Shared
         private async Task<string> GetStoredWalletKeyAsync(params string[] supportedWalletKeys)
         {
             var result = string.Empty;
-
-            //try
-            //{
-            //    if (_localStorage != null && supportedWalletKeys != null)
-            //    {
-            //        var walletKey = await _localStorage.GetItemAsStringAsync(_connectedWalletKey);
-
-            //        if (!string.IsNullOrWhiteSpace(walletKey) && supportedWalletKeys.Any(w => w.Equals(walletKey, StringComparison.OrdinalIgnoreCase)))
-            //        {
-            //            result = walletKey;
-            //        }
-            //    }
-            //}
-            //catch (Exception err)
-            //{
-            //    Console.WriteLine(err.Message);
-            //}
-
+            //TODO
             return result;
         }
         private async Task RemoveStoredWalletKeyAsync()
         {
-            //if (PersistConnectedWallet && _localStorage != null)
-            //{
-            //    await _localStorage.RemoveItemAsync(_connectedWalletKey);
-            //}
+            //TODO
         }
 
-        //public async ValueTask RefreshConnectedWallet()
-        //{
-        //    var balance = await GetBalance();
-        //    if (balance != null)
-        //    {
-        //        ConnectedWallet!.TokenCount = 0;
-        //        ConnectedWallet.TokenPreservation = 0;
-        //        ConnectedWallet.NativeAssets = new();
-        //        if (balance.MultiAsset != null && balance.MultiAsset.Count > 0)
-        //        {
-        //            ConnectedWallet.TokenPreservation = balance.MultiAsset.CalculateMinUtxoLovelace();
-        //            ConnectedWallet.TokenCount = balance.MultiAsset.Sum(x => x.Value.Token.Keys.Count);
-        //            ConnectedWallet.NativeAssets = balance.MultiAsset.SelectMany(policy =>
-        //                   policy.Value.Token.Select(asset =>
-        //                       new KeyValuePair<string, ulong>(
-        //                           $"{policy.Key.ToStringHex()}{asset.Key.ToStringHex()}",
-        //                           (ulong)asset.Value)))
-        //               .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        //        }
-        //        ConnectedWallet.Balance = balance.Coin - ConnectedWallet.TokenPreservation;
-        //    }
-        //    ConnectedWallet!.Network = await GetNetworkType();
-        //    StateHasChanged();
-        //}
+        public async ValueTask RefreshConnectedWallet()
+        {
+            var balance = await GetBalance();
+            if (balance != null)
+            {
+                _connectedWallet!.TokenCount = 0;
+                _connectedWallet.TokenPreservation = 0;
+                _connectedWallet.NativeAssets = new();
+                if (balance.MultiAsset != null && balance.MultiAsset.Count > 0)
+                {
+                    _connectedWallet.TokenPreservation = balance.MultiAsset.CalculateMinUtxoLovelace();
+                    _connectedWallet.TokenCount = balance.MultiAsset.Sum(x => x.Value.Token.Keys.Count);
+                    _connectedWallet.NativeAssets = balance.MultiAsset.SelectMany(policy =>
+                           policy.Value.Token.Select(asset =>
+                               new KeyValuePair<string, ulong>(
+                                   $"{policy.Key.ToStringHex()}{asset.Key.ToStringHex()}",
+                                   (ulong)asset.Value)))
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
+                _connectedWallet.Balance = balance.Coin - _connectedWallet.TokenPreservation;
+            }
+            _connectedWallet!.Network = await GetNetworkType();
+            StateHasChanged();
+        }
+
+        public async ValueTask<TransactionOutputValue> GetBalance()
+        {
+            var result = await GetBalanceCbor();
+            var cborObj = CBORObject.DecodeFromBytes(result.HexToByteArray());
+            if (cborObj.Type == CBORType.Integer)
+            {
+                var number = cborObj.AsNumber();
+                var coin = number.ToUInt64Checked();
+                return new TransactionOutputValue() { Coin = coin };
+            }
+
+            var outputValue = result.HexToByteArray().DeserializeTransactionOutputValue();
+            return outputValue;
+        }
+
+        public async ValueTask<string> GetBalanceCbor()
+        {
+            CheckInitializedAndConnected();
+            var result = await _walletConnectorJs!.GetBalance();
+            Console.WriteLine($"BALANCE CBOR: {result}");
+            return result;
+        }
+        public async ValueTask<NetworkType> GetNetworkType()
+        {
+            var networkId = await GetNetworkTypeId();
+            return ComponentUtils.GetNetworkType(networkId);
+        }
+        public async ValueTask<int> GetNetworkTypeId()
+        {
+            CheckInitializedAndConnected();
+            var networkId = await _walletConnectorJs!.GetNetworkId();
+            Console.WriteLine($"NETWORK ID: {networkId}");
+            return networkId;
+        }
+        private void CheckInitialized()
+        {
+            if (!Initialized || _walletConnectorJs == null)
+            {
+                throw new InvalidOperationException("Component not initialized");
+            }
+        }
+
+        private void CheckInitializedAndConnected()
+        {
+            CheckInitialized();
+            if (!Connected)
+            {
+                throw new InvalidOperationException("No wallet connected");
+            }
+        }
+
     }
 
 

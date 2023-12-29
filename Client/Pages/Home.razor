@@ -2,4 +2,26 @@
 
 @using Radzen;
 
-<h2><RadzenIcon Icon="account_balance"></RadzenIcon> Home</h2>
+<RadzenStack Gap="1">
+    @if (walletState is null)
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
+            no hay wallet selecionada, hay que conectarse
+        </RadzenAlert>
+    }
+    <RadzenIcon Icon="account_balance"></RadzenIcon>
+    <br />
+    
+    @if (walletState is not null)
+    {
+        <p>@walletMessage</p>
+        <p>Balance Simbolo: @symbol </p>
+        <p>Balance Ada: @balanceAda.ToString() </p>
+        <p>Network: @networkType </p>
+    }
+
+</RadzenStack>
+
+
+
+
