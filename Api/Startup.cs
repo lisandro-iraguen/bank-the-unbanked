@@ -9,6 +9,6 @@ public class Startup : FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        builder.Services.AddSingleton<IProductData, ProductData>();
+        builder.Services.AddSingleton<IWalletData, WalletData>();
     }
 }
