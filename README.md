@@ -7,6 +7,9 @@ In the fractured realms of **broken fiat systems**, Cardano emerges as a beacon,
 
 This is Test against the Argentinean Peso :shit:
 
+![cat-baby-dog-cute-figure-3d-cream-hold-money-ultra-hd-realistic-vivid-colors-highly-detailed-uh-788705823](https://github.com/lisandro-iraguen/bank-the-unbanked/assets/70443444/93566d30-d43a-4d09-98d8-1f45812d1f84)
+
+
 
 
 # Technology Stack
