@@ -7,6 +7,11 @@ namespace Client.Shared
         private void goToHome(MenuItemEventArgs e)
         {
             NavigationManager.NavigateTo("/home");
+        } 
+        
+        private void goToDeFi(MenuItemEventArgs e)
+        {
+            NavigationManager.NavigateTo("/defi");
         }
 
         private void goToAbout(MenuItemEventArgs e)
