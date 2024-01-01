@@ -13,7 +13,9 @@ namespace Client.Pages
 
         private string walletMessage = null;
         private string symbol = null;
+        private string symbolArs = null;
         private string balanceAda = null;
+        private string balanceArs = null;
         private string networkType = null;
 
         private WalletExtensionState walletState=null;
@@ -28,7 +30,9 @@ namespace Client.Pages
 
             walletMessage = $"Wallet Cargada Exitosamente: {walletState.Name} ";
             symbol = walletState.CoinCurrency;
+            symbolArs = "$ARS";
             balanceAda = walletState.BalanceAda;
+            balanceArs = "0";
             networkType = walletState.Network.ToString();
         }
     }
