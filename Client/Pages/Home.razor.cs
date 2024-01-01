@@ -1,6 +1,8 @@
 ﻿using Client.Shared;
 using Data.Wallet;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Utils;
@@ -23,6 +25,8 @@ namespace Client.Pages
         private string AssetsID=null;
         private string PolicyAssetsID=null;
         private string networkType = null;
+
+        private int valueToTransfer;
 
         private WalletExtensionState walletState=null;
         protected override void OnInitialized()
@@ -52,5 +56,17 @@ namespace Client.Pages
             balanceArs = nativeAmount.ToString();
             networkType = walletState.Network.ToString();
         }
+
+
+        void OnChangeWalletAdress(string value, string name)
+        {
+            Console.WriteLine($"{name} value changed to {value}");
+        }
+
+        private async Task transfer()
+        {
+            Console.WriteLine("transfer to anoter account");
+        }
+
     }
 }

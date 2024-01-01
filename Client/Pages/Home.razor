@@ -11,7 +11,7 @@
     }
     <RadzenIcon Icon="account_balance"></RadzenIcon>
     <br />
-    
+
     @if (walletState is not null)
     {
         <p>@walletMessage</p>
@@ -20,6 +20,17 @@
         <p>Balance Simbolo: @symbolArs </p>
         <p>Balance Pesos: @balanceArs.ToString() </p>
         <p>Network: @networkType </p>
+
+
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Wallet Adress</RadzenText>
+            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) class="w-100" aria-label="Default TextBox" />
+            <p> @symbolArs </p>
+            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+            <p> total Fee:</p>
+            <RadzenButton Click=@(args => transfer()) Text="Transferir" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenCard>
+
     }
 
 </RadzenStack>
