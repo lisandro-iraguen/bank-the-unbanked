@@ -22,3 +22,8 @@ This is Test against the Argentinean Peso :shit:
 8. Cardano
 
 working on **Cardano Preview Testnet**
+
+
+### Special thanks to:
+[Cardano Ars Magna](https://arsmagna.xyz/apps/web-tx-editor/)\
+[Lyn Alden book](https://www.amazon.com/Broken-Money-Financial-System-Failing/dp/B0CG83QBJ6)
