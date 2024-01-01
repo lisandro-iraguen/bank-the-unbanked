@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
+using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -9,18 +11,31 @@ namespace Client.Pages
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
+        [Inject]
+        protected IConfiguration _configuration { get; set; }
 
-        private readonly string tokenomics = "https://preview.cexplorer.io/policy/797828bae21c7dcbad5015d31380eb52632c04bb875a4c77fe16b5db";
-        private readonly string WhitePapper = "https://localhost:44348/documents/ArgentinePesoWithCardanoBlockch.pdf";
+
+
+        private string tokenomicsURl;
+        private string whitePapperUrl;
+
+
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            tokenomicsURl = _configuration.GetValue<string>("AppSettings:TokenomicsURL");
+            whitePapperUrl = _configuration.GetValue<string>("AppSettings:WhitePapperUrl");
+        }
 
         private async Task toToTokenomics()
         {
-            await JSRuntime.InvokeAsync<object>("open", tokenomics, "_blank");
+            await JSRuntime.InvokeAsync<object>("open", tokenomicsURl, "_blank");
         }
         
         private async Task downloadWhitePapper()
         {
-            await JSRuntime.InvokeAsync<object>("open", WhitePapper, "_blank");
+            await JSRuntime.InvokeAsync<object>("open", whitePapperUrl, "_blank");
         }
 
         
