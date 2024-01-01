@@ -1,0 +1,10 @@
+﻿@page "/tokenomics"
+@using Radzen;
+
+<h3>DeFi</h3>
+
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" Wrap="FlexWrap.Wrap">    
+    <RadzenButton Click=@(args => toToTokenomics()) Text="Tokenomics" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(args => downloadWhitePapper()) Text="white papper" ButtonStyle="ButtonStyle.Primary" />
+</RadzenStack>

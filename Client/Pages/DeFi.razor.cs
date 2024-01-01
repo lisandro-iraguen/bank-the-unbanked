@@ -9,13 +9,8 @@ namespace Client.Pages
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
-        private readonly string biSwapUrl= "https://app.minswap.org/";
         private readonly string miniSwap = "https://app.minswap.org/";
 
-        private async Task goToBiswap()
-        {
-            await JSRuntime.InvokeAsync<object>("open", biSwapUrl, "_blank");
-        }
         private async Task goToMiniSwap()
         {
             await JSRuntime.InvokeAsync<object>("open", miniSwap, "_blank");
