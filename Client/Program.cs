@@ -10,9 +10,6 @@ builder.RootComponents.Add<App>("app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
-builder.Configuration
-       .AddJsonFile("./appsettings.json") // Ensure proper path if necessary
-       .AddJsonFile($"./appsettings.{builder.HostEnvironment.Environment}.json", optional: true);
 
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["API_Prefix"] ?? builder.HostEnvironment.BaseAddress) });
