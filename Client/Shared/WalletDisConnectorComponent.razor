@@ -1,0 +1,43 @@
+﻿@using Radzen;
+
+
+
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+
+    @if (_connectedWallet is null)
+    {
+        <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else
+    {
+
+        <RadzenCard>
+
+            <div style="text-align:center">
+                <img class="wallet-icon" src="@_connectedWallet.Icon" title="@_connectedWallet.Name" style="width: 65px; height: 65px;" />
+            </div>
+            <div style="text-align:center">
+                <span class="wallet-name">@_connectedWallet.Name Wallet</span>
+            </div>
+
+            @if (@_connectedWallet.UsedAdress is not null && @_connectedWallet.UsedAdress.Any())
+            {
+                <div style="text-align:center">
+                    <span class="wallet-address">@usedWallet.Substring(0,10) ...</span>
+                </div>
+            }
+            <div>
+                @if (_connectedWallet.Installed && _connectedWallet.Connected)
+                {
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
+                        <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
+                    </RadzenStack>
+                }
+
+            </div>
+
+        </RadzenCard>
+
+    }
+
+</RadzenStack>

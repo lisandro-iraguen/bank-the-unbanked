@@ -1,9 +1,8 @@
-﻿using CardanoSharp.Wallet.Enums;
+﻿using CardanoSharp.Wallet.CIPs.CIP30.Models;
+using CardanoSharp.Wallet.Enums;
 using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Transactions;
-using Client.Components;
-using Client.Pages;
 using Data.Exceptions;
 using Data.Wallet;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +11,8 @@ using PeterO.Cbor2;
 using Radzen;
 using System.Net.Http.Json;
 using Utils;
-using static System.Net.WebRequestMethods;
+using Utils.Components;
+
 
 namespace Client.Shared
 {
@@ -23,10 +23,10 @@ namespace Client.Shared
 
         [Inject]
         protected IJSRuntime _javascriptRuntime { get; set; }
-        
+
         [Inject]
         protected HttpClient http { get; set; }
-        
+
 
         public bool Connecting { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Client.Shared
                 IEnumerable<WalletExtension> walletExtensions = await http.GetFromJsonAsync<IEnumerable<WalletExtension>>("api/WalletsData");
                 SupportedExtensions = walletExtensions.ToList();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -55,7 +55,7 @@ namespace Client.Shared
             }
             //_selfReference = DotNetObjectReference.Create(this);
             _wallets = await _walletConnectorJs.Init(SupportedExtensions);
-            await InitializePersistedWalletAsync();            
+            await InitializePersistedWalletAsync();
         }
         private async Task InitializePersistedWalletAsync()
         {
@@ -64,15 +64,15 @@ namespace Client.Shared
 
             if (supportedWalletKeys != null && supportedWalletKeys.Length > 0)
             {
-                   var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
+                var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
 
-                    if (!string.IsNullOrWhiteSpace(storedWalletKey))
+                if (!string.IsNullOrWhiteSpace(storedWalletKey))
+                {
+                    if (!await ConnectWalletAsync(storedWalletKey, false))
                     {
-                        if (!await ConnectWalletAsync(storedWalletKey, false))
-                        {
-                            await RemoveStoredWalletKeyAsync();
-                        }
+                        await RemoveStoredWalletKeyAsync();
                     }
+                }
             }
 
             StateHasChanged();
@@ -86,7 +86,7 @@ namespace Client.Shared
             {
                 _wallets!.First(x => x.Connected).Connected = false;
             }
-           
+
             return;
         }
 
@@ -99,23 +99,24 @@ namespace Client.Shared
 
             try
             {
-         
+
                 Connecting = true;
                 StateHasChanged();
 
                 var result = await _walletConnectorJs!.ConnectWallet(walletKey);
                 if (result)
                 {
-                    Connected = true ;
+                    Connected = true;
 
                     _connectedWallet = _wallets!.First(x => x.Key == walletKey);
                     await RefreshConnectedWallet();
                     _connectedWallet.Connected = Connected;
-                     
-                     
-                    WalletSingleton.Instance = _connectedWallet;                   
+                    _connectedWallet.WalletConnectorJs= _walletConnectorJs;
+
+                    WalletSingleton.Instance = _connectedWallet;
+                
                 }
-             
+
                 return result;
             }
             //suppress all errors as it could be valid user refusal
@@ -149,7 +150,7 @@ namespace Client.Shared
         }
 
         public async Task NavigateToNewTab(string url)
-        {           
+        {
             await _javascriptRuntime.InvokeAsync<object>("open", url, "_blank");
         }
         private async Task<string> GetStoredWalletKeyAsync(params string[] supportedWalletKeys)
@@ -183,6 +184,7 @@ namespace Client.Shared
                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                 }
                 _connectedWallet.Balance = balance.Coin - _connectedWallet.TokenPreservation;
+                _connectedWallet.UsedAdress = await GetUsedAddressesHex();
             }
             _connectedWallet!.Network = await GetNetworkType();
             StateHasChanged();
@@ -222,6 +224,16 @@ namespace Client.Shared
             Console.WriteLine($"NETWORK ID: {networkId}");
             return networkId;
         }
+        public async ValueTask<string[]> GetUsedAddressesHex(Paginate? paginate = null)
+        {
+            var addresses = await _walletConnectorJs!.GetUsedAddresses(paginate);
+            foreach (var address in addresses)
+            {
+                Console.WriteLine($"USED ADDRESS: {address}");
+            }
+            return addresses;
+        }
+
         private void CheckInitialized()
         {
             if (!Initialized || _walletConnectorJs == null)

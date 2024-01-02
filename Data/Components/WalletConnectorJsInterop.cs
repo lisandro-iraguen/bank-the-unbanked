@@ -1,7 +1,12 @@
 ﻿using Microsoft.JSInterop;
+using CardanoSharp.Wallet.CIPs.CIP30.Models;
 using Data.Wallet;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 
-namespace Client.Components
+
+namespace Utils.Components
 {
     public class WalletConnectorJsInterop : IAsyncDisposable
     {
@@ -79,6 +84,21 @@ namespace Client.Components
                 throw new JSException(ex.Message);
             }
         }
+
+        public async ValueTask<string[]> GetUsedAddresses(Paginate? paginate = null)
+        {
+           
+            try
+            {
+                var addresses = await _jsWalletConnector!.InvokeAsync<string[]>("getUsedAddresses", paginate);
+                return addresses;
+            }
+            catch (JSException ex)
+            {
+                throw new JSException(ex.Message);
+            }
+        }
+
 
         public async ValueTask DisposeAsync()
         {

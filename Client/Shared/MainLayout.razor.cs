@@ -24,7 +24,14 @@ namespace Client.Shared
         public async Task OpenWalletConnectors()
         {
 
-            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderDialogContent);
+            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
+            
+        }
+        
+        public async Task OpenWalletDisconector()
+        {
+
+            var dialogResult = await _dialogService.OpenAsync("Desconectar Biletera", RenderWalletDisConnector);
             
         }
 
@@ -36,15 +43,30 @@ namespace Client.Shared
 
         public void LoadWallet()
         {
-            Console.WriteLine($"Wallet Loaded {WalletSingleton.Instance.Name}");
+            if (WalletSingleton.Instance is not null)
+            {
+                Console.WriteLine($"Wallet Loaded {WalletSingleton.Instance.Name}");
+            }
         }
 
-        private RenderFragment RenderDialogContent(DialogService service)
+        private RenderFragment RenderWalletConnector(DialogService service)
         {
          
             RenderFragment fragment = builder =>
             {
                 builder.OpenComponent(0, typeof(WalletConnectorComponent));
+                builder.CloseComponent();
+            };
+
+            return fragment;
+        } 
+        
+        private RenderFragment RenderWalletDisConnector(DialogService service)
+        {
+         
+            RenderFragment fragment = builder =>
+            {
+                builder.OpenComponent(0, typeof(WalletDisConnectorComponent));
                 builder.CloseComponent();
             };
 

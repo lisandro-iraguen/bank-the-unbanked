@@ -9,7 +9,7 @@ using Utils;
 
 namespace Client.Pages
 {
-    public partial class Home: ComponentBase
+    public partial class Home : ComponentBase
     {
         [Inject]
         protected IConfiguration _configuration { get; set; }
@@ -22,13 +22,13 @@ namespace Client.Pages
         private string symbolArs = null;
         private string balanceAda = null;
         private string balanceArs = null;
-        private string AssetsID=null;
-        private string PolicyAssetsID=null;
+        private string AssetsID = null;
+        private string PolicyAssetsID = null;
         private string networkType = null;
 
         private int valueToTransfer;
 
-        private WalletExtensionState walletState=null;
+        private WalletExtensionState walletState = null;
         protected override void OnInitialized()
         {
 
@@ -36,25 +36,26 @@ namespace Client.Pages
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
             PolicyAssetsID = _configuration.GetValue<string>("AppSettings:PolicyAssetId");
 
-            if(AssetsID is null)
+            if (AssetsID is null)
             {
                 throw new Exception("AssetID cannot be null");
             }
         }
-        
+
         public void LoadWalletParameters()
         {
             walletState = WalletSingleton.Instance;
+            if (walletState is not null)
+            {
+                ulong nativeAmount = walletState.NativeAssets[PolicyAssetsID + "-" + AssetsID];
 
-            ulong nativeAmount= walletState.NativeAssets[PolicyAssetsID+"-"+AssetsID];
-
-
-            walletMessage = $"Wallet Cargada Exitosamente: {walletState.Name} ";
-            symbol = walletState.CoinCurrency;
-            symbolArs = ComponentUtils.HexToString(AssetsID);
-            balanceAda = walletState.BalanceAda;
-            balanceArs = nativeAmount.ToString();
-            networkType = walletState.Network.ToString();
+                walletMessage = $"Wallet Cargada Exitosamente: {walletState.Name} ";
+                symbol = walletState.CoinCurrency;
+                symbolArs = ComponentUtils.HexToString(AssetsID);
+                balanceAda = walletState.BalanceAda;
+                balanceArs = nativeAmount.ToString();
+                networkType = walletState.Network.ToString();
+            }
         }
 
 

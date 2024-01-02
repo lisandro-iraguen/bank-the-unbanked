@@ -1,6 +1,4 @@
-﻿using Client.Components;
-using Data.Wallet;
-using Data.Web;
+﻿using Data.Web;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;

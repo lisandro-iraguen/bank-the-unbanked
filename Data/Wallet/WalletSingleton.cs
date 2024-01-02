@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Utils.Components;
 
 namespace Data.Wallet
 {
@@ -11,6 +7,7 @@ namespace Data.Wallet
         private static WalletExtensionState instance = null;
         private static readonly object padlock = new object();
         public string walletId;
+        public static WalletConnectorJsInterop walletConnectorJs = null;
         public static WalletExtensionState Instance
         {
             get

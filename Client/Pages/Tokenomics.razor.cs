@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
-using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 
 namespace Client.Pages
 {

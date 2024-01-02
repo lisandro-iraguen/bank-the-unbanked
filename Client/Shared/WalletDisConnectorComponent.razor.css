@@ -1,0 +1,12 @@
+﻿.wallet-icon {
+    width: 65px;
+    height: 65px;
+}
+
+.wallet-address {
+    text-align: center;
+    white-space: nowrap;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

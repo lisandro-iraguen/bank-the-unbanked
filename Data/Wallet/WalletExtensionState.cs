@@ -1,11 +1,14 @@
 ﻿using CardanoSharp.Wallet.Enums;
 using System.Collections.Generic;
 using System.Globalization;
+using Utils.Components;
 
 namespace Data.Wallet
 {
     public class WalletExtensionState : WalletExtension
     {
+        public string[] UsedAdress { get; set; }
+        public WalletConnectorJsInterop WalletConnectorJs { get; set; }
         public bool Installed { get; set; }
 
         public bool Enabled { get; set; }
