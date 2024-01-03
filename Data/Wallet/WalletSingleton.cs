@@ -1,24 +1,28 @@
-﻿using Utils.Components;
+﻿using Components;
+using System;
 
 namespace Data.Wallet
 {
     public class WalletSingleton
     {
-        private static WalletExtensionState instance = null;
-        private static readonly object padlock = new object();
+        public WalletExtensionState walletInstance { get; set; }
         public string walletId;
-        public static WalletConnectorJsInterop walletConnectorJs = null;
-        public static WalletExtensionState Instance
+        public WalletConnectorJsInterop walletConnectorJs = null;
+        public WalletConnector _walletConnector = null;
+        private readonly static WalletSingleton _instance = new WalletSingleton();
+
+        private WalletSingleton()
+        {
+        }
+
+        public static WalletSingleton Instance
         {
             get
             {
-                
-                    return instance;
-                
-            }
-            set { 
-                instance = value;
+                return _instance;
             }
         }
+
+       
     }
 }

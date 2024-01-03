@@ -13,15 +13,21 @@
 
             <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
                 <RadzenRow Gap="2rem">
-
                     <RadzenColumn Order="7">
-                        @if(WalletSingleton.Instance == null)
+                        @if (@isConecting)
                         {
-                            <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+                            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
                         }
                         else
                         {
-                            <RadzenButton class="rz-m-2" Text="@WalletSingleton.Instance.Name" Icon="account_balance_wallet" Click=@OpenWalletDisconector></RadzenButton>
+                            @if (WalletSingleton.Instance._walletConnector._connectedWallet == null)
+                            {
+                                <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+                            }
+                            else
+                            {
+                                <RadzenButton class="rz-m-2" Text="@WalletSingleton.Instance.walletInstance.Name" Icon="account_balance_wallet" Click=@OpenWalletDisconector></RadzenButton>
+                            }
                         }
                     </RadzenColumn>
                 </RadzenRow>
@@ -36,7 +42,7 @@
     </RadzenSidebar>
     <RadzenBody>
         <CascadingValue Value="actionWrapper">
-        @Body
+            @Body
         </CascadingValue>
     </RadzenBody>
     <RadzenFooter>

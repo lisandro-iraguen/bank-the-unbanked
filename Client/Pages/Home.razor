@@ -8,12 +8,17 @@
         <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
             no hay wallet selecionada, hay que conectarse
         </RadzenAlert>
+        @if (@isConecting)
+        {
+            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
     }
     <RadzenIcon Icon="account_balance"></RadzenIcon>
     <br />
 
     @if (walletState is not null)
     {
+
         <p>@walletMessage</p>
         <p>Balance Simbolo: @symbol </p>
         <p>Balance Ada: @balanceAda.ToString() </p>

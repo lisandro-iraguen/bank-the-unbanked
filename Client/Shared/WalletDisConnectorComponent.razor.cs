@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
-using Utils.Components;
+using Components;
 
 namespace Client.Shared
 {
@@ -21,7 +21,7 @@ namespace Client.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            _connectedWallet = WalletSingleton.Instance;
+            _connectedWallet = WalletSingleton.Instance.walletInstance;
             usedWallet = _connectedWallet.UsedAdress.First();
         }
 
@@ -32,9 +32,10 @@ namespace Client.Shared
             await _connectedWallet.WalletConnectorJs!.DisposeAsync();
             _connectedWallet.Connected = false;
             _connectedWallet = null;
-            WalletSingleton.Instance = null;
+            WalletSingleton.Instance._walletConnector.disconectWallet();
+            WalletSingleton.Instance.walletInstance = null;
+           _dialogService.Close();
             StateHasChanged();
-            _dialogService.Close();
             return;
         }
 

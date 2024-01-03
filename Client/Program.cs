@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Client.Pages;
 using Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("app");
@@ -19,7 +20,7 @@ builder.Services.AddScoped<DialogService>();
 
 
 builder.Services.AddRadzenComponents();
-
+builder.Services.AddBlazoredLocalStorage();
 
 
 await builder.Build().RunAsync();

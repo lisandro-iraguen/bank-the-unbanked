@@ -2,8 +2,11 @@
 
 namespace Utils
 {
+    
+
     public static class ComponentUtils
     {
+        public static string ConnectedWalletKey => "connectedWalletKey";
         public static NetworkType GetNetworkType(int networkId)
         {
             switch (networkId)

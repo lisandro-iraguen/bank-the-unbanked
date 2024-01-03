@@ -1,7 +1,7 @@
 ﻿using CardanoSharp.Wallet.Enums;
 using System.Collections.Generic;
 using System.Globalization;
-using Utils.Components;
+using Components;
 
 namespace Data.Wallet
 {

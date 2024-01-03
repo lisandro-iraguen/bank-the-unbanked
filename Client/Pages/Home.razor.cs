@@ -27,7 +27,7 @@ namespace Client.Pages
         private string networkType = null;
 
         private int valueToTransfer;
-
+        private bool isConecting = false;
         private WalletExtensionState walletState = null;
         protected override void OnInitialized()
         {
@@ -44,7 +44,8 @@ namespace Client.Pages
 
         public void LoadWalletParameters()
         {
-            walletState = WalletSingleton.Instance;
+            isConecting = true;
+            walletState = WalletSingleton.Instance.walletInstance;
             if (walletState is not null)
             {
                 ulong nativeAmount = walletState.NativeAssets[PolicyAssetsID + "-" + AssetsID];
@@ -56,6 +57,7 @@ namespace Client.Pages
                 balanceArs = nativeAmount.ToString();
                 networkType = walletState.Network.ToString();
             }
+            isConecting = false;
         }
 
 

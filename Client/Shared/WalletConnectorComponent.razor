@@ -4,14 +4,14 @@
 
 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
 
-    @if (_wallets is null)
+    @if (_walletConector is null)
     {
         <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
     }
     else
     {
 
-        @foreach (var extension in _wallets)
+        @foreach (var extension in _walletConector._wallets)
         {
             <RadzenCard>
 
@@ -22,17 +22,11 @@
                     <span class="wallet-name">@extension.Name Wallet</span>
                 </div>
                 <div>
-                    @if (extension.Installed && extension.Connected)
+                   @if (extension.Installed)
                     {
-                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                            <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
-                        </RadzenStack>
-                    }
-                    else if (extension.Installed)
-                    {
-                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
+                       <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
                             <RadzenButton Disabled="@Connecting" Click="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
-                        </RadzenStack>
+                        </RadzenStack> 
                     }
                     else
                     {
@@ -44,6 +38,6 @@
 
             </RadzenCard>
 
-        }
-    }
+        } 
+    } 
 </RadzenStack>

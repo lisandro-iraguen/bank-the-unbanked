@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace Utils.Components
+namespace Components
 {
     public class WalletConnectorJsInterop : IAsyncDisposable
     {
