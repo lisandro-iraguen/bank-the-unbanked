@@ -27,14 +27,15 @@
         <p>Network: @networkType </p>
 
 
-        <RadzenCard>
+        
+         <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Wallet Adress</RadzenText>
-            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) class="w-100" aria-label="Default TextBox" />
-            <p> @symbolArs </p>
+            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToSTransfer  class="w-100" aria-label="Default TextBox" />
+            @* <p> @symbolArs </p> *@
             <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
             <p> total Fee:</p>
-            <RadzenButton Click=@(args => transfer()) Text="Transferir" ButtonStyle="ButtonStyle.Primary" />
-        </RadzenCard>
+            <RadzenButton Click=@(args => singTransaction()) Text="Transferir" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenCard> 
 
     }
 

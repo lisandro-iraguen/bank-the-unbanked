@@ -4,6 +4,8 @@ using Data.Wallet;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using Data.Exceptions;
+using Data.Errors;
 
 
 namespace Components
@@ -132,6 +134,60 @@ namespace Components
             try
             {
                 return await _jsWalletConnector!.InvokeAsync<bool>("isWalletEnabled", key);
+            }
+            catch (JSException ex)
+            {
+                throw new JSException(ex.Message);
+            }
+        }
+
+        public async ValueTask<DataSignature> SignData(string address, string hexData)
+        {
+            
+            try
+            {
+                var dataSignature = await _jsWalletConnector!.InvokeAsync<DataSignature>("signData", address, hexData);
+                return dataSignature;
+            }
+            catch (JSException ex)
+            {
+                throw ex.ToWebWalletException(WebWalletErrorType.DataSign);
+            }
+        }
+
+        public async ValueTask<string> SignTx(string txCbor, bool partialSign = false)
+        {
+           
+            try
+            {
+                var cborWitnessSet = await _jsWalletConnector!.InvokeAsync<string>("signTx", txCbor, partialSign);
+                return cborWitnessSet;
+            }
+            catch (JSException ex)
+            {
+                throw ex.ToWebWalletException(WebWalletErrorType.TxSign);
+            }
+        }
+
+        public async ValueTask<string> SubmitTx(string txCbor)
+        {
+          
+            try
+            {
+                var txHash = await _jsWalletConnector!.InvokeAsync<string>("submitTx", txCbor);
+                return txHash;
+            }
+            catch (JSException ex)
+            {
+                throw ex.ToWebWalletException(WebWalletErrorType.TxSign);
+            }
+        }
+        public async ValueTask<string[]> GetUtxos(string? amountCbor = null, Paginate? paginate = null)
+        {
+             try
+            {
+                var utxos = await _jsWalletConnector!.InvokeAsync<string[]>("getUtxos", amountCbor, paginate);
+                return utxos;
             }
             catch (JSException ex)
             {
