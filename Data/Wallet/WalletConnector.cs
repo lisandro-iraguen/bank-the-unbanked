@@ -25,7 +25,7 @@ namespace Data.Wallet
 {
     public class WalletConnector
     {
-       
+
         public List<WalletExtensionState>? _wallets = null;
         public WalletConnectorJsInterop? _walletConnectorJs;
         public WalletExtensionState? _connectedWallet { get; set; }
@@ -39,7 +39,7 @@ namespace Data.Wallet
 
         private ILocalStorageService _localStorage;
         private HttpClient _http;
-        private IJSRuntime _javascriptRuntime; 
+        private IJSRuntime _javascriptRuntime;
         public WalletConnector(ILocalStorageService lStorage, HttpClient client, IJSRuntime jSRuntime)
         {
             _localStorage = lStorage;
@@ -65,7 +65,7 @@ namespace Data.Wallet
 
         }
 
-        public async Task ConnectWallet()
+        public async Task ConnectWalletAutomatically()
         {
             var supportedWalletKeys = SupportedExtensions?.Select(s => s.Key)?.ToArray();
             if (supportedWalletKeys != null && supportedWalletKeys.Length > 0)
@@ -76,11 +76,31 @@ namespace Data.Wallet
                 {
                     if (!await ConnectWalletAsync(storedWalletKey, false))
                     {
-                        // await RemoveStoredWalletKeyAsync();
+                        await RemoveStoredWalletKeyAsync();
                     }
                 }
             }
         }
+        public async Task ConnectWallet(string key)
+        {
+            var supportedWalletKeys = SupportedExtensions?.Select(s => s.Key)?.ToArray();
+
+            if (supportedWalletKeys != null && supportedWalletKeys.Length > 0)
+            {
+                var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
+                if (string.IsNullOrWhiteSpace(storedWalletKey))
+                {
+                    if (supportedWalletKeys.Contains(key))
+                    {
+                        if (!await ConnectWalletAsync(key, false))
+                        {
+                            await RemoveStoredWalletKeyAsync();
+                        }
+                    }
+                }
+            }
+        }
+
 
         private async Task<string> GetStoredWalletKeyAsync(params string[] supportedWalletKeys)
         {
@@ -105,7 +125,13 @@ namespace Data.Wallet
 
             return result;
         }
-
+        private async Task RemoveStoredWalletKeyAsync()
+        {
+            if (_localStorage != null)
+            {
+                await _localStorage.RemoveItemAsync(ComponentUtils.ConnectedWalletKey);
+            }
+        }
         public async ValueTask RefreshConnectedWallet()
         {
             var balance = await GetBalance();
@@ -130,6 +156,7 @@ namespace Data.Wallet
             }
             _connectedWallet!.Network = await GetNetworkType();
         }
+
         public async ValueTask<TransactionOutputValue> GetBalance()
         {
             var result = await GetBalanceCbor();
@@ -214,6 +241,14 @@ namespace Data.Wallet
             var networkId = await _walletConnectorJs!.GetNetworkId();
             Console.WriteLine($"NETWORK ID: {networkId}");
             return networkId;
+        }
+
+        public async ValueTask<int> GetNetworkSlot()
+        {
+            CheckInitializedAndConnected();
+            var networkSlot = await _walletConnectorJs!.getNetworkSlot();
+            Console.WriteLine($"NETWORK Slot: {networkSlot}");
+            return networkSlot;
         }
         public async ValueTask<string[]> GetUsedAddressesHex(Paginate? paginate = null)
         {
@@ -325,7 +360,7 @@ namespace Data.Wallet
         }
 
         public void disconectWallet()
-        {         
+        {
             _connectedWallet = null;
         }
     }

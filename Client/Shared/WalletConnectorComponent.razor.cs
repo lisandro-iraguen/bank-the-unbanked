@@ -41,7 +41,7 @@ namespace Client.Shared
         public async ValueTask ConnectWalletAsync(string key)
         {
             Connecting = true;
-            await _walletConector.ConnectWallet();
+            await _walletConector.ConnectWallet(key);
             _dialogService.Close();
             Connecting = false;
         }

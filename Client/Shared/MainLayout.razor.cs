@@ -42,7 +42,7 @@ namespace Client.Shared
             {
                 Console.WriteLine(ex.Message);
             }
-            await _walletConnector.ConnectWallet();
+            await _walletConnector.ConnectWalletAutomatically();
             isConecting = false;
             actionWrapper.Action.Invoke();
             StateHasChanged();
