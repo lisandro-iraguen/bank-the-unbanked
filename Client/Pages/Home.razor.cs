@@ -5,6 +5,16 @@ using CardanoSharp.Wallet.Extensions;
 using Utils;
 using CardanoSharp.Wallet.TransactionBuilding;
 using CardanoSharp.Wallet.Models.Addresses;
+using CardanoSharp.Wallet.Models.Transactions;
+using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
+using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
+using CardanoSharp.Wallet.Models.Keys;
+using CardanoSharp.Wallet;
+using CardanoSharp.Wallet.Extensions.Models;
+using Newtonsoft.Json;
+using System.Text;
+using CardanoSharp.Wallet.Extensions.Models.Transactions;
 
 
 namespace Client.Pages
@@ -13,6 +23,9 @@ namespace Client.Pages
     {
         [Inject]
         protected IConfiguration _configuration { get; set; }
+
+        [Inject]
+        protected HttpClient http { get; set; }
 
         [CascadingParameter]
         private ActionWrapper _actionCommingFromTheMainLayout { get; set; }
@@ -35,8 +48,8 @@ namespace Client.Pages
 
             _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
-            PolicyAssetsID = _configuration.GetValue<string>("AppSettings:PolicyAssetId");
             walletToSTransfer = _configuration.GetValue<string>("AppSettings:TestWalletToSTransfer");
+            PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
 
             if (AssetsID is null)
             {
@@ -57,11 +70,11 @@ namespace Client.Pages
             {
                 if (walletConector.Connected)
                 {
-                    
+
                     var result = await walletConector.GetBalance();
 
-                  
-                   Console.WriteLine("Balance:");
+
+                    Console.WriteLine("Balance:");
                     Console.WriteLine($" - Coin: {result.Coin}");
                     foreach (var asset in result.MultiAsset)
                     {
@@ -77,11 +90,11 @@ namespace Client.Pages
                             Console.WriteLine(($"   - Tokens: {token.Value}"));
                         }
                     }
-                  
+
                 }
             }
-         
-         }
+
+        }
 
 
         void OnChangeWalletAdress(string value, string name)
@@ -89,7 +102,7 @@ namespace Client.Pages
             Console.WriteLine($"{name} value changed to {value}");
         }
 
-     
+
         private async Task singTransaction()
         {
             walletState = WalletSingleton.Instance.walletInstance;
@@ -101,54 +114,44 @@ namespace Client.Pages
             string imputTx = "";
             uint indexTx = 0;
 
-            Address baseAddr = new Address(walletToSTransfer);
-
-            int currentSlot = await walletConector.GetNetworkSlot();
-
-            var utxo = await walletConector.GetUtxos();
-            var u = utxo.Last();
-            imputTx = u.TxHash;
-            indexTx = u.TxIndex;
-
-            uint tokenQuantity = 1;
-            //var tokenAsset = TokenBundleBuilder.Create
-            //    .AddToken(policyId.ToBytes(), tokenName.ToBytes(), tokenQuantity);
-
-            //var transactionBody = TransactionBodyBuilder.Create
-            //                     .AddInput(imputTx, indexTx)
-            //                     .AddOutput(baseAddr, valueToTransfer)
-            //                     .SetTtl(currentSlot + 1000)
-            //                     .SetFee(0);
-
-
-            //CardanoSharp.Wallet.Models.Transactions.Transaction transaction = null;
-            //try
-            //{
-            //    transaction = TransactionBuilder.Create
-            //    .SetBody(transactionBody)
-            //    .Build();
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("build transaction'failed");
-            //    Console.WriteLine(ex.Message);
-            //}
 
 
 
-            //try
-            //{
 
-            //    var finalResult = await walletConector.SignTx(transaction);
-            //    Console.WriteLine($"Sign TX (witness set cbor):");
-            //    Console.WriteLine(finalResult);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Sign TX transaction failed");
-            //    Console.WriteLine(ex.Message);
-            //}
+
+            var response = await http.GetAsync("/api/TxBuild");
+            var data = new TxRequest();
+            if (response.IsSuccessStatusCode)
+            {
+                var transaction = await response.Content.ReadFromJsonAsync<Transaction>();
+                data.transactionCbor = transaction.Serialize().ToStringHex();
+                var witnessSet = await walletConector.SignTx(transaction, true);
+                data.witness = witnessSet;
+                Console.WriteLine($"Success: transaction");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+
+         
+            
+            string jsonContent = JsonConvert.SerializeObject(data);
+            StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
+            if (response.IsSuccessStatusCode)
+            {
+                string result = await response2.Content.ReadAsStringAsync();
+                var delivered = await walletConector.SubmitTxCbor(result);
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+
+
+
+           
 
 
         }

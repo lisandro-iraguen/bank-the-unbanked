@@ -34,7 +34,7 @@
             @* <p> @symbolArs </p> *@
             <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
             <p> total Fee:</p>
-            <RadzenButton Click=@(args => singTransaction()) Text="Transferir" ButtonStyle="ButtonStyle.Primary" />
+            <RadzenButton Click=@(args => singTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" />
         </RadzenCard> 
 
     }

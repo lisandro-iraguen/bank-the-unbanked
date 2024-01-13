@@ -84,18 +84,7 @@ namespace Components
                 throw new JSException(ex.Message);
             }
         }
-        public async ValueTask<int> getNetworkSlot()
-        {
-            try
-            {
-                var networkSlot = await _jsWalletConnector!.InvokeAsync<int>("getNetworkSlot");
-                return networkSlot;
-            }
-            catch (JSException ex)
-            {
-                throw new JSException(ex.Message);
-            }
-        }
+      
         public async ValueTask<string[]> GetUsedAddresses(Paginate? paginate = null)
         {
            

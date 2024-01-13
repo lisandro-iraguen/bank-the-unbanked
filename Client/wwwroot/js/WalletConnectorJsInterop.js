@@ -58,14 +58,7 @@ export function createWalletConnector() {
 				throw JSON.stringify(e);
 			}
 		},
-		getNetworkSlot: async function () {
-			try {
-				return 1;
-			}
-			catch (e) {
-				throw JSON.stringify(e);
-			}
-		},
+		
 		getUtxos: async function (amountCbor = undefined, paginate = undefined) {
 			try {
 				return await this.connectedWallet.getUtxos(amountCbor, paginate);

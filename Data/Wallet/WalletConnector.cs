@@ -33,7 +33,6 @@ namespace Data.Wallet
         public List<WalletExtension> SupportedExtensions { get; set; }
 
         public bool Connecting { get; private set; }
-
         public bool Initialized { get; private set; }
         public bool Connected { get; private set; }
 
@@ -243,13 +242,7 @@ namespace Data.Wallet
             return networkId;
         }
 
-        public async ValueTask<int> GetNetworkSlot()
-        {
-            CheckInitializedAndConnected();
-            var networkSlot = await _walletConnectorJs!.getNetworkSlot();
-            Console.WriteLine($"NETWORK Slot: {networkSlot}");
-            return networkSlot;
-        }
+       
         public async ValueTask<string[]> GetUsedAddressesHex(Paginate? paginate = null)
         {
             var addresses = await _walletConnectorJs!.GetUsedAddresses(paginate);

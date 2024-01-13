@@ -2,11 +2,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Client;
 using Radzen;
-using Microsoft.Extensions.Configuration;
-using Client.Pages;
-using Utils;
-using Microsoft.Extensions.DependencyInjection;
 using Blazored.LocalStorage;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("app");

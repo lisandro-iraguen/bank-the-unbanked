@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Api.Wallet
 {
-    public class WalletDataGet
+    public class Transaction
     {
         private readonly IWalletData _walletData;
 
-        public WalletDataGet(IWalletData w)
+        public Transaction(IWalletData w)
         {
             _walletData = w;
         }
@@ -22,5 +23,9 @@ namespace Api.Wallet
             var products = await _walletData.GetWalletData();
             return new OkObjectResult(products);
         }
+
+
+
+
     }
 }
