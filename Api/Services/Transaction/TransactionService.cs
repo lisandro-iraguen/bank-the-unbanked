@@ -74,12 +74,12 @@ public class TransactionService : ITransactionService
             //var protocolParameters = ppResponse.Content.FirstOrDefault();
 
             transactionBody.SetFee(0);
-            //var blockSummaries = (await _networkClient.GetChainTip()).Content;
-            //var ttl = 2500 + (uint)blockSummaries.First().AbsSlot;
-            //transactionBody.SetTtl(ttl);
+            var blockSummaries = (await _networkClient.GetChainTip()).Content;
+            var ttl = 1000 + (uint)blockSummaries.First().AbsSlot;
+            transactionBody.SetTtl(ttl);
             var witnessSet = TransactionWitnessSetBuilder.Create
-         .SetScriptAllNativeScript(scriptPolicy)
-         .MockVKeyWitness(2);
+                            .SetScriptAllNativeScript(scriptPolicy)
+                            .MockVKeyWitness(2);
 
             var transaction = TransactionBuilder.Create;
             transaction.SetBody(transactionBody);
