@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CardanoSharpAsset = CardanoSharp.Wallet.Models.Asset;
+using CardanoSharp.Wallet.Extensions.Models;
+using CardanoSharp.Wallet.Enums;
 
 namespace Api.Services.Transaction;
 
@@ -51,36 +53,38 @@ public class TransactionService : ITransactionService
 
             ///2. Create the Body
             var transactionBody = TransactionBodyBuilder.Create;
-
-            //set payment outputs
-
-            //var policyId = scriptPolicy.Build().GetPolicyId();
+            ulong amountToTransfer = 100000000;
 
             var coinSelection = ((TransactionBodyBuilder)transactionBody).UseLargestFirst(utxos, addressString);
             foreach (var i in coinSelection.Inputs)
             {
                 transactionBody.AddInput(i.TransactionId, i.TransactionIndex);
             }
-            if (coinSelection.ChangeOutputs is not null && coinSelection.ChangeOutputs.Any())
-            {
-                foreach (var output in coinSelection.ChangeOutputs) 
-                        transactionBody.AddOutput(new Address(addressString), output.Value.Coin);
-            
-            }
 
-           
+            transactionBody.AddOutput(addressString.ToAddress().GetBytes(), amountToTransfer);
+
+            //if (coinSelection.ChangeOutputs is not null && coinSelection.ChangeOutputs.Any())
+            //{
+            //    foreach (var output in coinSelection.ChangeOutputs) 
+            //            transactionBody.AddOutput(new Address(addressString), output.Value.Coin);
+            
+            //}
+            
+
 
             var ppResponse = await _epochClient.GetProtocolParameters();
             var protocolParameters = ppResponse.Content.FirstOrDefault();
-
-            transactionBody.SetFee(0);
+            transactionBody.SetFee(protocolParameters.MinFeeB.Value);
+            
             var blockSummaries = (await _networkClient.GetChainTip()).Content;
             var ttl = 1000 + (uint)blockSummaries.First().AbsSlot;
             transactionBody.SetTtl(ttl);
-            var witnessSet = TransactionWitnessSetBuilder.Create
-                            .SetScriptAllNativeScript(scriptPolicy)
-                            .MockVKeyWitness(2);
 
+
+            var witnessSet = TransactionWitnessSetBuilder.Create
+                            .AddVKeyWitness(_policyManager.GetPublicKey(), _policyManager.GetPrivateKey())
+                            .MockVKeyWitness(2);
+            
             var transaction = TransactionBuilder.Create;
             transaction.SetBody(transactionBody);
             transaction.SetWitnesses(witnessSet);
@@ -89,6 +93,7 @@ public class TransactionService : ITransactionService
             var draft = transaction.Build();
             var fee = draft.CalculateFee(protocolParameters.MinFeeA, protocolParameters.MinFeeB);
             transactionBody.SetFee(fee);
+
             //transactionBody.RemoveFeeFromChange();
 
             var rawTx = transaction.Build();

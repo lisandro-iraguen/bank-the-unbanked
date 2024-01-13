@@ -141,8 +141,8 @@ namespace Client.Pages
             HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
             if (response.IsSuccessStatusCode)
             {
-                string result = await response2.Content.ReadAsStringAsync();
-                var delivered = await walletConector.SubmitTxCbor(result);
+                var result = await response2.Content.ReadFromJsonAsync<Transaction>();
+                var delivered = await walletConector.SubmitTx(result);
             }
             else
             {

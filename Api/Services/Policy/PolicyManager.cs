@@ -16,7 +16,7 @@ public class PolicyManager : IPolicyManager
 
     public PolicyManager()
     {
-        var mnemonic = new MnemonicService().Restore("lunch layer hold omit fit select erase toy mixture cruel wonder nose grunt refuse private");
+        var mnemonic = new MnemonicService().Restore("muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter");
         IIndexNodeDerivation paymentNode1 = mnemonic.GetMasterNode()
             .Derive(PurposeType.PolicyKeys)
             .Derive()
