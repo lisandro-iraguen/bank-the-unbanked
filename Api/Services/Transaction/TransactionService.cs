@@ -70,8 +70,8 @@ public class TransactionService : ITransactionService
 
            
 
-            //var ppResponse = await _epochClient.GetProtocolParameters();
-            //var protocolParameters = ppResponse.Content.FirstOrDefault();
+            var ppResponse = await _epochClient.GetProtocolParameters();
+            var protocolParameters = ppResponse.Content.FirstOrDefault();
 
             transactionBody.SetFee(0);
             var blockSummaries = (await _networkClient.GetChainTip()).Content;
@@ -84,8 +84,13 @@ public class TransactionService : ITransactionService
             var transaction = TransactionBuilder.Create;
             transaction.SetBody(transactionBody);
             transaction.SetWitnesses(witnessSet);
-            
+
             //get a draft transaction to calculate fee
+            var draft = transaction.Build();
+            var fee = draft.CalculateFee(protocolParameters.MinFeeA, protocolParameters.MinFeeB);
+            transactionBody.SetFee(fee);
+            //transactionBody.RemoveFeeFromChange();
+
             var rawTx = transaction.Build();
             var mockWitnesses = rawTx.TransactionWitnessSet.VKeyWitnesses.Where(x => x.IsMock);
             foreach (var mw in mockWitnesses)
