@@ -39,7 +39,7 @@ public class TransactionService : ITransactionService
         _epochClient = epochClient;
     }
 
-    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string addressString)
+    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string addressString, int value)
     {
         try
         {
@@ -54,7 +54,7 @@ public class TransactionService : ITransactionService
 
             ///2. Create the Body
             var transactionBody = TransactionBodyBuilder.Create;
-            ulong amountToTransfer = 100000000;
+            ulong amountToTransfer = (ulong)value;
 
             transactionBody.AddOutput(addressString.ToAddress().GetBytes(), amountToTransfer);
 

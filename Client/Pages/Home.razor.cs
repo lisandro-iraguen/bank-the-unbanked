@@ -30,16 +30,9 @@ namespace Client.Pages
         [CascadingParameter]
         private ActionWrapper _actionCommingFromTheMainLayout { get; set; }
 
-        private string walletMessage = null;
-        private string symbol = null;
-        private string symbolArs = null;
-        private string balanceAda = null;
-        private string balanceArs = null;
         private string AssetsID = null;
-        private string PolicyAssetsID = null;
-        private string networkType = null;
-
-        private ulong valueToTransfer = 0;
+        private string PolicyAssetsID = null;        
+        private ulong valueToTransfer = 100000000;
         private string walletToSTransfer;
         private bool isConecting = false;
         private WalletExtensionState walletState = null;
@@ -107,26 +100,15 @@ namespace Client.Pages
         {
             walletState = WalletSingleton.Instance.walletInstance;
             var walletConector = WalletSingleton.Instance._walletConnector;
-            string usedWallet = walletState.UsedAdress.First();
-            var tokenHex = AssetsID;
-            var policyId = PolicyAssetsID;
-            var tokenName = ComponentUtils.HexToString(AssetsID);
-            string imputTx = "";
-            uint indexTx = 0;
-
-
-
-
-
-
-            var response = await http.GetAsync("/api/TxBuild");
-            var data = new TxRequest();
+            string url = $"/api/TxBuild?wallet={walletToSTransfer}&value={valueToTransfer}";
+            var response = await http.GetAsync(url);
+            var txSignData = new TxRequest();
             if (response.IsSuccessStatusCode)
             {
                 var transaction = await response.Content.ReadFromJsonAsync<Transaction>();
-                data.transactionCbor = transaction.Serialize().ToStringHex();
+                txSignData.transactionCbor = transaction.Serialize().ToStringHex();
                 var witnessSet = await walletConector.SignTx(transaction, true);
-                data.witness = witnessSet;
+                txSignData.witness = witnessSet;
                 Console.WriteLine($"Success: transaction");
             }
             else
@@ -136,7 +118,7 @@ namespace Client.Pages
 
          
             
-            string jsonContent = JsonConvert.SerializeObject(data);
+            string jsonContent = JsonConvert.SerializeObject(txSignData);
             StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
             if (response.IsSuccessStatusCode)

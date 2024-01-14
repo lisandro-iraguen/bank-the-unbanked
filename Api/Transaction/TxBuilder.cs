@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Api.Services.Transaction;
+using System;
 
 namespace Api.Transaction
 {
@@ -20,8 +21,21 @@ namespace Api.Transaction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "TxBuild")] HttpRequest req)
         {
-            var transact = await _transaction.BuildTransaction("addr_test1qzfspdp2s5rmecrusgawm7hpkm8qpdksxjtymxz2aa0yyd5lazyya790dh0xwfmcjyjjwc967z62wp8vmkza3pu8l0nq30pne3");
-            return new OkObjectResult(transact);
+            string wallet = req.Query["wallet"];
+            string value = req.Query["value"];
+            if(string.IsNullOrEmpty(wallet)) return new BadRequestObjectResult("no wallet address");
+            if(string.IsNullOrEmpty(value)) return new BadRequestObjectResult("no wallet value");
+
+            try
+            {
+                int transferValue = int.Parse(value);
+                var transact = await _transaction.BuildTransaction(wallet, transferValue);
+                return new OkObjectResult(transact);
+            }
+            catch(Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
         }
 
 
