@@ -36,9 +36,10 @@ namespace Client.Shared
             {
                 _walletConnector = new WalletConnector(_localStorage, http, _javascriptRuntime);
                 await _walletConnector.IntializedWalletAsync();
-                WalletSingleton.Instance._walletConnector= _walletConnector;
+                WalletSingleton.Instance._walletConnector = _walletConnector;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -65,14 +66,18 @@ namespace Client.Shared
         {
             StateHasChanged();
             actionWrapper.Action?.Invoke();
-            
+
         }
 
         public void LoadWallet()
         {
-            if (WalletSingleton.Instance.walletInstance is not null)
+            if (WalletSingleton.Instance != null && WalletSingleton.Instance.walletInstance != null)
             {
                 Console.WriteLine($"Wallet Loaded {WalletSingleton.Instance.walletInstance.Name}");
+            }
+            else
+            {
+                Console.WriteLine($"load wallet not set");                
             }
         }
 

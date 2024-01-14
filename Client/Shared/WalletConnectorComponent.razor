@@ -28,6 +28,7 @@
                             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
                                 <RadzenButton Disabled="@Connecting" Click="@(async () => await ConnectWalletAsync(extension.Key))">Connect</RadzenButton>
                             </RadzenStack>
+                            
                         }
                         else
                         {

@@ -93,7 +93,7 @@ namespace Client.Pages
 
                 }
             }
-
+            isConecting = false;
         }
 
 

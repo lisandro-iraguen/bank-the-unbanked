@@ -308,6 +308,7 @@ namespace Data.Wallet
         }
         public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
+            await RemoveStoredWalletKeyAsync();
             await _walletConnectorJs!.DisposeAsync();
             while (_wallets!.Any(x => x.Connected))
             {
@@ -354,6 +355,10 @@ namespace Data.Wallet
 
         public void disconectWallet()
         {
+            Task.Run(async () =>
+            {
+                await RemoveStoredWalletKeyAsync();
+            });
             _connectedWallet = null;
         }
     }
