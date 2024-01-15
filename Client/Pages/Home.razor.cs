@@ -33,7 +33,8 @@ namespace Client.Pages
         private string AssetsID = null;
         private string PolicyAssetsID = null;        
         private ulong valueToTransfer = 100000000;
-        private string walletToSTransfer;
+        private string walletfromTransfer;
+        private string walletToTransfer;
         private bool isConecting = false;
         private WalletExtensionState walletState = null;
         protected override void OnInitialized()
@@ -41,7 +42,8 @@ namespace Client.Pages
 
             _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
-            walletToSTransfer = _configuration.GetValue<string>("AppSettings:TestWalletToSTransfer");
+            walletfromTransfer = _configuration.GetValue<string>("AppSettings:TestWalletFromTransfer");
+            walletToTransfer = _configuration.GetValue<string>("AppSettings:TestWalletToSTransfer");
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
 
             if (AssetsID is null)
@@ -100,7 +102,7 @@ namespace Client.Pages
         {
             walletState = WalletSingleton.Instance.walletInstance;
             var walletConector = WalletSingleton.Instance._walletConnector;
-            string url = $"/api/TxBuild?wallet={walletToSTransfer}&value={valueToTransfer}";
+            string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
             var response = await http.GetAsync(url);
             var txSignData = new TxRequest();
             if (response.IsSuccessStatusCode)

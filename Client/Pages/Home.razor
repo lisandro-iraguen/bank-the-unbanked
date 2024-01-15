@@ -30,7 +30,10 @@
         
          <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Wallet Adress</RadzenText>
-            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToSTransfer  class="w-100" aria-label="Default TextBox" />
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">from:</RadzenText>
+            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletfromTransfer class="w-100" aria-label="Default TextBox" />
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
+            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
             @* <p> @symbolArs </p> *@
             <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
             <br />

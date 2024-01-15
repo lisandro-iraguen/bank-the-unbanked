@@ -21,15 +21,17 @@ namespace Api.Transaction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "TxBuild")] HttpRequest req)
         {
-            string wallet = req.Query["wallet"];
+            string walletFrom = req.Query["walletFrom"];
+            string walletTo = req.Query["walletto"];
             string value = req.Query["value"];
-            if(string.IsNullOrEmpty(wallet)) return new BadRequestObjectResult("no wallet address");
+            if(string.IsNullOrEmpty(walletFrom)) return new BadRequestObjectResult("no wallet address from");
+            if(string.IsNullOrEmpty(walletTo)) return new BadRequestObjectResult("no wallet address walletTo");
             if(string.IsNullOrEmpty(value)) return new BadRequestObjectResult("no wallet value");
 
             try
             {
                 int transferValue = int.Parse(value);
-                var transact = await _transaction.BuildTransaction(wallet, transferValue);
+                var transact = await _transaction.BuildTransaction(walletFrom,walletTo, transferValue);
                 return new OkObjectResult(transact);
             }
             catch(Exception e)

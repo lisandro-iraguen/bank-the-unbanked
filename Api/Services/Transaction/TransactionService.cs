@@ -39,26 +39,26 @@ public class TransactionService : ITransactionService
         _epochClient = epochClient;
     }
 
-    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string addressString, int value)
+    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, int value)
     {
         try
         {
-            var addressinBytes = addressString.ToBytes();
-            //0. Prep
-            var address = new Address(addressinBytes);
+           
+            
+            //0. Prep           
             var scriptPolicy = _policyManager.GetPolicyScript();
 
             //1. Get UTxOs
-            var utxos = await GetUtxos(addressString);
+            var utxos = await GetUtxos(fromAddress);
 
 
             ///2. Create the Body
             var transactionBody = TransactionBodyBuilder.Create;
             ulong amountToTransfer = (ulong)value;
 
-            transactionBody.AddOutput(addressString.ToAddress().GetBytes(), amountToTransfer);
+            transactionBody.AddOutput(toAddress.ToAddress().GetBytes(), amountToTransfer);
 
-            var coinSelection = ((TransactionBodyBuilder)transactionBody).UseRandomImprove(utxos, addressString);
+            var coinSelection = ((TransactionBodyBuilder)transactionBody).UseRandomImprove(utxos, fromAddress);
             foreach (var i in coinSelection.Inputs)
             {
                 transactionBody.AddInput(i.TransactionId, i.TransactionIndex);
@@ -69,7 +69,7 @@ public class TransactionService : ITransactionService
             if (coinSelection.ChangeOutputs is not null && coinSelection.ChangeOutputs.Any())
             {
                 foreach (var output in coinSelection.ChangeOutputs)
-                    transactionBody.AddOutput(new Address(addressString), output.Value.Coin);
+                    transactionBody.AddOutput(new Address(fromAddress), output.Value.Coin);
 
             }
 
