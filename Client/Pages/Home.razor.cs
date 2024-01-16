@@ -1,20 +1,17 @@
-﻿using Client.Shared;
+﻿using CardanoSharp.Wallet.Extensions;
+using CardanoSharp.Wallet.Extensions.Models;
+using CardanoSharp.Wallet.Extensions.Models.Transactions;
+using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
+using CardanoSharp.Wallet.Models.Transactions;
+using Client.Shared;
 using Data.Wallet;
 using Microsoft.AspNetCore.Components;
-using CardanoSharp.Wallet.Extensions;
-using Utils;
-using CardanoSharp.Wallet.TransactionBuilding;
-using CardanoSharp.Wallet.Models.Addresses;
-using CardanoSharp.Wallet.Models.Transactions;
-using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
-using System.Net.Http.Json;
-using System.Security.Cryptography.X509Certificates;
-using CardanoSharp.Wallet.Models.Keys;
-using CardanoSharp.Wallet;
-using CardanoSharp.Wallet.Extensions.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Json;
 using System.Text;
-using CardanoSharp.Wallet.Extensions.Models.Transactions;
+using System.Xml.Linq;
+using Utils;
 
 
 namespace Client.Pages
@@ -31,12 +28,15 @@ namespace Client.Pages
         private ActionWrapper _actionCommingFromTheMainLayout { get; set; }
 
         private string AssetsID = null;
-        private string PolicyAssetsID = null;        
         private ulong valueToTransfer = 100000000;
         private string walletfromTransfer;
         private string walletToTransfer;
+        private string PolicyAssetsID = null;        
+        private string symbol;
+        private string balanceAda;
+        private string networkType;
         private bool isConecting = false;
-        private WalletExtensionState walletState = null;
+        private WalletExtensionState walletState;
         protected override void OnInitialized()
         {
 
@@ -45,6 +45,9 @@ namespace Client.Pages
             walletfromTransfer = _configuration.GetValue<string>("AppSettings:TestWalletFromTransfer");
             walletToTransfer = _configuration.GetValue<string>("AppSettings:TestWalletToSTransfer");
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
+
+          
+
 
             if (AssetsID is null)
             {
@@ -88,7 +91,22 @@ namespace Client.Pages
 
                 }
             }
+            balanceAda = walletState.BalanceAda;
+            networkType = walletState.Network.ToString();
+            symbol = walletState.CoinCurrency;
+            var auxAddress = walletState.UsedAdress[0];
+            try
+            {
+                if (!string.IsNullOrEmpty(auxAddress))
+                {
+                    walletfromTransfer = auxAddress.ToAddress().ToStringHex();
+                }
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             isConecting = false;
+            StateHasChanged();
         }
 
 
