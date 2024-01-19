@@ -5,7 +5,10 @@ using CardanoSharp.Wallet.Models.Derivations;
 using CardanoSharp.Wallet.Models.Keys;
 using CardanoSharp.Wallet.TransactionBuilding;
 using CardanoSharp.Wallet.Utilities;
-
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using System;
+using Microsoft.Extensions.Configuration;
 namespace Api.Services.Policy;
 
 
@@ -14,9 +17,24 @@ public class PolicyManager : IPolicyManager
     private readonly PrivateKey _privateKey;
     private readonly PublicKey _publicKey;
 
-    public PolicyManager()
+    private readonly IConfiguration _configuration;
+
+    
+    public PolicyManager(IConfiguration configuration)
     {
-        var mnemonic = new MnemonicService().Restore("muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter");
+        _configuration = configuration;
+        string keyVaultUrl = _configuration["KetVolt"];
+
+        // Create a new SecretClient using the Key Vault URL and default Azure credentials
+        var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+
+        // Retrieve a secret by name
+        string secretName = _configuration["keyVoltScretName"];
+        KeyVaultSecret secret = client.GetSecret(secretName);
+
+        // Access the secret value
+
+        var mnemonic = new MnemonicService().Restore(secret.Value);
         IIndexNodeDerivation paymentNode1 = mnemonic.GetMasterNode()
             .Derive(PurposeType.PolicyKeys)
             .Derive()
