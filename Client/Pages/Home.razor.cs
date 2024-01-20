@@ -36,6 +36,7 @@ namespace Client.Pages
         private string symbol;
         private string balanceAda;
         private string networkType;
+        private int balancePesos=10000;
         private bool isConecting = false;
         private bool isSendingTransaction = false;
 
@@ -113,6 +114,7 @@ namespace Client.Pages
             balanceAda = walletState.BalanceAda;
             networkType = walletState.Network.ToString();
             symbol = walletState.CoinCurrency;
+           
             var auxAddress = walletState.UsedAdress[0];
             try
             {
