@@ -15,9 +15,6 @@
     <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="application.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

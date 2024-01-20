@@ -20,19 +20,24 @@ public class Startup : FunctionsStartup
 
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        string dir = Environment.CurrentDirectory;
-        IConfigurationRoot config = new ConfigurationBuilder()
-            .SetBasePath(dir)
-            .AddJsonFile("application.json", optional: true, reloadOnChange: true)
+
+        string configPath = Path.Combine(Environment.CurrentDirectory, "local.settings.json");
+
+        // Create a ConfigurationBuilder and load settings from local.settings.json
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(configPath, optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
 
+     
+       
 
         builder.Services.AddKoios("https://preview.koios.rest/api/v0");
         builder.Services.AddSingleton<IWalletData, WalletData>();
         builder.Services.AddSingleton<IWebData, WebDeveloperData>();
         builder.Services.AddSingleton<IPolicyManager>(x =>
-            new PolicyManager(config));
+            new PolicyManager(configuration));
         builder.Services.AddSingleton<ITransactionService, TransactionService>();
 
       

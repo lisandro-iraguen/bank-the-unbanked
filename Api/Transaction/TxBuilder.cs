@@ -5,6 +5,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Api.Services.Transaction;
 using System;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Api.Transaction
 {
@@ -27,6 +29,10 @@ namespace Api.Transaction
             if(string.IsNullOrEmpty(walletFrom)) return new BadRequestObjectResult("no wallet address from");
             if(string.IsNullOrEmpty(walletTo)) return new BadRequestObjectResult("no wallet address walletTo");
             if(string.IsNullOrEmpty(value)) return new BadRequestObjectResult("no wallet value");
+
+            
+            
+
 
             try
             {

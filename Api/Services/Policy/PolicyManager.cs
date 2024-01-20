@@ -41,16 +41,16 @@ public class PolicyManager : IPolicyManager
     {
         //return "muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter";
 
-        string clientId = "0167353a-c78e-48f9-9464-d94fe6ba3d0b";
-        string clientSecret = "xGU8Q~B0of6PB2aAU24L-FlLoEfbrpjz~thdnbm.";//this should be changed in appplication.json, it must use clientSecretId, not the client secret itself
-        string tenantId = "c8da0640-1d20-4d34-94de-5d62b0832499";
+        string clientId = _configuration["clientId"];
+        string clientSecret = _configuration["clientSecret"]; ;//this should be changed in appplication.json, it must use clientSecretId, not the client secret itself
+        string tenantId = _configuration["tenantId"];
 
         var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 
 
-        string keyVaultUrl = "https://bank-the-unbanked-kv.vault.azure.net/";
+        string keyVaultUrl = _configuration["KeyVolt"]; 
         var client = new SecretClient(new Uri(keyVaultUrl), credential);
-        string secretName = "nemonic";
+        string secretName = _configuration["keyVoltScretName"];
         KeyVaultSecret secret = client.GetSecret(secretName);
         string nmonic = secret.Value;
         return nmonic;

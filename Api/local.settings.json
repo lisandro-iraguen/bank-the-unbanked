@@ -1,8 +1,7 @@
-﻿{
+﻿{  
   "KeyVolt": "https://bank-the-unbanked-kv.vault.azure.net/",
   "keyVoltScretName": "nemonic",
   "clientId": "0167353a-c78e-48f9-9464-d94fe6ba3d0b",
   "clientSecret": "xGU8Q~B0of6PB2aAU24L-FlLoEfbrpjz~thdnbm.",
   "tenantId": "c8da0640-1d20-4d34-94de-5d62b0832499"
-
 }
