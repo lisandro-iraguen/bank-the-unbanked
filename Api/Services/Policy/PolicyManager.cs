@@ -41,9 +41,15 @@ public class PolicyManager : IPolicyManager
     {
         //return "muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter";
 
+        string clientId = _configuration["clientId"];
+        string clientSecret = _configuration["clientSecret"];
+        string tenantId = _configuration["tenantId"];
+
+        var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
 
         string keyVaultUrl = _configuration["KeyVolt"];
-        var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+        var client = new SecretClient(new Uri(keyVaultUrl), credential);
         string secretName = _configuration["keyVoltScretName"];
         KeyVaultSecret secret = client.GetSecret(secretName);
         string nmonic = secret.Value;
