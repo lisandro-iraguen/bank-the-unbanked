@@ -2,6 +2,7 @@
 using CardanoSharp.Wallet.Extensions.Models;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
+using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.Shared;
 using Data.Wallet;
@@ -31,7 +32,7 @@ namespace Client.Pages
         private ulong valueToTransfer = 100000000;
         private string walletfromTransfer;
         private string walletToTransfer;
-        private string PolicyAssetsID = null;        
+        private string PolicyAssetsID = null;
         private string symbol;
         private string balanceAda;
         private string networkType;
@@ -42,11 +43,11 @@ namespace Client.Pages
 
             _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
-            walletfromTransfer = _configuration.GetValue<string>("AppSettings:TestWalletFromTransfer");
-            walletToTransfer = _configuration.GetValue<string>("AppSettings:TestWalletToSTransfer");
+
+
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
 
-          
+
 
 
             if (AssetsID is null)
@@ -68,10 +69,26 @@ namespace Client.Pages
             {
                 if (walletConector.Connected)
                 {
+                    var addressResult = await walletConector.GetUsedAddressesHex();
+                    if (addressResult.Length > 0)
+                    {
+
+                        try
+                        {
+                            var adress = new Address(addressResult[0].HexToByteArray());                            
+                            walletfromTransfer= adress.ToString();
+
+                        }catch(Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        walletfromTransfer = "no hay wallets cargadas";
+                    }
 
                     var result = await walletConector.GetBalance();
-
-
                     Console.WriteLine("Balance:");
                     Console.WriteLine($" - Coin: {result.Coin}");
                     foreach (var asset in result.MultiAsset)
@@ -101,7 +118,8 @@ namespace Client.Pages
                 {
                     walletfromTransfer = auxAddress.ToAddress().ToStringHex();
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -136,8 +154,8 @@ namespace Client.Pages
                 Console.WriteLine($"Error: {response.StatusCode}");
             }
 
-         
-            
+
+
             string jsonContent = JsonConvert.SerializeObject(txSignData);
             StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
@@ -153,7 +171,7 @@ namespace Client.Pages
 
 
 
-           
+
 
 
         }

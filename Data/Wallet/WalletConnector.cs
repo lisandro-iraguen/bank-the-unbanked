@@ -253,6 +253,7 @@ namespace Data.Wallet
             return addresses;
         }
 
+
         private void CheckInitialized()
         {
             if (!Initialized || _walletConnectorJs == null)

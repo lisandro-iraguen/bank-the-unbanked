@@ -23,7 +23,7 @@ public class PolicyManager : IPolicyManager
     public PolicyManager(IConfiguration configuration)
     {
         _configuration = configuration;
-        string keyVaultUrl = _configuration["KetVolt"];
+        string keyVaultUrl =  _configuration["KeyVolt"];
 
         // Create a new SecretClient using the Key Vault URL and default Azure credentials
         var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());

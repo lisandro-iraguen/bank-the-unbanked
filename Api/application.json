@@ -1,4 +1,4 @@
 ﻿{
-  "KetVolt": "https://bank-the-unbanked.vault.azure.net/",
-  "keyVoltScretName": "nemomic"
+  "KeyVolt": "https://bank-the-unbanked-kv.vault.azure.net/",
+  "keyVoltScretName": "nemonic"
 }
