@@ -24,19 +24,12 @@ public class Startup : FunctionsStartup
         var configuration = BuildConfiguration(builder.GetContext().ApplicationRootPath);
 
 
-
-
         builder.Services.AddKoios("https://preview.koios.rest/api/v0");
         builder.Services.AddSingleton<IWalletData, WalletData>();
         builder.Services.AddSingleton<IWebData, WebDeveloperData>();
         builder.Services.AddSingleton<IPolicyManager>(x =>
             new PolicyManager(configuration));
         builder.Services.AddSingleton<ITransactionService, TransactionService>();
-
-    
-
-
-
 
     }
 
