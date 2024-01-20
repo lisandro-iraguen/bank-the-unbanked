@@ -23,18 +23,9 @@ public class PolicyManager : IPolicyManager
     public PolicyManager(IConfiguration configuration)
     {
         _configuration = configuration;
-        string keyVaultUrl =  _configuration["KeyVolt"];
+        string nmonic = GetNmonicFromAPI();
 
-        // Create a new SecretClient using the Key Vault URL and default Azure credentials
-        var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-
-        // Retrieve a secret by name
-        string secretName = _configuration["keyVoltScretName"];
-        KeyVaultSecret secret = client.GetSecret(secretName);
-
-        // Access the secret value
-
-        var mnemonic = new MnemonicService().Restore(secret.Value);
+        var mnemonic = new MnemonicService().Restore(nmonic);
         IIndexNodeDerivation paymentNode1 = mnemonic.GetMasterNode()
             .Derive(PurposeType.PolicyKeys)
             .Derive()
@@ -44,6 +35,21 @@ public class PolicyManager : IPolicyManager
         paymentNode1.SetPublicKey();
         _privateKey = paymentNode1.PrivateKey;
         _publicKey = paymentNode1.PublicKey;
+    }
+
+    private string GetNmonicFromAPI(bool useKeyvault=false)
+    {
+        if (useKeyvault)
+        {
+            return "muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter";
+        }
+
+        string keyVaultUrl = _configuration["KeyVolt"];
+        var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+        string secretName = _configuration["keyVoltScretName"];
+        KeyVaultSecret secret = client.GetSecret(secretName);
+        string nmonic = secret.Value;
+        return nmonic;
     }
 
     public IScriptAllBuilder GetPolicyScript() =>
