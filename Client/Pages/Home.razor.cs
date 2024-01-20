@@ -37,6 +37,8 @@ namespace Client.Pages
         private string balanceAda;
         private string networkType;
         private bool isConecting = false;
+        private bool isSendingTransaction = false;
+
         private WalletExtensionState walletState;
         protected override void OnInitialized()
         {
@@ -136,6 +138,7 @@ namespace Client.Pages
 
         private async Task singTransaction()
         {
+            isSendingTransaction = true;
             walletState = WalletSingleton.Instance.walletInstance;
             var walletConector = WalletSingleton.Instance._walletConnector;
             string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
@@ -152,6 +155,7 @@ namespace Client.Pages
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode}");
+
             }
 
 
@@ -173,7 +177,7 @@ namespace Client.Pages
 
 
 
-
+            isSendingTransaction = false;
         }
 
     }

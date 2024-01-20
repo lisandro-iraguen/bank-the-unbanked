@@ -3,53 +3,63 @@
 @using Radzen;
 
 
-    <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
-        @if (walletState is null)
-        {
-            <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
-                no hay wallet selecionada, hay que conectarse
-            </RadzenAlert>
-            @if (@isConecting)
-            {
-                <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-            }
-        }
-        <RadzenIcon Icon="account_balance"></RadzenIcon>
-        <br />
-    </RadzenStack>
-
-
-    @if (walletState is not null)
+<RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
+    @if (walletState is null)
     {
+        <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
+            no hay wallet selecionada, hay que conectarse
+        </RadzenAlert>
         @if (@isConecting)
         {
             <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
         }
-        else
-
-        {
-            <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Wallet Adress</RadzenText>
-                <p>Balance Simbolo: @symbol </p>
-                <p>Balance Ada: @balanceAda </p>
-                <p>Network: @networkType </p>
-            </RadzenStack>
-
-            <RadzenCard>
-                <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">From:</RadzenText>
-                    <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletfromTransfer class="w-100" aria-label="Default TextBox" />
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
-                    <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
-
-                    <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
-
-                    <RadzenButton Click=@(args => singTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" />
-                </RadzenStack>
-
-            </RadzenCard>
-        }
     }
+    <RadzenIcon Icon="account_balance"></RadzenIcon>
+    <br />
+</RadzenStack>
+
+
+@if (walletState is not null)
+{
+    @if (@isConecting)
+    {
+        <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    }
+    else
+
+    {
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Wallet Adress</RadzenText>
+            <p>Balance Simbolo: @symbol </p>
+            <p>Balance Ada: @balanceAda </p>
+            <p>Network: @networkType </p>
+        </RadzenStack>
+
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Start" Wrap="FlexWrap.NoWrap">
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">From:</RadzenText>
+                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletfromTransfer class="w-100" aria-label="Default TextBox" />
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
+                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
+
+                <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+
+                    <RadzenButton Click=@(args => singTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="isSendingTransaction" />
+                
+
+
+            </RadzenStack>
+            @if (isSendingTransaction)
+            {
+
+                <RadzenStack Gap="3px" Class="rz-m-12">
+                    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                </RadzenStack>
+            }
+        </RadzenCard>
+
+    }
+}
 
 
 
