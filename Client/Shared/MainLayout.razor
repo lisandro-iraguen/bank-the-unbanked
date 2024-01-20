@@ -8,7 +8,7 @@
     <RadzenHeader>
 
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" Wrap="FlexWrap.NoWrap">
-            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <RadzenSidebarToggle Click="@(() => ToggleSideBar())" />
             <RadzenLabel Text="banco" />
 
             <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
@@ -36,7 +36,7 @@
         </RadzenStack>
 
     </RadzenHeader>
-    <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
+    <RadzenSidebar @bind-Expanded=@sidebarExpanded @bind-Visible=@SidebarVisible>
         <NavMenu />
 
     </RadzenSidebar>

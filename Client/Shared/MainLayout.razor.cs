@@ -21,11 +21,30 @@ namespace Client.Shared
         [Inject]
         protected ILocalStorageService _localStorage { get; set; }
 
-        private bool sidebar1Expanded = false;
         private ActionWrapper actionWrapper = new ActionWrapper();
         private WalletConnector _walletConnector;
 
         private bool isConecting = true;
+        private bool sidebarExpanded = false;
+        private bool SidebarVisible = false;
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                sidebarExpanded = false;              
+            }
+            base.OnAfterRender(firstRender);
+        }
+        public async override Task SetParametersAsync(ParameterView parameters)
+        {
+            await base.SetParametersAsync(parameters);
+        }
+        private void ToggleSideBar()
+        {
+            sidebarExpanded = !sidebarExpanded;
+            SidebarVisible = true;
+            StateHasChanged();
+        }
 
         protected override async Task OnInitializedAsync()
         {
