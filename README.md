@@ -21,10 +21,11 @@ This is an Argentine's wallet to use $ARS :shit:
 6. GitHub
 8. Cardano
 
-working on **Cardano Preview Testnet**
+this app is Working on **Cardano Preview Testnet** for now until the first release
 
-Do we use $ARS Oracle to get the pair ADA/ARS
-DolarBot-Api
+
+Do we use $ARS "Oracle" to get the pair ADA/ARS
+[DolarBot-Api](https://github.com/lisandro-iraguen/DolarBot-Api)
 
 ### Special thanks to:
 [Cardano Ars Magna](https://arsmagna.xyz/apps/web-tx-editor/)\
