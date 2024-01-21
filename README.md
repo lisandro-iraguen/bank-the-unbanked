@@ -5,13 +5,12 @@ In a world of unstable traditional currencies, Cardano shines as a guiding light
 
 [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "Demo Url")
 
-This is an Argentine's wallet to use $ARS :shit:
-this app is Working on **Cardano Preview Testnet** for now until the first release
+### Comments
+This is an Argentine's wallet to use $ARS :shit: </br>
+This app is Working on **Cardano Preview Testnet** for now until the first release  </br>
+Do we use $ARS "Oracle" to get the pair ADA/ARS [DolarBot-Api](https://github.com/lisandro-iraguen/DolarBot-Api)  </br>
 
-Do we use $ARS "Oracle" to get the pair ADA/ARS
-[DolarBot-Api](https://github.com/lisandro-iraguen/DolarBot-Api)
-
-our pet:
+### Pet
 
 ![cat-baby-dog-cute-figure-3d-cream-hold-money-ultra-hd-realistic-vivid-colors-highly-detailed-uh-788705823](https://github.com/lisandro-iraguen/bank-the-unbanked/assets/70443444/93566d30-d43a-4d09-98d8-1f45812d1f84)
 
