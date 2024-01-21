@@ -6,7 +6,10 @@ In a world of unstable traditional currencies, Cardano shines as a guiding light
 [Demo](https://blue-field-0d777b910.4.azurestaticapps.net/home "Demo Url")
 
 This is an Argentine's wallet to use $ARS :shit:
+this app is Working on **Cardano Preview Testnet** for now until the first release
 
+Do we use $ARS "Oracle" to get the pair ADA/ARS
+[DolarBot-Api](https://github.com/lisandro-iraguen/DolarBot-Api)
 
 our pet:
 
@@ -19,14 +22,10 @@ our pet:
 3. Radzen Blazor
 4. Azure
 5. Azure Functions
-6. GitHub
+6. Azure KeyVault
+7. GitHub
 8. Cardano
 
-this app is Working on **Cardano Preview Testnet** for now until the first release
-
-
-Do we use $ARS "Oracle" to get the pair ADA/ARS
-[DolarBot-Api](https://github.com/lisandro-iraguen/DolarBot-Api)
 
 ### Special thanks to:
 [Cardano Ars Magna](https://arsmagna.xyz/apps/web-tx-editor/)\
