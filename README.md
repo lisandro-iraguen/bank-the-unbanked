@@ -8,7 +8,7 @@ In a world of unstable traditional currencies, Cardano shines as a guiding light
 ### Comments
 This is an Argentine's wallet to use $ARS :shit: </br>
 This app is Working on **Cardano Preview Testnet** for now until the first release  </br>
-Do we use $ARS "Oracle" to get the pair ADA/ARS [criptoya api](https://criptoya.com/api)  </br>
+Do we use $ARS "Oracle" to get the pair ARS/USDC ARS/USDT  [criptoya api](https://criptoya.com/api)  </br>
 
 ### Pet
 
