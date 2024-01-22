@@ -27,6 +27,6 @@ Do we use $ARS "Oracle" to get the pair ADA/ARS [criptoya api](https://criptoya.
 
 
 ### Special thanks to:
-[Cardano Ars Magna](https://arsmagna.xyz/apps/web-tx-editor/)\
-[Lyn Alden book](https://www.amazon.com/Broken-Money-Financial-System-Failing/dp/B0CG83QBJ6)
-[criptoya](https://criptoya.com/) 
+[Cardano Ars Magna](https://arsmagna.xyz/apps/web-tx-editor/) <br>
+[Lyn Alden book](https://www.amazon.com/Broken-Money-Financial-System-Failing/dp/B0CG83QBJ6)<br>
+[Criptoya](https://criptoya.com/) 
