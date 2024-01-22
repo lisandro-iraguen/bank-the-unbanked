@@ -8,6 +8,7 @@ using Api.Services.Policy;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System;
+using Api.Services.Oracle;
 
 [assembly: FunctionsStartup(typeof(Api.Startup))]
 
@@ -27,6 +28,7 @@ public class Startup : FunctionsStartup
         builder.Services.AddKoios("https://preview.koios.rest/api/v0");
         builder.Services.AddSingleton<IWalletData, WalletData>();
         builder.Services.AddSingleton<IWebData, WebDeveloperData>();
+        builder.Services.AddSingleton<IPriceServices, PriceServices>();
         builder.Services.AddSingleton<IPolicyManager>(x =>
             new PolicyManager(configuration));
         builder.Services.AddSingleton<ITransactionService, TransactionService>();

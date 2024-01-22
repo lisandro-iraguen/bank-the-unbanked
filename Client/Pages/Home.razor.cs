@@ -5,7 +5,9 @@ using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
 using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.Shared;
+using Data.Oracle;
 using Data.Wallet;
+using Data.Web;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -41,22 +43,32 @@ namespace Client.Pages
         private bool isSendingTransaction = false;
 
         private WalletExtensionState walletState;
+
+
+        private CriptoDTO cryotpDto;
         protected override void OnInitialized()
         {
 
             _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
-
-
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
 
 
-
+           
 
             if (AssetsID is null)
             {
                 throw new Exception("AssetID cannot be null");
             }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            cryotpDto = await http.GetFromJsonAsync<CriptoDTO>("api/BinanceP2P");
+
+            cryotpDto.DTTime = new DateTime(cryotpDto.Time);
+
+
         }
         public void LoadWalletParametersWrapper()
         {

@@ -15,7 +15,7 @@ namespace Client.Pages
         {
             try
             {
-                IEnumerable<Developer> developers = await http.GetFromJsonAsync<IEnumerable<Developer>>("api/developers");
+                IEnumerable<Developer> developers = await http.GetFromJsonAsync<IEnumerable<Developer>>("api/Developers");
                 _developers = developers.ToList();
             }
             catch (Exception e)

@@ -18,10 +18,12 @@ namespace Api.Web
 
         [FunctionName("WebData")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "developers")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "Developers")] HttpRequest req)
         {
             var developers = await _webData.GetWebDevelopersData();
             return new OkObjectResult(developers);
         }
+
+        
     }
 }
