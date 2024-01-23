@@ -32,12 +32,12 @@
 
     {
         <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-            <H2>Total: @(balancePesos) </H2>
+            <H2>Total:$ARS @(balancePesos) </H2>
             <p>@networkType </p>
             <h4>Balance: @symbol @balanceAda </h4>
             <h4>BinanceP2P</h4>
             <h4>Dolar: @cryotpDto.TotalBid </h4>
-            <h4>ultima actualizacion: @cryotpDto.DTTime.ToLongDateString() </h4>
+            <h4>ultima actualizacion: @cryotpDto.DTTime.ToString("HH:mm:ss") </h4>
           
         </RadzenStack>
 

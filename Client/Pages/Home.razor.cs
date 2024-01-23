@@ -11,6 +11,7 @@ using Data.Web;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text;
 using System.Xml.Linq;
@@ -38,7 +39,7 @@ namespace Client.Pages
         private string symbol;
         private string balanceAda;
         private string networkType;
-        private int balancePesos=10000;
+        private decimal balancePesos = 0;
         private bool isConecting = false;
         private bool isSendingTransaction = false;
 
@@ -54,7 +55,7 @@ namespace Client.Pages
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
 
 
-           
+
 
             if (AssetsID is null)
             {
@@ -65,10 +66,10 @@ namespace Client.Pages
         protected override async Task OnInitializedAsync()
         {
             cryotpDto = await http.GetFromJsonAsync<CriptoDTO>("api/BinanceP2P");
-
-            cryotpDto.DTTime = new DateTime(cryotpDto.Time);
-
-
+            if (cryotpDto is not null)
+                cryotpDto.DTTime = new DateTime(cryotpDto.Time);
+               
+            
         }
         public void LoadWalletParametersWrapper()
         {
@@ -90,10 +91,11 @@ namespace Client.Pages
 
                         try
                         {
-                            var adress = new Address(addressResult[0].HexToByteArray());                            
-                            walletfromTransfer= adress.ToString();
+                            var adress = new Address(addressResult[0].HexToByteArray());
+                            walletfromTransfer = adress.ToString();
 
-                        }catch(Exception ex)
+                        }
+                        catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
                         }
@@ -126,7 +128,8 @@ namespace Client.Pages
             balanceAda = walletState.BalanceAda;
             networkType = walletState.Network.ToString();
             symbol = walletState.CoinCurrency;
-           
+            decimal adaBalance = decimal.Parse(balanceAda, CultureInfo.InvariantCulture);
+            balancePesos =cryotpDto.TotalBid * adaBalance;
             var auxAddress = walletState.UsedAdress[0];
             try
             {
