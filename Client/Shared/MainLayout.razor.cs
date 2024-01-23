@@ -60,7 +60,7 @@ namespace Client.Shared
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+              Console.WriteLine($"Wallet Connection error", ex.Message);
             }
             await _walletConnector.ConnectWalletAutomatically();
             isConecting = false;
