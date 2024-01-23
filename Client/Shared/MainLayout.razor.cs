@@ -97,6 +97,7 @@ namespace Client.Shared
             else
             {
                 Console.WriteLine($"load wallet not set");                
+                Console.WriteLine($"check if the wallet is connected");                
             }
         }
 
