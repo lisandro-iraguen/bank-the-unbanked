@@ -1,26 +1,38 @@
 ﻿@page "/about"
+@using Client.State.Developer
+@using Fluxor
 @using Radzen;
+@inject IDispatcher dispatcher
+@inject IState<DeveloperState> developersState
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+
 
 <div>
     Developer List Linkedin
 </div>
 <div>
-    @if (_developers is null)
-    {
-        <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-    }
-    else
-    {
+@if (developersState.Value.IsLoading)
+{
+	<RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+else
+{
+	@foreach (var dev in developersState.Value.developers)
+	{
+		<a href="@dev.Url">@dev.Text</a>
 
-        @foreach (var dev in _developers)
-        {
-            <a href="@dev.Url">@dev.Text</a>
-        }
-    }
+	}
+}
 
 </div>
+
+
+
 <div>
-    <p>apoyar el proyecto </p>
-    <p>hace tu donación: </p>
+    <p>apoyar el proyecto <br />
+    hace tu donación: </p>
     <p>addr1q9x9y3pufptxpgndqhvuxxupls4587glmfaa336qfy8l6vtgnyf8eftccn4gzzygj5z24ujpgpf48ujvq7ynr65mr4fs2aa95g</p>
-</div>
+</div> 
+
+<a href='https://cafecito.app/bank-the-unbanked' rel='noopener' target='_blank'><img srcset='https://cdn.cafecito.app/imgs/buttons/button_1.png 1x, https://cdn.cafecito.app/imgs/buttons/button_1_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_1_3.75x.png 3.75x' src='https://cdn.cafecito.app/imgs/buttons/button_1.png' alt='Invitame un café en cafecito.app' /></a>

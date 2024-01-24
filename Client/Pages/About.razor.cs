@@ -1,28 +1,13 @@
-﻿using Data.Web;
-using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
+﻿using Client.State.Developer;
 
 namespace Client.Pages
 {
     public partial class About
     {
-        [Inject]
-        protected HttpClient http { get; set; }
-
-        private List<Developer>? _developers = null;
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            try
-            {
-                IEnumerable<Developer> developers = await http.GetFromJsonAsync<IEnumerable<Developer>>("api/Developers");
-                _developers = developers.ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        
+            base.OnInitialized();
+            dispatcher.Dispatch(new FetchDeveloperAction());
         }
     }
 }
