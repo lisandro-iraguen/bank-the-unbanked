@@ -1,4 +1,4 @@
-# :bank: Bank the Unbanked (Argentina, for now)
+# :bank: Bank the Unbanked (Argentina)
 
 
 In a world of unstable traditional currencies, Cardano shines as a guiding light, bringing together those without access to banking. Its blockchain technology conducts a harmonious financial system, giving people secure identities and digital wallets. Breaking free from the exclusion of the system to take part in the economy.
