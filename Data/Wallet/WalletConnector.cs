@@ -20,13 +20,15 @@ using System.Net.Http.Json;
 using Microsoft.JSInterop;
 using CardanoSharp.Wallet.Models;
 using CardanoSharp.Wallet.Extensions.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace Data.Wallet
 {
     public class WalletConnector
     {
+    
 
-        public List<WalletExtensionState>? _wallets = null;
+		public List<WalletExtensionState>? _wallets = null;
         public WalletConnectorJsInterop? _walletConnectorJs;
         public WalletExtensionState? _connectedWallet { get; set; }
 
@@ -49,7 +51,8 @@ namespace Data.Wallet
         {
             try
             {
-                IEnumerable<WalletExtension> walletExtensions = await _http.GetFromJsonAsync<IEnumerable<WalletExtension>>("api/WalletsData");
+
+		        IEnumerable<WalletExtension> walletExtensions = await _http.GetFromJsonAsync<IEnumerable<WalletExtension>>("api/WalletsData");
                 SupportedExtensions = walletExtensions.ToList();
             }
             catch (Exception e)

@@ -5,22 +5,22 @@ using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
 using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.Shared;
+using Client.State.Crypto;
 using Data.Oracle;
 using Data.Wallet;
-using Data.Web;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text;
-using System.Xml.Linq;
 using Utils;
+
 
 
 namespace Client.Pages
 {
-    public partial class Home : ComponentBase
+    public partial class Home 
     {
         [Inject]
         protected IConfiguration _configuration { get; set; }
@@ -44,33 +44,20 @@ namespace Client.Pages
         private bool isSendingTransaction = false;
 
         private WalletExtensionState walletState;
-
-
-        private CriptoDTO cryotpDto;
         protected override void OnInitialized()
         {
-
+            base.OnInitialized();
+            dispatcher.Dispatch(new FetchCryptoAction());
             _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
             AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
             PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
-
-
-
-
             if (AssetsID is null)
             {
                 throw new Exception("AssetID cannot be null");
             }
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-            cryotpDto = await http.GetFromJsonAsync<CriptoDTO>("api/BinanceP2P");
-            if (cryotpDto is not null)
-                cryotpDto.DTTime = new DateTime(cryotpDto.Time);
-               
-            
-        }
+       
         public void LoadWalletParametersWrapper()
         {
             _ = LoadWalletParametersAsync();
@@ -129,7 +116,7 @@ namespace Client.Pages
             networkType = walletState.Network.ToString();
             symbol = walletState.CoinCurrency;
             decimal adaBalance = decimal.Parse(balanceAda, CultureInfo.InvariantCulture);
-            balancePesos =cryotpDto.TotalBid * adaBalance;
+            balancePesos = cryptoState.Value.Crypto.TotalBid * adaBalance;
             var auxAddress = walletState.UsedAdress[0];
             try
             {
