@@ -6,27 +6,32 @@ using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.Shared;
 using Client.State.Crypto;
-using Data.Oracle;
 using Data.Wallet;
+using Fluxor;
+using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using System;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text;
 using Utils;
 
 
-
 namespace Client.Pages
 {
-    public partial class Home 
+    public partial class Home : FluxorComponent
     {
         [Inject]
         protected IConfiguration _configuration { get; set; }
 
         [Inject]
         protected HttpClient http { get; set; }
+
+        [Inject]        
+        protected IDispatcher dispatcher { get; set; }
+        
+        [Inject]         
+        IState<Client.State.Crypto.CryptoState> cryptoState { get; set; }
 
         [CascadingParameter]
         private ActionWrapper _actionCommingFromTheMainLayout { get; set; }

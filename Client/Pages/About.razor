@@ -1,10 +1,8 @@
-﻿@page "/about"
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@page "/about"
 @using Client.State.Developer
-@using Fluxor
 @using Radzen;
-@inject IDispatcher dispatcher
-@inject IState<CryptoState> developersState
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
 
 <div>
     Developer List Linkedin

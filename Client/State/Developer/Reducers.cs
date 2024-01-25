@@ -6,11 +6,11 @@ namespace Client.State.Developer
     public class Reducers
     {
         [ReducerMethod]
-        public static CryptoState ReduceFetchDeveloperAction(CryptoState state, FetchDeveloperAction action) =>
+        public static DeveloperState ReduceFetchDeveloperAction(DeveloperState state, FetchDeveloperAction action) =>
     new(isLoading: true,devs: null);
 
         [ReducerMethod]
-        public static CryptoState ReduceFetchDeveloperResultAction(CryptoState state, FetchDeveloperResultAction action) =>
+        public static DeveloperState ReduceFetchDeveloperResultAction(DeveloperState state, FetchDeveloperResultAction action) =>
           new(isLoading: false, devs: action.developers);
     }
 }

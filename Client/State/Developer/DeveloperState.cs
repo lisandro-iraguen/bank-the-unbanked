@@ -5,13 +5,13 @@ namespace Client.State.Developer
 {
     [FeatureState]
 
-    public class CryptoState
+    public class DeveloperState
     {
         public bool IsLoading { get; }
         public IEnumerable<Data.Web.Developer> developers { get; }
 
-        private CryptoState() { }
-        public CryptoState(bool isLoading, IEnumerable<Data.Web.Developer> devs)
+        private DeveloperState() { }
+        public DeveloperState(bool isLoading, IEnumerable<Data.Web.Developer> devs)
         {
             IsLoading = isLoading;
             developers = devs ?? Array.Empty<Data.Web.Developer>();

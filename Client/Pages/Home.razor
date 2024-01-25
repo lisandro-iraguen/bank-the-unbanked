@@ -1,11 +1,7 @@
-﻿@page "/home"
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
+@page "/home"
 @using Client.State.Crypto
 @using Radzen;
-@using Fluxor
-
-@inject IDispatcher dispatcher;
-@inject IState<CryptoState> cryptoState;
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
 
 
 @if (walletState is null)
