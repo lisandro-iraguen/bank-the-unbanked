@@ -13,20 +13,15 @@ namespace Client.Shared
     public partial class WalletConnectorComponent
     {
 
-        [Inject]
-        protected DialogService _dialogService { get; set; }
-
-        [Inject]
-        protected HttpClient http { get; set; }
-        [Inject]
-        protected IJSRuntime? _javascriptRuntime { get; set; }
-
-        [Inject]
-        protected ILocalStorageService _localStorage { get; set; }
-        [Inject] protected IState<WalletExtensionStateFE> walletExtensionStateFE { get; set; }
+        [Inject] protected DialogService _dialogService { get; set; }
+        [Inject] protected HttpClient http { get; set; }
+        [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
+        [Inject] protected ILocalStorageService _localStorage { get; set; }
+        [Inject] protected IDispatcher dispatcher { get; set; }
+        [Inject] protected IState<WalletState> walletState { get; set; }
 
         private WalletConnector _walletConector;
-        private bool Connecting;
+        
 
 
         protected override async Task OnInitializedAsync()
@@ -42,10 +37,11 @@ namespace Client.Shared
         }
         public async ValueTask ConnectWalletAsync(string key)
         {
-            Connecting = true;
-            await _walletConector.ConnectWallet(key);
+            //await _walletConector.ConnectWallet(key);
+
+            
             _dialogService.Close();
-            Connecting = false;
+        
         }
 
             public async Task NavigateToNewTab(string url)

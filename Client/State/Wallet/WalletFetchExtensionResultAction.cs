@@ -2,12 +2,12 @@
 
 namespace Client.State.Wallet.Extension
 {
-    public class FetchExtensionResultAction
+    public class WalletFetchExtensionResultAction
     {
 
         public IEnumerable<WalletExtensionState> extensions { get; }
 
-        public FetchExtensionResultAction(IEnumerable<WalletExtensionState> ext)
+        public WalletFetchExtensionResultAction(IEnumerable<WalletExtensionState> ext)
         {
             extensions = ext;
         }

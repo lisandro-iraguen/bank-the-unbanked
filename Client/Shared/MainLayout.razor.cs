@@ -6,6 +6,7 @@ using Blazored.LocalStorage;
 using Client.State.Developer;
 using Fluxor;
 using Client.State.Wallet.Extension;
+using Client.State.Wallet;
 
 
 
@@ -51,7 +52,7 @@ namespace Client.Shared
         {
             _dialogService.OnClose += Close;
             actionWrapper.Action = LoadWallet;
-            dispatcher.Dispatch(new FetchExtensionAction(_javascriptRuntime));
+            dispatcher.Dispatch(new WalletConnectAction(_javascriptRuntime));
 
             isConecting = true;
             try
