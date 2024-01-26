@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Components;
 using Data.Wallet;
 using Microsoft.JSInterop;
 using Blazored.LocalStorage;
+using Client.State.Developer;
+using Fluxor;
+using Client.State.Wallet.Extension;
 
 
 
@@ -11,15 +14,13 @@ namespace Client.Shared
 {
     public partial class MainLayout : LayoutComponentBase
     {
-        [Inject]
-        protected DialogService _dialogService { get; set; }
-        [Inject]
-        protected HttpClient http { get; set; }
-        [Inject]
-        protected IJSRuntime? _javascriptRuntime { get; set; }
+        [Inject] protected DialogService _dialogService { get; set; }
+        [Inject] protected HttpClient http { get; set; }
+        [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
+        [Inject] protected ILocalStorageService _localStorage { get; set; }
+        [Inject] protected IDispatcher dispatcher { get; set; }
 
-        [Inject]
-        protected ILocalStorageService _localStorage { get; set; }
+     
 
         private ActionWrapper actionWrapper = new ActionWrapper();
         private WalletConnector _walletConnector;
@@ -50,6 +51,8 @@ namespace Client.Shared
         {
             _dialogService.OnClose += Close;
             actionWrapper.Action = LoadWallet;
+            dispatcher.Dispatch(new FetchExtensionAction(_javascriptRuntime));
+
             isConecting = true;
             try
             {

@@ -10,9 +10,14 @@
     }
     else
     {
-        if (_walletConector._wallets is not null)
+        if (walletExtensionStateFE.Value.IsLoading)
         {
-            @foreach (var extension in _walletConector._wallets)
+            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
+        else
+        {
+
+            foreach (var extension in walletExtensionStateFE.Value.extensions)
             {
                 <RadzenCard>
 

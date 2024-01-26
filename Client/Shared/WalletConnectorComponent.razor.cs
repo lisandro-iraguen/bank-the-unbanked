@@ -1,5 +1,7 @@
 ﻿using Blazored.LocalStorage;
+using Client.State.Wallet.Extension;
 using Data.Wallet;
+using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
@@ -21,7 +23,7 @@ namespace Client.Shared
 
         [Inject]
         protected ILocalStorageService _localStorage { get; set; }
-
+        [Inject] protected IState<WalletExtensionStateFE> walletExtensionStateFE { get; set; }
 
         private WalletConnector _walletConector;
         private bool Connecting;
