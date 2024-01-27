@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 using Components;
+using Client.State.WalletConnector;
+using Fluxor;
+using Client.State.Wallet;
 
 namespace Client.Shared
 {
@@ -10,33 +13,17 @@ namespace Client.Shared
     {
         [Inject]
         protected DialogService _dialogService { get; set; }
-
-        //[Inject]
-        //protected IJSRuntime _javascriptRuntime { get; set; }
-
-     
-        //public WalletExtensionState? _connectedWallet { get; private set; }
-        //private string usedWallet = "";
-
-
-        protected override async Task OnInitializedAsync()
-        {
-            //_connectedWallet = WalletSingleton.Instance.walletInstance;
-            //usedWallet = _connectedWallet.UsedAdress.First();
-        }
-
+        [Inject] protected IState<WalletState> walletState { get; set; }
+        [Inject] protected IState<WalletConectorState> walletConectorState { get; set; }
+        [Inject] protected IDispatcher dispatcher { get; set; }
 
 
         public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
-            //await _connectedWallet.WalletConnectorJs!.DisposeAsync();
-           // _connectedWallet.Connected = false;
-           // _connectedWallet = null;
-           // WalletSingleton.Instance._walletConnector.disconectWallet();
-           // WalletSingleton.Instance.walletInstance = null;
-           //_dialogService.Close();
-           // StateHasChanged();
-           // return;
+            dispatcher.Dispatch(new WalletDisconectAction());
+           _dialogService.Close();
+           StateHasChanged();
+           return;
         }
 
 
