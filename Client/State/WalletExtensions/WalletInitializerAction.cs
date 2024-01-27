@@ -1,7 +1,7 @@
 ﻿using Components;
 using Microsoft.JSInterop;
 
-namespace Client.State.WalletConnector
+namespace Client.State.WalletExtensions
 {
     public class WalletInitializerAction
     {

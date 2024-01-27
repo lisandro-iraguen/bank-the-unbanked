@@ -2,7 +2,7 @@
 using Data.Wallet;
 using Microsoft.JSInterop;
 
-namespace Client.State.WalletConnector
+namespace Client.State.WalletExtensions
 {
     public class WalletInitializerResultAction
     {

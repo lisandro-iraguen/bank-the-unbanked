@@ -110,7 +110,7 @@ namespace Data.Wallet
      
         //public async ValueTask<DataSignature> SignData(string address, string hexData)
         //{
-        //    //CheckInitializedAndConnected();
+        //   
         //    //return await _walletConnectorJs!.SignData(address, hexData);
         //}
 
@@ -137,6 +137,7 @@ namespace Data.Wallet
         //    Console.WriteLine(($"TX CBOR: {txCbor}"));
         //    return await _walletConnectorJs!.SubmitTx(txCbor);
         //}
+
         //private async Task SetStoredWalletKeyAsync(string walletKey)
         //{
         //    if (_localStorage != null && !string.IsNullOrWhiteSpace(walletKey))
@@ -144,17 +145,7 @@ namespace Data.Wallet
         //        await _localStorage.SetItemAsStringAsync(ComponentUtils.ConnectedWalletKey, walletKey);
         //    }
         //}
-        //public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
-        //{
-        //    await RemoveStoredWalletKeyAsync();
-        //    await _walletConnectorJs!.DisposeAsync();
-        //    while (_wallets!.Any(x => x.Connected))
-        //    {
-        //        _wallets!.First(x => x.Connected).Connected = false;
-        //    }
-
-        //    return;
-        //}
+      
 
         //public async ValueTask<Utxo[]> GetUtxos(TransactionOutputValue? requiredOutput = null, Paginate? paginate = null)
         //{
@@ -191,13 +182,6 @@ namespace Data.Wallet
         //    return utxoCbors;
         //}
 
-        public void disconectWallet()
-        {
-            //Task.Run(async () =>
-            //{
-            //    await RemoveStoredWalletKeyAsync();
-            //});
-            //_connectedWallet = null;
-        }
+      
     }
 }

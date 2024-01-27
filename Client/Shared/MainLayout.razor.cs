@@ -1,11 +1,5 @@
-﻿using Blazored.LocalStorage;
-using Client.State.Wallet;
-using Client.State.WalletConnector;
-using Data.Wallet;
-using Fluxor;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Radzen;
 
 
 

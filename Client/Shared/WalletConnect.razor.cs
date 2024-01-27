@@ -1,9 +1,7 @@
 ﻿
 using Client.State.Wallet;
 using Client.State.WalletConnecting;
-using Client.State.WalletConnector;
 using Fluxor;
-using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 

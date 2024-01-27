@@ -2,20 +2,20 @@
 using Data.Wallet;
 using Fluxor;
 
-namespace Client.State.WalletConnector
+namespace Client.State.WalletExtensions
 {
     [FeatureState]
 
-    public class WalletConectorState
+    public class WalletExtensionsState
     {
         public bool IsConnecting { get; }
 
         public WalletConnectorJsInterop WalletConnectorJSInterop { get; }
         public IEnumerable<WalletExtensionState> Extensions { get; }
       
-        private WalletConectorState() { }
+        private WalletExtensionsState() { }
 
-        public WalletConectorState(bool isConnecting, WalletConnectorJsInterop js, IEnumerable<WalletExtensionState> ext)
+        public WalletExtensionsState(bool isConnecting, WalletConnectorJsInterop js, IEnumerable<WalletExtensionState> ext)
         {
             IsConnecting = isConnecting;
             WalletConnectorJSInterop = js;

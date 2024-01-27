@@ -1,11 +1,8 @@
-﻿using Data.Wallet;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using Radzen;
-using Components;
-using Client.State.WalletConnector;
+﻿using Client.State.Wallet;
+using Client.State.WalletExtensions;
 using Fluxor;
-using Client.State.Wallet;
+using Microsoft.AspNetCore.Components;
+using Radzen;
 
 namespace Client.Shared
 {
@@ -14,7 +11,7 @@ namespace Client.Shared
         [Inject]
         protected DialogService _dialogService { get; set; }
         [Inject] protected IState<WalletState> walletState { get; set; }
-        [Inject] protected IState<WalletConectorState> walletConectorState { get; set; }
+        [Inject] protected IState<WalletExtensionsState> walletConectorState { get; set; }
         [Inject] protected IDispatcher dispatcher { get; set; }
 
 

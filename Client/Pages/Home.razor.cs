@@ -1,23 +1,9 @@
-﻿using CardanoSharp.Wallet.Extensions;
-using CardanoSharp.Wallet.Extensions.Models;
-using CardanoSharp.Wallet.Extensions.Models.Transactions;
-using CardanoSharp.Wallet.Extensions.Models.Transactions.TransactionWitnesses;
-using CardanoSharp.Wallet.Models.Addresses;
-using CardanoSharp.Wallet.Models.Transactions;
-using Client.Shared;
-using Client.State.Crypto;
+﻿using Client.State.Crypto;
 using Client.State.Wallet;
 using Client.State.WalletConnecting;
-using Client.State.WalletConnector;
-using Data.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
-using System.Globalization;
-using System.Net.Http.Json;
-using System.Text;
-using Utils;
 
 
 namespace Client.Pages

@@ -4,7 +4,7 @@ using Fluxor;
 using System.Net.Http.Json;
 
 
-namespace Client.State.WalletConnector
+namespace Client.State.WalletExtensions
 {
     public class Effects
     {
