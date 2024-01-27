@@ -6,6 +6,9 @@ using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.Shared;
 using Client.State.Crypto;
+using Client.State.Wallet;
+using Client.State.WalletConnecting;
+using Client.State.WalletConnector;
 using Data.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
@@ -21,122 +24,20 @@ namespace Client.Pages
 {
     public partial class Home : FluxorComponent
     {
-        [Inject]
-        protected IConfiguration _configuration { get; set; }
-
-        [Inject]
-        protected HttpClient http { get; set; }
-
-        [Inject]        
-        protected IDispatcher dispatcher { get; set; }
+        [Inject] protected IConfiguration _configuration { get; set; }
+        [Inject] protected IDispatcher dispatcher { get; set; }
         
-        [Inject]         
-        IState<Client.State.Crypto.CryptoState> cryptoState { get; set; }
+        [Inject] IState<CryptoState> cryptoState { get; set; }
+        [Inject] IState<WalletState> walletState { get; set; }
+        [Inject] IState<WalletConnectingState> walletConectingState { get; set; }
 
-        [CascadingParameter]
-        private ActionWrapper _actionCommingFromTheMainLayout { get; set; }
 
-        private string AssetsID = null;
-        private ulong valueToTransfer = 100000000;
-        private string walletfromTransfer;
-        private string walletToTransfer;
-        private string PolicyAssetsID = null;
-        private string symbol;
-        private string balanceAda;
-        private string networkType;
-        private decimal balancePesos = 0;
-        private bool isConecting = false;
-        private bool isSendingTransaction = false;
-
-        private WalletExtensionState walletState;
         protected override void OnInitialized()
         {
             base.OnInitialized();
             dispatcher.Dispatch(new FetchCryptoAction());
-            _actionCommingFromTheMainLayout.Action += LoadWalletParametersWrapper;
-            AssetsID = _configuration.GetValue<string>("AppSettings:AssetId");
-            PolicyAssetsID = _configuration.GetValue<string>("Policy:AssetId");
-            if (AssetsID is null)
-            {
-                throw new Exception("AssetID cannot be null");
-            }
         }
 
-       
-        public void LoadWalletParametersWrapper()
-        {
-            _ = LoadWalletParametersAsync();
-        }
-        public async Task LoadWalletParametersAsync()
-        {
-            isConecting = true;
-            walletState = WalletSingleton.Instance.walletInstance;
-            var walletConector = WalletSingleton.Instance._walletConnector;
-
-            if (walletConector != null && walletConector.Initialized)
-            {
-                if (walletConector.Connected)
-                {
-                    var addressResult = await walletConector.GetUsedAddressesHex();
-                    if (addressResult.Length > 0)
-                    {
-
-                        try
-                        {
-                            var adress = new Address(addressResult[0].HexToByteArray());
-                            walletfromTransfer = adress.ToString();
-
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    }
-                    else
-                    {
-                        walletfromTransfer = "no hay wallets cargadas";
-                    }
-
-                    var result = await walletConector.GetBalance();
-                    Console.WriteLine("Balance:");
-                    Console.WriteLine($" - Coin: {result.Coin}");
-                    foreach (var asset in result.MultiAsset)
-                    {
-                        var policyId = asset.Key.ToStringHex();
-                        Console.WriteLine(($" - Policy: {policyId}"));
-
-                        foreach (var token in asset.Value.Token)
-                        {
-
-                            var assetName = token.Key.ToStringHex();
-                            assetName = ComponentUtils.HexToString(assetName);
-                            Console.WriteLine(($"   - AssetName: {assetName}"));
-                            Console.WriteLine(($"   - Tokens: {token.Value}"));
-                        }
-                    }
-
-                }
-            }
-            balanceAda = walletState.BalanceAda;
-            networkType = walletState.Network.ToString();
-            symbol = walletState.CoinCurrency;
-            decimal adaBalance = decimal.Parse(balanceAda, CultureInfo.InvariantCulture);
-            balancePesos = cryptoState.Value.Crypto.TotalBid * adaBalance;
-            var auxAddress = walletState.UsedAdress[0];
-            try
-            {
-                if (!string.IsNullOrEmpty(auxAddress))
-                {
-                    walletfromTransfer = auxAddress.ToAddress().ToStringHex();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            isConecting = false;
-            StateHasChanged();
-        }
 
 
         void OnChangeWalletAdress(string value, string name)
@@ -147,46 +48,46 @@ namespace Client.Pages
 
         private async Task singTransaction()
         {
-            isSendingTransaction = true;
-            walletState = WalletSingleton.Instance.walletInstance;
-            var walletConector = WalletSingleton.Instance._walletConnector;
-            string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
-            var response = await http.GetAsync(url);
-            var txSignData = new TxRequest();
-            if (response.IsSuccessStatusCode)
-            {
-                var transaction = await response.Content.ReadFromJsonAsync<Transaction>();
-                txSignData.transactionCbor = transaction.Serialize().ToStringHex();
-                var witnessSet = await walletConector.SignTx(transaction, true);
-                txSignData.witness = witnessSet;
-                Console.WriteLine($"Success: transaction");
-            }
-            else
-            {
-                Console.WriteLine($"Error: {response.StatusCode}");
+            //isSendingTransaction = true;
+            //walletState = WalletSingleton.Instance.walletInstance;
+            //var walletConector = WalletSingleton.Instance._walletConnector;
+            //string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
+            //var response = await http.GetAsync(url);
+            //var txSignData = new TxRequest();
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var transaction = await response.Content.ReadFromJsonAsync<Transaction>();
+            //    txSignData.transactionCbor = transaction.Serialize().ToStringHex();
+            //    //var witnessSet = await walletConector.SignTx(transaction, true);
+            //    //txSignData.witness = witnessSet;
+            //    Console.WriteLine($"Success: transaction");
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"Error: {response.StatusCode}");
 
-            }
-
-
-
-            string jsonContent = JsonConvert.SerializeObject(txSignData);
-            StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response2.Content.ReadFromJsonAsync<Transaction>();
-                var delivered = await walletConector.SubmitTx(result);
-            }
-            else
-            {
-                Console.WriteLine($"Error: {response.StatusCode}");
-            }
+            //}
 
 
 
+            //string jsonContent = JsonConvert.SerializeObject(txSignData);
+            //StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            //HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var result = await response2.Content.ReadFromJsonAsync<Transaction>();
+            //    //var delivered = await walletConector.SubmitTx(result);
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"Error: {response.StatusCode}");
+            //}
 
 
-            isSendingTransaction = false;
+
+
+
+            //isSendingTransaction = false;
         }
 
     }

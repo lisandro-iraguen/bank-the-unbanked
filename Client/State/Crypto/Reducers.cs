@@ -7,11 +7,11 @@ namespace Client.State.Crypto
     public class Reducers
     {
         [ReducerMethod]
-        public static CryptoState ReduceFetchDeveloperAction(CryptoState state, FetchCryptoAction action) =>
+        public static CryptoState ReduceFetchCryptoAction(CryptoState state, FetchCryptoAction action) =>
     new(isLoading: true,crypto: null);
 
         [ReducerMethod]
-        public static CryptoState ReduceFetchDeveloperResultAction(CryptoState state, FetchCryptoResultAction action) =>
+        public static CryptoState ReduceFetchCryptoResultAction(CryptoState state, FetchCryptoResultAction action) =>
           new(isLoading: false, crypto: action.criptoDTO);
     }
 }

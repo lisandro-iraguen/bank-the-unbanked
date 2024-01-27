@@ -1,26 +1,25 @@
-﻿using Components;
-using Data.Wallet;
+﻿using Data.Wallet;
 using Fluxor;
 
-namespace Client.State.Wallet.Extension
+namespace Client.State.Wallet
 {
     [FeatureState]
-
     public class WalletState
     {
-        public bool IsLoading { get; }
-    
-        public WalletConnectorJsInterop WalletConnectorJSInterop { get; }
-        public IEnumerable<WalletExtensionState> Extensions { get; }
+        public bool IsConnecting { get; }
+        public IEnumerable<WalletExtensionState> Wallets { get; }
 
+        public string Key { get; }
+        public WalletExtensionState Wallet { get; }
         private WalletState() { }
-        public WalletState(bool isLoading, WalletConnectorJsInterop js, IEnumerable<WalletExtensionState> ext)
-        {
-            IsLoading = isLoading;
-            WalletConnectorJSInterop =js;
-            Extensions = ext ?? Array.Empty<WalletExtensionState>();
-        }
-    }
 
-   
+        public WalletState(bool isConnecting,string key, WalletExtensionState wallet, IEnumerable<WalletExtensionState> wallets)
+        {
+            IsConnecting = isConnecting;
+            Key = key;
+            Wallet = wallet;
+            Wallets = wallets ?? Array.Empty<WalletExtensionState>();
+        }
+
+    }
 }

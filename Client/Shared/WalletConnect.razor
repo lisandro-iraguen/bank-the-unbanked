@@ -1,0 +1,19 @@
+﻿@using Radzen;
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
+
+
+@if (walletConectingState.Value.IsConnecting)
+{
+    <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+else
+{
+    if (walletState.Value.Wallet == null)
+    {
+        <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+    }
+    else
+    {
+        <RadzenButton class="rz-m-2" Text="@walletState.Value.Wallet.Name" Icon="account_balance_wallet" Click=@OpenWalletDisconector></RadzenButton>
+    }
+}
