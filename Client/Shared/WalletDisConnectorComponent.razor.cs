@@ -1,4 +1,5 @@
-﻿using Client.State.Wallet;
+﻿using Blazored.LocalStorage;
+using Client.State.Wallet;
 using Client.State.WalletExtensions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
@@ -13,11 +14,12 @@ namespace Client.Shared
         [Inject] protected IState<WalletState> walletState { get; set; }
         [Inject] protected IState<WalletExtensionsState> walletConectorState { get; set; }
         [Inject] protected IDispatcher dispatcher { get; set; }
+        [Inject] protected ILocalStorageService localStorage{ get; set; }
 
 
         public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
-            dispatcher.Dispatch(new WalletDisconectAction());
+            dispatcher.Dispatch(new WalletDisconectAction(walletState.Value.Wallet, localStorage));
            _dialogService.Close();
            StateHasChanged();
            return;

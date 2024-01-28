@@ -51,6 +51,7 @@ namespace Client.Shared
        
         public async Task OpenWalletConnectors()
         {
+            dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime, _localStorage, _dialogService));
             var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
 
         }

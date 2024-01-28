@@ -13,10 +13,9 @@ namespace Client.State.Wallet
          new(key: state.Key, wallet: action.Wallet, wallets: state.Wallets);
 
         [ReducerMethod]
-        public static WalletState ReduceWalletDisconectAction(WalletState state, WalletDisconectAction action)
-        {
-            _ = state.Wallet.WalletConnectorJs.DisposeAsync();
-            return new(key: state.Key, wallet: null, wallets: state.Wallets);
+        public static WalletState ReduceWalletDisconectAction(WalletState state, WalletDisconectResultAction action)
+        {           
+            return new(key: null, wallet: null, wallets: null);
         }
 
         [ReducerMethod]

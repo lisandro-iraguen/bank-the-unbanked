@@ -31,6 +31,7 @@ namespace Client.State.Wallet
             dispatcher.Dispatch(new IsConnectedConectionAction());
             string key = action.Key;
             var valletList = action.Wallets;
+            var storage = action.LocalStorage;
 
             var supportedWalletKeys = SupportedWalletListToString(valletList);
             if (supportedWalletKeys.Contains(key))
@@ -39,6 +40,7 @@ namespace Client.State.Wallet
                 var result = await GetConnectionResult(key, walletSelected);
                 if (result)
                 {
+                    await SetStoredWalletKeyAsync(key, storage);
                     walletSelected = await UpdateWallet(key, walletSelected);
                     dispatcher.Dispatch(new IsNotConnectedConectionAction());
                     dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
@@ -72,14 +74,22 @@ namespace Client.State.Wallet
                     if (result)
                     {
                         walletSelected = await UpdateWallet(storedWalletKey, walletSelected);
-                        dispatcher.Dispatch(new IsNotConnectedConectionAction());
                         dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
+                        dispatcher.Dispatch(new IsNotConnectedConectionAction());
                     }
                 }
             }
         }
 
-
+        [EffectMethod]
+        public async Task HandleWalletDisconectAction(WalletDisconectAction action, IDispatcher dispatcher)
+        {
+            dispatcher.Dispatch(new IsConnectedConectionAction());
+            await action.Wallet.WalletConnectorJs.DisposeAsync();
+            await RemoveStoredWalletKeyAsync(action.LocalStorage);
+            dispatcher.Dispatch(new WalletDisconectResultAction());
+            dispatcher.Dispatch(new IsNotConnectedConectionAction());
+        }
 
 
         private async Task<WalletExtensionState> UpdateWallet(string key, WalletExtensionState walletSelected)
@@ -185,7 +195,15 @@ namespace Client.State.Wallet
                 await localStorage.RemoveItemAsync(ComponentUtils.ConnectedWalletKey);
             }
         }
+        private async Task SetStoredWalletKeyAsync(string walletKey, ILocalStorageService localStorage)
+        {
+            if (localStorage != null && !string.IsNullOrWhiteSpace(walletKey))
+            {
+                await localStorage.SetItemAsStringAsync(ComponentUtils.ConnectedWalletKey, walletKey.ToString());
+            }
+        }
 
+       
         private string[]? SupportedWalletListToString(IEnumerable<WalletExtensionState> valletList)
         {
             return valletList?.Select(s => s.Key)?.ToArray();

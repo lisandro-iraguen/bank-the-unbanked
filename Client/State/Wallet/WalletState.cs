@@ -8,7 +8,6 @@ namespace Client.State.Wallet
     {
        
         public IEnumerable<WalletExtensionState> Wallets { get; }
-
         public string Key { get; }
         public WalletExtensionState Wallet { get; }
         private WalletState() { }
