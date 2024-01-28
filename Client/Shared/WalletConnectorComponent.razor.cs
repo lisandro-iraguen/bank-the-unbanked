@@ -25,7 +25,7 @@ namespace Client.Shared
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime));            
+                     
         }
      
         public void ConnectWalletAsync(string key)

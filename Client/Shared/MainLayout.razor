@@ -1,6 +1,7 @@
 ﻿@using Radzen;
 @using Data.Wallet;
-@inherits LayoutComponentBase
+@inherits Fluxor.Blazor.Web.Components.FluxorLayout;
+
 
 <RadzenComponents />
 
@@ -12,9 +13,23 @@
             <RadzenLabel Text="banco" />
 
             <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
-                <RadzenRow Gap="2rem">
-                    <RadzenColumn Order="7">                       
-                      <WalletConnect />
+                <RadzenRow Gap="2rem">                    
+                    <RadzenColumn Order="7">
+                        @if (walletConectorState.Value.IsConnecting)
+                        {
+                            <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                        }
+                        else
+                        {
+                            if (walletState.Value.Wallet == null)
+                            {
+                                <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+                            }
+                            else
+                            {
+                                <RadzenButton class="rz-m-2" Text="@walletState.Value.Wallet.Name" Icon="account_balance_wallet" Click=@OpenWalletDisconector></RadzenButton>
+                            }
+                        }
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenRow>
@@ -24,10 +39,9 @@
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded=@sidebarExpanded @bind-Visible=@SidebarVisible>
         <NavMenu />
-
     </RadzenSidebar>
     <RadzenBody>
-            @Body       
+             @Body        
     </RadzenBody>
     <RadzenFooter>
         <Copyright />

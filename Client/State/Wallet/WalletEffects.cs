@@ -1,4 +1,5 @@
-﻿using CardanoSharp.Wallet.CIPs.CIP30.Models;
+﻿using Blazored.LocalStorage;
+using CardanoSharp.Wallet.CIPs.CIP30.Models;
 using CardanoSharp.Wallet.Enums;
 using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
@@ -17,7 +18,7 @@ namespace Client.State.Wallet
     public class WalletEffects
     {
         private readonly HttpClient Http;
-        
+
 
         public WalletEffects(HttpClient http)
         {
@@ -29,39 +30,17 @@ namespace Client.State.Wallet
         {
             dispatcher.Dispatch(new ChangeConnectingStateAction(true));
             action.DialogService.Close();
-
             string key = action.Key;
-            var valletList = action.Wallets;            
-            var supportedWalletKeys = valletList?.Select(s => s.Key)?.ToArray();
+            var valletList = action.Wallets;
+
+            var supportedWalletKeys = SupportedWalletListToString(valletList);
             if (supportedWalletKeys.Contains(key))
             {
-                var walletSelected = valletList!.First(x => x.Key == key);
-                var result = await walletSelected.WalletConnectorJs!.ConnectWallet(key);
+                var walletSelected = GetWalletSelected(key, valletList);
+                var result = await GetConnectionResult(key, walletSelected);
                 if (result)
                 {
-                    Console.WriteLine($"wallet conected {key} sucessful!");                    
-                    walletSelected.Connected = true;
-                    var balance = await GetBalance(walletSelected.WalletConnectorJs);
-                    if (balance != null)
-                    {
-                        walletSelected!.TokenCount = 0;
-                        walletSelected.TokenPreservation = 0;
-                        walletSelected.NativeAssets = new();
-                        if (balance.MultiAsset != null && balance.MultiAsset.Count > 0)
-                        {
-                            walletSelected.TokenPreservation = balance.MultiAsset.CalculateMinUtxoLovelace();
-                            walletSelected.TokenCount = balance.MultiAsset.Sum(x => x.Value.Token.Keys.Count);
-                            walletSelected.NativeAssets = balance.MultiAsset.SelectMany(policy =>
-                                   policy.Value.Token.Select(asset =>
-                                       new KeyValuePair<string, ulong>(
-                                           $"{policy.Key.ToStringHex()}-{asset.Key.ToStringHex()}",
-                                           (ulong)asset.Value)))
-                               .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                        }
-                        walletSelected.Balance = balance.Coin - walletSelected.TokenPreservation;
-                        walletSelected.UsedAdress = await GetUsedAddressesHex(walletSelected.WalletConnectorJs);
-                    }
-                    walletSelected!.Network = await GetNetworkType(walletSelected.WalletConnectorJs);
+                    walletSelected = await UpdateWallet(key, walletSelected);
                     dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
                     dispatcher.Dispatch(new ChangeConnectingStateAction(false));
                     action.DialogService.Refresh();
@@ -73,6 +52,66 @@ namespace Client.State.Wallet
 
 
 
+
+        [EffectMethod]
+        public async Task HandleWalletConnectAutomaticallyAction(WalletConnectAutomaticallyAction action, IDispatcher dispatcher)
+        {
+            dispatcher.Dispatch(new ChangeConnectingStateAction(true));
+            var valletList = action.Wallets;
+            var supportedWalletKeys = SupportedWalletListToString(valletList);
+            var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys, action.LocalStorageSerivce);
+            if (String.IsNullOrEmpty(storedWalletKey))
+            {
+                dispatcher.Dispatch(new ChangeConnectingStateAction(false));
+                Console.WriteLine($"Key not found {storedWalletKey}");
+            }
+            else
+            {
+                if (supportedWalletKeys.Contains(storedWalletKey))
+                {
+                    var walletSelected = GetWalletSelected(storedWalletKey, valletList);
+                    var result = await GetConnectionResult(storedWalletKey, walletSelected);
+                    if (result)
+                    {
+                        walletSelected = await UpdateWallet(storedWalletKey, walletSelected);
+                        dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
+                        dispatcher.Dispatch(new ChangeConnectingStateAction(false));
+                        action.DialogService.Refresh();
+                    }
+                }
+            }
+        }
+
+
+
+
+        private async Task<WalletExtensionState> UpdateWallet(string key, WalletExtensionState walletSelected)
+        {
+            Console.WriteLine($"wallet conected {key} sucessful!");
+            walletSelected.Connected = true;
+            var balance = await GetBalance(walletSelected.WalletConnectorJs);
+            if (balance != null)
+            {
+                walletSelected!.TokenCount = 0;
+                walletSelected.TokenPreservation = 0;
+                walletSelected.NativeAssets = new();
+                if (balance.MultiAsset != null && balance.MultiAsset.Count > 0)
+                {
+                    walletSelected.TokenPreservation = balance.MultiAsset.CalculateMinUtxoLovelace();
+                    walletSelected.TokenCount = balance.MultiAsset.Sum(x => x.Value.Token.Keys.Count);
+                    walletSelected.NativeAssets = balance.MultiAsset.SelectMany(policy =>
+                           policy.Value.Token.Select(asset =>
+                               new KeyValuePair<string, ulong>(
+                                   $"{policy.Key.ToStringHex()}-{asset.Key.ToStringHex()}",
+                                   (ulong)asset.Value)))
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
+                walletSelected.Balance = balance.Coin - walletSelected.TokenPreservation;
+                walletSelected.UsedAdress = await GetUsedAddressesHex(walletSelected.WalletConnectorJs);
+            }
+            walletSelected!.Network = await GetNetworkType(walletSelected.WalletConnectorJs);
+            return walletSelected;
+        }
         public async ValueTask<TransactionOutputValue> GetBalance(WalletConnectorJsInterop _walletConnectorJs)
         {
             var result = await GetBalanceCbor(_walletConnectorJs);
@@ -109,7 +148,7 @@ namespace Client.State.Wallet
 
         }
 
-        public async ValueTask<string[]> GetUsedAddressesHex(WalletConnectorJsInterop _walletConnectorJs,Paginate? paginate = null)
+        public async ValueTask<string[]> GetUsedAddressesHex(WalletConnectorJsInterop _walletConnectorJs, Paginate? paginate = null)
         {
             var addresses = await _walletConnectorJs!.GetUsedAddresses(paginate);
             foreach (var address in addresses)
@@ -119,6 +158,48 @@ namespace Client.State.Wallet
             return addresses;
         }
 
+        private async Task<string> GetStoredWalletKeyAsync(string[] supportedWalletKeys, ILocalStorageService localStorage)
+        {
+            var result = string.Empty;
 
+            try
+            {
+                if (localStorage != null && supportedWalletKeys != null)
+                {
+                    var walletKey = await localStorage.GetItemAsStringAsync(ComponentUtils.ConnectedWalletKey);
+
+                    if (!string.IsNullOrWhiteSpace(walletKey) && supportedWalletKeys.Any(w => w.Equals(walletKey, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        result = walletKey;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+            }
+
+            return result;
+        }
+        private async Task RemoveStoredWalletKeyAsync(ILocalStorageService localStorage)
+        {
+            if (localStorage != null)
+            {
+                await localStorage.RemoveItemAsync(ComponentUtils.ConnectedWalletKey);
+            }
+        }
+
+        private string[]? SupportedWalletListToString(IEnumerable<WalletExtensionState> valletList)
+        {
+            return valletList?.Select(s => s.Key)?.ToArray();
+        }
+        private WalletExtensionState GetWalletSelected(string key, IEnumerable<WalletExtensionState> valletList)
+        {
+            return valletList!.First(x => x.Key == key);
+        }
+        private async Task<bool> GetConnectionResult(string key, WalletExtensionState walletSelected)
+        {
+            return await walletSelected.WalletConnectorJs!.ConnectWallet(key);
+        }
     }
 }

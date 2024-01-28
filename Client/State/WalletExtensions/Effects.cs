@@ -1,4 +1,6 @@
-﻿using Components;
+﻿using Client.State.Wallet;
+using Client.State.WalletConnecting;
+using Components;
 using Data.Wallet;
 using Fluxor;
 using System.Net.Http.Json;
@@ -18,7 +20,7 @@ namespace Client.State.WalletExtensions
         [EffectMethod]
         public async Task HandleWalletInitializerAction(WalletInitializerAction action, IDispatcher dispatcher)
         {
-
+            dispatcher.Dispatch(new ChangeConnectingStateAction(true));
             var walletConnectorJs = new WalletConnectorJsInterop(action.JsRuntime);
             var extensions = await Http.GetFromJsonAsync<IEnumerable<WalletExtensionState>>("api/WalletsData");
             var _wallets = await walletConnectorJs.Init(extensions);
@@ -30,6 +32,8 @@ namespace Client.State.WalletExtensions
             if (extensions is not null)
             {
                 dispatcher.Dispatch(new WalletInitializerResultAction(jsInterop: walletConnectorJs, extensions: _wallets!));
+                dispatcher.Dispatch(new WalletConnectAutomaticallyAction(_wallets, action.LocalStorageSerivce, action.DialogService));
+                dispatcher.Dispatch(new ChangeConnectingStateAction(false));
             }
         }
 

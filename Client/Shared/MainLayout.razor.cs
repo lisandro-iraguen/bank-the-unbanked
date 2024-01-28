@@ -1,23 +1,29 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazored.LocalStorage;
+using Client.State.Wallet;
+using Client.State.WalletConnecting;
+using Client.State.WalletExtensions;
+using Fluxor;
+using Fluxor.Blazor.Web.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Radzen;
 
 
 
 
 namespace Client.Shared
 {
-    public partial class MainLayout 
+    public partial class MainLayout
     {
-      
-        //[Inject] protected HttpClient http { get; set; }
+
+        [Inject] protected IDispatcher dispatcher { get; set; }
         [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
+        [Inject] protected ILocalStorageService _localStorage { get; set; }
+        [Inject] protected IState<WalletExtensionsState> walletConectorState { get; set; }
+        [Inject] protected IState<WalletState> walletState { get; set; }
         //[Inject] protected ILocalStorageService _localStorage { get; set; }
-     
+        [Inject] protected DialogService _dialogService { get; set; }
 
-        //private ActionWrapper actionWrapper = new ActionWrapper();
-        //private WalletConnector _walletConnector;
-
-        //private bool isConecting = true;
         private bool sidebarExpanded = false;
         private bool SidebarVisible = false;
         protected override void OnAfterRender(bool firstRender)
@@ -39,53 +45,48 @@ namespace Client.Shared
             StateHasChanged();
         }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            //_dialogService.OnClose += Close;
-            //actionWrapper.Action = LoadWallet;
-          
-
-            //isConecting = true;
-            //try
-            //{
-            //    _walletConnector = new WalletConnector(_localStorage, http, _javascriptRuntime);
-            //    await _walletConnector.IntializedWalletAsync();
-            //    WalletSingleton.Instance._walletConnector = _walletConnector;
-
-            //}
-            //catch (Exception ex)
-            //{
-            //  Console.WriteLine($"Wallet Connection error", ex.Message);
-            //}
-            //await _walletConnector.ConnectWalletAutomatically();
-            //isConecting = false;
-            //actionWrapper.Action.Invoke();
-            //StateHasChanged();
-        }
-       
-
-        private void Close(dynamic obj)
-        {
+            base.OnInitialized();
+            dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime, _localStorage, _dialogService));
+            
            
-            //actionWrapper.Action?.Invoke();
-            //this.StateHasChanged();
-            //Console.WriteLine(walletState.Value.IsConnecting);
         }
 
-        public void LoadWallet()
+        public async Task OpenWalletConnectors()
         {
-            //if (WalletSingleton.Instance != null && WalletSingleton.Instance.walletInstance != null)
-            //{
-            //    Console.WriteLine($"Wallet Loaded {WalletSingleton.Instance.walletInstance.Name}");
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"load wallet not set");                
-            //    Console.WriteLine($"check if the wallet is connected");                
-            //}
+            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
+
         }
 
-       
+        public async Task OpenWalletDisconector()
+        {
+
+            var dialogResult = await _dialogService.OpenAsync("Desconectar Biletera", RenderWalletDisConnector);
+
+        }
+        private RenderFragment RenderWalletConnector(DialogService service)
+        {
+
+            RenderFragment fragment = builder =>
+            {
+                builder.OpenComponent(0, typeof(WalletConnectorComponent));
+                builder.CloseComponent();
+            };
+
+            return fragment;
+        }
+
+        private RenderFragment RenderWalletDisConnector(DialogService service)
+        {
+
+            RenderFragment fragment = builder => {
+                builder.OpenComponent(0, typeof(WalletDisConnectorComponent));
+                builder.CloseComponent();
+            };
+
+            return fragment;
+        }
     }
 
 }
