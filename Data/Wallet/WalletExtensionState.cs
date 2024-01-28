@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Components;
+using System;
+using CardanoSharp.Wallet.Models.Addresses;
+using System.Text;
+using CardanoSharp.Wallet.Extensions;
 
 namespace Data.Wallet
 {
@@ -36,7 +40,16 @@ namespace Data.Wallet
             }
         }
 
-
+        public string LastUsedAddress
+        {
+            get
+            {
+                var adress= new Address(UsedAdress[0].HexToByteArray());
+                return adress.ToString();
+            }
+          
+           
+        }
 
         public string CoinCurrency
         {

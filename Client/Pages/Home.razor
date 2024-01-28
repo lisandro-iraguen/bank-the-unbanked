@@ -1,6 +1,6 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
 @page "/home"
-@using Client.State.Crypto
+@using Client.State.Crypto;
 @using Radzen;
 
 
@@ -13,7 +13,7 @@
     <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
         <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
     </RadzenStack>
- 
+
 }
 else
 {
@@ -32,7 +32,7 @@ else
 
 @if (walletState.Value.Wallet is not null)
 {
-   
+
     <RadzenStack Orientation="Orientation.Vertical" Gap="1px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
         <RadzenIcon Icon="account_balance"></RadzenIcon>
     </RadzenStack>
@@ -58,35 +58,29 @@ else
 
     </RadzenStack>
 
-    @*  <RadzenCard>
+    <RadzenCard>
 
-            <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">From:</RadzenText>
-                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletfromTransfer class="w-100" aria-label="Default TextBox" />
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
-                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
-
-                <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
-
-                <RadzenButton Click=@(args => singTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="isSendingTransaction" />
+        <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">From: @walletState.Value.Wallet.LastUsedAddress</RadzenText>            
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
+            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
 
 
+            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+            <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="transactionState.Value.IsSigningTransaction" />
 
+
+
+        </RadzenStack>
+        @if (transactionState.Value.IsSigningTransaction)
+        {
+            <RadzenStack Gap="3px" Class="rz-m-12">
+                <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
             </RadzenStack>
-            @if (isSendingTransaction)
-            {
 
-                <RadzenStack Gap="3px" Class="rz-m-12">
-                    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-                </RadzenStack>
-            }
-        </RadzenCard>  *@
+        }
+
+    </RadzenCard>
 
 
 }
-
-
-
-
-
-

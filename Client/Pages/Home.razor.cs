@@ -1,10 +1,12 @@
 ﻿using Client.State.Connection;
 using Client.State.Crypto;
+using Client.State.Transaction;
 using Client.State.Wallet;
-using Data.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
+using Utils;
+
 
 
 namespace Client.Pages
@@ -13,16 +15,24 @@ namespace Client.Pages
     {
         [Inject] protected IConfiguration _configuration { get; set; }
         [Inject] protected IDispatcher dispatcher { get; set; }
-        
         [Inject] IState<CryptoState> cryptoState { get; set; }
         [Inject] IState<WalletState> walletState { get; set; }
         [Inject] IState<ConectedState> walletConecting { get; set; }
+        [Inject] IState<TransactionState> transactionState { get; set; }
 
 
+
+
+        private string walletToTransfer;
+        private int valueToTransfer = 1000000;
         protected override void OnInitialized()
         {
             base.OnInitialized();
             dispatcher.Dispatch(new FetchCryptoAction());
+
+
+            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";
+            
         }
 
 
@@ -31,30 +41,12 @@ namespace Client.Pages
         {
             Console.WriteLine($"{name} value changed to {value}");
         }
-        
 
 
-        private async Task singTransaction()
+
+        private async Task SignAndSubmitTransaction()
         {
-            //isSendingTransaction = true;
-            //walletState = WalletSingleton.Instance.walletInstance;
-            //var walletConector = WalletSingleton.Instance._walletConnector;
-            //string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
-            //var response = await http.GetAsync(url);
-            //var txSignData = new TxRequest();
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var transaction = await response.Content.ReadFromJsonAsync<Transaction>();
-            //    txSignData.transactionCbor = transaction.Serialize().ToStringHex();
-            //    //var witnessSet = await walletConector.SignTx(transaction, true);
-            //    //txSignData.witness = witnessSet;
-            //    Console.WriteLine($"Success: transaction");
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"Error: {response.StatusCode}");
-
-            //}
+            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer));
 
 
 
@@ -70,13 +62,11 @@ namespace Client.Pages
             //{
             //    Console.WriteLine($"Error: {response.StatusCode}");
             //}
-
-
-
-
-
-            //isSendingTransaction = false;
         }
 
+        public string hexToString(string hexString)
+        {
+            return ComponentUtils.HexToString(hexString);
+        }
     }
 }
