@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Components;
 using Data.Wallet;
+using Fluxor;
 using Microsoft.JSInterop;
 using Radzen;
 
@@ -10,14 +11,14 @@ namespace Client.State.Wallet
     {   
         public IEnumerable<WalletExtensionState> Wallets { get; }
         public ILocalStorageService LocalStorageSerivce { get; }
-        public DialogService DialogService { get; }
+        public IDispatcher Dispatcher { get; }
+     
 
         private WalletConnectAutomaticallyAction() { }
-        public WalletConnectAutomaticallyAction(IEnumerable<WalletExtensionState> wallets, ILocalStorageService localStorageSerivce, DialogService dialogService)
+        public WalletConnectAutomaticallyAction(IEnumerable<WalletExtensionState> wallets, ILocalStorageService localStorageSerivce)
         {            
             Wallets = wallets;
-            LocalStorageSerivce = localStorageSerivce;
-            DialogService = dialogService;
+            LocalStorageSerivce = localStorageSerivce;            
         }
     }
 }

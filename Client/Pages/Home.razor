@@ -3,7 +3,12 @@
 @using Client.State.Crypto
 @using Radzen;
 
-@if (walletConectingState.Value.IsConnecting)
+
+
+
+
+
+@if (walletConecting.Value.IsConnecting)
 {
     <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
         <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />

@@ -4,12 +4,11 @@ using CardanoSharp.Wallet.Enums;
 using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Transactions;
-using Client.State.WalletConnecting;
+using Client.State.Connection;
 using Components;
 using Data.Wallet;
 using Fluxor;
 using PeterO.Cbor2;
-using System.Net.Http.Json;
 using Utils;
 
 
@@ -28,8 +27,8 @@ namespace Client.State.Wallet
         [EffectMethod]
         public async Task HandleWalletInitializerAction(WalletConnectorAction action, IDispatcher dispatcher)
         {
-            dispatcher.Dispatch(new ChangeConnectingStateAction(true));
             action.DialogService.Close();
+            dispatcher.Dispatch(new IsConnectedConectionAction());
             string key = action.Key;
             var valletList = action.Wallets;
 
@@ -41,9 +40,8 @@ namespace Client.State.Wallet
                 if (result)
                 {
                     walletSelected = await UpdateWallet(key, walletSelected);
+                    dispatcher.Dispatch(new IsNotConnectedConectionAction());
                     dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
-                    dispatcher.Dispatch(new ChangeConnectingStateAction(false));
-                    action.DialogService.Refresh();
                 }
             }
 
@@ -56,13 +54,13 @@ namespace Client.State.Wallet
         [EffectMethod]
         public async Task HandleWalletConnectAutomaticallyAction(WalletConnectAutomaticallyAction action, IDispatcher dispatcher)
         {
-            dispatcher.Dispatch(new ChangeConnectingStateAction(true));
+            dispatcher.Dispatch(new IsConnectedConectionAction());
             var valletList = action.Wallets;
             var supportedWalletKeys = SupportedWalletListToString(valletList);
             var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys, action.LocalStorageSerivce);
             if (String.IsNullOrEmpty(storedWalletKey))
             {
-                dispatcher.Dispatch(new ChangeConnectingStateAction(false));
+                dispatcher.Dispatch(new IsNotConnectedConectionAction());
                 Console.WriteLine($"Key not found {storedWalletKey}");
             }
             else
@@ -74,9 +72,8 @@ namespace Client.State.Wallet
                     if (result)
                     {
                         walletSelected = await UpdateWallet(storedWalletKey, walletSelected);
+                        dispatcher.Dispatch(new IsNotConnectedConectionAction());
                         dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
-                        dispatcher.Dispatch(new ChangeConnectingStateAction(false));
-                        action.DialogService.Refresh();
                     }
                 }
             }

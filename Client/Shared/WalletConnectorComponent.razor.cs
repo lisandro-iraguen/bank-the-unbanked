@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Client.State.Connection;
 using Client.State.Wallet;
 using Client.State.WalletExtensions;
 using Fluxor;

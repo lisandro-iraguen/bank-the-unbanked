@@ -1,6 +1,7 @@
-﻿using Client.State.Crypto;
+﻿using Client.State.Connection;
+using Client.State.Crypto;
 using Client.State.Wallet;
-using Client.State.WalletConnecting;
+using Data.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -15,7 +16,7 @@ namespace Client.Pages
         
         [Inject] IState<CryptoState> cryptoState { get; set; }
         [Inject] IState<WalletState> walletState { get; set; }
-        [Inject] IState<WalletConnectingState> walletConectingState { get; set; }
+        [Inject] IState<ConectedState> walletConecting { get; set; }
 
 
         protected override void OnInitialized()
@@ -30,6 +31,7 @@ namespace Client.Pages
         {
             Console.WriteLine($"{name} value changed to {value}");
         }
+        
 
 
         private async Task singTransaction()

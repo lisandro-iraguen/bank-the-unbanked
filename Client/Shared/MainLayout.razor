@@ -15,7 +15,7 @@
             <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
                 <RadzenRow Gap="2rem">                    
                     <RadzenColumn Order="7">
-                        @if (walletConectorState.Value.IsConnecting)
+                        @if (walletConectedState.Value.IsConnecting)
                         {
                             <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
                         }
@@ -40,7 +40,7 @@
     <RadzenSidebar @bind-Expanded=@sidebarExpanded @bind-Visible=@SidebarVisible>
         <NavMenu />
     </RadzenSidebar>
-    <RadzenBody>
+    <RadzenBody>      
              @Body        
     </RadzenBody>
     <RadzenFooter>
