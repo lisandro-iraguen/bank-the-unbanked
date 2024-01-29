@@ -11,6 +11,11 @@ namespace Client.State.Transaction
 
         [ReducerMethod]
         public static TransactionState ReduceSignTransactionResultAction(TransactionState state, SignTransactionResultAction action) =>
-         new(isSigningTransaction: true, wallet: action.UsedWallet);
+         new(isSigningTransaction: true, wallet: action.UsedWallet); 
+        
+
+        [ReducerMethod]
+        public static TransactionState ReduceSignTransactionFailedResultAction(TransactionState state, SignTransactionFailedResultAction action) =>
+         new(isSigningTransaction: false, wallet: state.UsedWallet);
     }
 }

@@ -32,6 +32,14 @@ namespace Data.Wallet
             }
         }
 
+        public decimal BalanceAda2
+        {
+            get
+            {
+                return (Balance / 1000000);
+            }
+        }
+
         public string BalanceRemainder
         {
             get

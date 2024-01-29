@@ -48,20 +48,6 @@ namespace Client.Pages
         {
             dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer));
 
-
-
-            //string jsonContent = JsonConvert.SerializeObject(txSignData);
-            //StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            //HttpResponseMessage response2 = await http.PostAsync("api/TxSign", content);
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var result = await response2.Content.ReadFromJsonAsync<Transaction>();
-            //    //var delivered = await walletConector.SubmitTx(result);
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"Error: {response.StatusCode}");
-            //}
         }
 
         public string hexToString(string hexString)
