@@ -50,9 +50,6 @@ namespace Client.Pages
 
         }
 
-        public string hexToString(string hexString)
-        {
-            return ComponentUtils.HexToString(hexString);
-        }
+
     }
 }
