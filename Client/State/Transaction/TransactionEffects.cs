@@ -25,7 +25,10 @@ namespace Client.State.Transaction
             WalletExtensionState wallet = action.UsedWallet;
             string walletfromTransfer = wallet.LastUsedAddress;
             string walletToTransfer = action.TransferTo;
-            string valueToTransfer = action.TransferAmount.ToString();
+            string valueToTransfer = (action.TransferAmount*wallet.Lovlace).ToString();
+
+
+
             string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
             try
             {

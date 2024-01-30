@@ -67,7 +67,7 @@ else
             <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
 
 
-            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"/>
             <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="transactionState.Value.IsSigningTransaction" />
 
 

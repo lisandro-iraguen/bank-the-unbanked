@@ -5,6 +5,7 @@ using Client.State.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json.Linq;
 using Utils;
 
 
@@ -24,7 +25,7 @@ namespace Client.Pages
 
 
         private string walletToTransfer;
-        private int valueToTransfer = 1000000;
+        private int valueToTransfer = 0;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -35,7 +36,7 @@ namespace Client.Pages
             
         }
 
-
+       
 
         void OnChangeWalletAdress(string value, string name)
         {

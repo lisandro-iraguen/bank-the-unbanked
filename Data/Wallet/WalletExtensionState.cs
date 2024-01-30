@@ -21,13 +21,21 @@ namespace Data.Wallet
 
         public string Version { get; set; }
 
-        public ulong Balance { get; set; }
+        public ulong Balance { get; set; } 
+        
+        public int Lovlace {
+            get
+            {
+                return 1000000;
+            }
+                
+        }
 
         public string BalanceAda
         {
             get
             {
-                var temp = (Balance / 1000000).ToString("N", CultureInfo.CreateSpecificCulture("en-US"));
+                var temp = (Balance / (ulong)Lovlace).ToString("N", CultureInfo.CreateSpecificCulture("en-US"));
                 return temp.Substring(0, temp.IndexOf('.'));
             }
         }
@@ -36,7 +44,7 @@ namespace Data.Wallet
         {
             get
             {
-                return (Balance / 1000000);
+                return (Balance / (ulong)Lovlace);
             }
         }
 
