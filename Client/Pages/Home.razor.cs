@@ -25,7 +25,7 @@ namespace Client.Pages
 
 
         private string walletToTransfer;
-        private int valueToTransfer = 0;
+        private ulong valueToTransfer = 0;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -47,7 +47,7 @@ namespace Client.Pages
 
         private async Task SignAndSubmitTransaction()
         {
-            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer));
+            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, (valueToTransfer/ cryptoState.Value.Crypto.TotalBid)));
 
         }
 

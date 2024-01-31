@@ -49,7 +49,7 @@ else
         }
         else
         {
-            
+
             <h1>$ARS @(cryptoState.Value.Crypto.TotalBid * @walletState.Value.Wallet.BalanceAda2) </h1>
             <h4>BinanceP2P</h4>
             <h4>Dolar: @cryptoState.Value.Crypto.TotalBid </h4>
@@ -62,24 +62,25 @@ else
     <RadzenCard>
 
         <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">From: @walletState.Value.Wallet.LastUsedAddress</RadzenText>            
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">to:</RadzenText>
             <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
 
 
-            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"/>
-            <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="transactionState.Value.IsSigningTransaction" />
+            <RadzenNumeric @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">
+                @walletState.Value.Wallet.CoinCurrency: @(@valueToTransfer / @cryptoState.Value.Crypto.TotalBid)</RadzenText>
+
+                <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="transactionState.Value.IsSigningTransaction" />
 
 
 
         </RadzenStack>
-        @if (transactionState.Value.IsSigningTransaction)
-        {
+    @if (transactionState.Value.IsSigningTransaction)
+    {
             <RadzenStack Gap="3px" Class="rz-m-12">
                 <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
             </RadzenStack>
 
-        }
+    }
 
     </RadzenCard>
 
