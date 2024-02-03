@@ -39,10 +39,8 @@ public class PolicyManager : IPolicyManager
 
     private string GetNmonicFromAPI()
     {
-        //return "muffin brisk logic desk spot chase equal hen evil casual hat neck enemy since chief upon anxiety love stuff tent luggage chaos put winter";
-
-        string clientId = _configuration["clientId"];
-        string clientSecret = _configuration["clientSecret"]; ;//this should be changed in appplication.json, it must use clientSecretId, not the client secret itself
+         string clientId = _configuration["clientId"];
+        string clientSecret = _configuration["clientSecret"]; 
         string tenantId = _configuration["tenantId"];
 
         var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
