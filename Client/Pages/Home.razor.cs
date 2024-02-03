@@ -61,5 +61,16 @@ namespace Client.Pages
             dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer/ cryptoState.Value.Crypto.TotalBid));
             return Task.CompletedTask;
         }
+
+        private bool CantSendStransaction()
+        {
+            if (valueToTransfer == 0) return true;            
+            var valueInAda = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
+            if ((transactionFeeState.Value.Fee > valueInAda)) return true;
+            if (transactionState.Value.IsSigningTransaction) return true;
+            if (transactionFeeState.Value.IsLoading) return true;
+
+            return false;
+        }
     }
 }
