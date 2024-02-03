@@ -109,7 +109,7 @@ public class TransactionService : ITransactionService
 
     }
 
-    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> SignTransaction(string transactionCbor, string witness)
+    public Task<CardanoSharp.Wallet.Models.Transactions.Transaction> SignTransaction(string transactionCbor, string witness)
     {
         try
         {
@@ -123,7 +123,7 @@ public class TransactionService : ITransactionService
                 VKey = _policyManager.GetPublicKey(),
                 SKey = _policyManager.GetPrivateKey()
             });
-            return tx;
+            return Task.FromResult(tx);
         }
         catch (Exception ex)
         {
@@ -131,7 +131,7 @@ public class TransactionService : ITransactionService
             Console.WriteLine(ex.Message);
         }
 
-        return null;
+        return Task.FromResult<CardanoSharp.Wallet.Models.Transactions.Transaction>(null);
 
     }
 

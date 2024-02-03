@@ -7,6 +7,6 @@ namespace Api.Services.Transaction
     {
         Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, int value);
         Task<CardanoSharp.Wallet.Models.Transactions.Transaction> SignTransaction(string transactionCbor, string witness);
-
+        Task<ulong> CalculateFee(string fromAddress, string toAddress, int value);
     }
 }

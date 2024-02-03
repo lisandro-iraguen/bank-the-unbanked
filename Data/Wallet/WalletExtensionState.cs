@@ -23,7 +23,7 @@ namespace Data.Wallet
 
         public ulong Balance { get; set; } 
         
-        public int Lovlace {
+        public ulong Lovlace {
             get
             {
                 return 1000000;

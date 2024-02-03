@@ -1,6 +1,7 @@
 ﻿using Client.State.Connection;
 using Client.State.Crypto;
 using Client.State.Transaction;
+using Client.State.TransactionFee;
 using Client.State.Wallet;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
@@ -20,6 +21,7 @@ namespace Client.Pages
         [Inject] IState<WalletState> walletState { get; set; }
         [Inject] IState<ConectedState> walletConecting { get; set; }
         [Inject] IState<TransactionState> transactionState { get; set; }
+        [Inject] IState<TransactionFeeState> transactionFeeState { get; set; }
 
 
 
@@ -30,10 +32,7 @@ namespace Client.Pages
         {
             base.OnInitialized();
             dispatcher.Dispatch(new FetchCryptoAction());
-
-
-            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";
-            
+            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";            
         }
 
        
@@ -41,16 +40,26 @@ namespace Client.Pages
         void OnChangeWalletAdress(string value, string name)
         {
             Console.WriteLine($"{name} value changed to {value}");
+        
         }
-
-
-
-        private async Task SignAndSubmitTransaction()
+        
+        void OnChangeValueToBeTransfer(ulong value, string name)
         {
-            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, (valueToTransfer/ cryptoState.Value.Crypto.TotalBid)));
+            Console.WriteLine($"{name} to be transfer changed to {value}");
+            GetTransactionFee();
 
         }
 
+        private Task GetTransactionFee()
+        {
+            dispatcher.Dispatch(new TransactionFeeAction(walletState.Value.Wallet, walletToTransfer,valueToTransfer));
+            return Task.CompletedTask;
+        }
 
+        private Task SignAndSubmitTransaction()
+        {
+            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer/ cryptoState.Value.Crypto.TotalBid));
+            return Task.CompletedTask;
+        }
     }
 }
