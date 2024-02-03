@@ -36,7 +36,7 @@ public class TransactionService : ITransactionService
         _epochClient = epochClient;
     }
 
-    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, int value)
+    public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, ulong value)
     {
         
         try
@@ -81,7 +81,7 @@ public class TransactionService : ITransactionService
         return null;
       
     }
-    public async Task<ulong> CalculateFee(string fromAddress, string toAddress, int value)
+    public async Task<ulong> CalculateFee(string fromAddress, string toAddress, ulong value)
     {
         try
         {
@@ -152,11 +152,11 @@ public class TransactionService : ITransactionService
         return witnessSet;
     }
 
-    private async Task<ITransactionBodyBuilder> CoinSelection(string fromAddress, string toAddress, int value)
+    private async Task<ITransactionBodyBuilder> CoinSelection(string fromAddress, string toAddress, ulong value)
     {
         var utxos = await GetUtxosWhithoutNativeAssets(fromAddress);
         var transactionBody = TransactionBodyBuilder.Create;
-        ulong amountToTransfer = (ulong)value;
+        ulong amountToTransfer = value;
 
         transactionBody.AddOutput(toAddress.ToAddress().GetBytes(), amountToTransfer);
 

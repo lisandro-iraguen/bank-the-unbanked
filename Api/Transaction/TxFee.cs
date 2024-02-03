@@ -36,7 +36,7 @@ namespace Api.Transaction
 
             try
             {
-                int transferValue = int.Parse(value);
+                ulong transferValue = ulong.Parse(value);
                 var fee = await _transaction.CalculateFee(walletFrom,walletTo, transferValue);
                 return new OkObjectResult(fee);
             }
