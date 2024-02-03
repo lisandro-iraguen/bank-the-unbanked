@@ -46,7 +46,7 @@ public class TransactionService : ITransactionService
             var scriptPolicy = _policyManager.GetPolicyScript();
 
             //1. Get UTxOs
-            var utxos = await GetUtxos(fromAddress);
+            var utxos = await GetUtxosWhithoutNativeAssets(fromAddress);
 
 
             ///2. Create the Body
@@ -55,7 +55,13 @@ public class TransactionService : ITransactionService
 
             transactionBody.AddOutput(toAddress.ToAddress().GetBytes(), amountToTransfer);
 
+
+            
             var coinSelection = ((TransactionBodyBuilder)transactionBody).UseRandomImprove(utxos, fromAddress);
+
+           
+
+
             foreach (var i in coinSelection.Inputs)
             {
                 transactionBody.AddInput(i.TransactionId, i.TransactionIndex);
@@ -186,6 +192,53 @@ public class TransactionService : ITransactionService
 
                 utxo.Balance.Assets = assetList;
                 utxos.Add(utxo);
+            }
+
+            return utxos;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+    }
+    
+    private async Task<List<Utxo>> GetUtxosWhithoutNativeAssets(string address)
+    {
+        try
+        {
+            var addressBulkRequest = new AddressBulkRequest { Addresses = new List<string> { address } };
+            var addressResponse = await _addressClient.GetAddressInformation(addressBulkRequest);
+            var addressInfo = addressResponse.Content;
+            var utxos = new List<Utxo>();
+
+            foreach (var ai in addressInfo.SelectMany(x => x.UtxoSets))
+            {
+                if (ai is null) continue;
+                var utxo = new Utxo()
+                {
+                    TxIndex = ai.TxIndex,
+                    TxHash = ai.TxHash,
+                    Balance = new Balance()
+                    {
+                        Lovelaces = ulong.Parse(ai.Value)
+                    }
+                };
+
+                var assetList = new List<CardanoSharpAsset>();
+                foreach (var aa in ai.AssetList)
+                {
+                    assetList.Add(new CardanoSharpAsset()
+                    {
+                        Name = aa.AssetName,
+                        PolicyId = aa.PolicyId,
+                        Quantity = long.Parse(aa.Quantity)
+                    });
+                }
+
+                utxo.Balance.Assets = assetList;
+                if (!utxo.Balance.Assets.Any())
+                    utxos.Add(utxo);
             }
 
             return utxos;
