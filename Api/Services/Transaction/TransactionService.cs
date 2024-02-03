@@ -38,67 +38,19 @@ public class TransactionService : ITransactionService
 
     public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, int value)
     {
+        
         try
         {
-           
-            
-            //0. Prep           
-            var scriptPolicy = _policyManager.GetPolicyScript();
-
-            //1. Get UTxOs
-            var utxos = await GetUtxosWhithoutNativeAssets(fromAddress);
-
-
-            ///2. Create the Body
-            var transactionBody = TransactionBodyBuilder.Create;
-            ulong amountToTransfer = (ulong)value;
-
-            transactionBody.AddOutput(toAddress.ToAddress().GetBytes(), amountToTransfer);
-
-
-            
-            var coinSelection = ((TransactionBodyBuilder)transactionBody).UseRandomImprove(utxos, fromAddress);
-
-           
-
-
-            foreach (var i in coinSelection.Inputs)
-            {
-                transactionBody.AddInput(i.TransactionId, i.TransactionIndex);
-            }
-
-          
-
-            if (coinSelection.ChangeOutputs is not null && coinSelection.ChangeOutputs.Any())
-            {
-                foreach (var output in coinSelection.ChangeOutputs)
-                    transactionBody.AddOutput(new Address(fromAddress), output.Value.Coin);
-
-            }
-
-
-
+            ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
             var ppResponse = await _epochClient.GetProtocolParameters();
             var protocolParameters = ppResponse.Content.FirstOrDefault();
-         
-            var blockSummaries = (await _networkClient.GetChainTip()).Content;
-            var ttl = 1000 + (uint)blockSummaries.First().AbsSlot;
+            uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
-            
-
-            var witnessSet = TransactionWitnessSetBuilder.Create
-                            .AddVKeyWitness(_policyManager.GetPublicKey(), _policyManager.GetPrivateKey())
-                            .MockVKeyWitness(2);
-            
+            ITransactionWitnessSetBuilder witnessSet = SetWitness();
             var transaction = TransactionBuilder.Create;
             transaction.SetBody(transactionBody);
             transaction.SetWitnesses(witnessSet);
-            
-
-            //get a draft transaction to calculate fee
             var draft = transaction.Build();
-           
-
             var fee = draft.CalculateFee(protocolParameters.MinFeeA, protocolParameters.MinFeeB);
             draft.TransactionBody.TransactionOutputs.Last().Value.Coin -= fee;
             transactionBody.SetFee(fee);
@@ -129,13 +81,39 @@ public class TransactionService : ITransactionService
         return null;
       
     }
+    public async Task<ulong> CalculateFee(string fromAddress, string toAddress, int value)
+    {
+        try
+        {
 
+            ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
+            var ppResponse = await _epochClient.GetProtocolParameters();
+            var protocolParameters = ppResponse.Content.FirstOrDefault();
+            uint ttl = await BuildTTL();
+            transactionBody.SetTtl(ttl);
+            ITransactionWitnessSetBuilder witnessSet = SetWitness();
+            var transaction = TransactionBuilder.Create;
+            transaction.SetBody(transactionBody);
+            transaction.SetWitnesses(witnessSet);
+            var draft = transaction.Build();
+            var fee = draft.CalculateFee(protocolParameters.MinFeeA, protocolParameters.MinFeeB);
+            return fee;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("get fee failed:");
+            Console.WriteLine(ex.Message);
+        }
+
+        return 0;
+
+    }
 
     public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> SignTransaction(string transactionCbor, string witness)
     {
         try
         {
-            var tx= transactionCbor.HexToByteArray().DeserializeTransaction();
+            var tx = transactionCbor.HexToByteArray().DeserializeTransaction();
             var vKeyWitnesses = witness.HexToByteArray().DeserializeTransactionWitnessSet();
             foreach (var vkeyWitness in vKeyWitnesses.VKeyWitnesses)
                 tx.TransactionWitnessSet.VKeyWitnesses.Add(vkeyWitness);
@@ -156,6 +134,54 @@ public class TransactionService : ITransactionService
         return null;
 
     }
+
+    private async Task<uint> BuildTTL()
+    {
+        uint blocksFuture = 1000;
+        var blockSummaries = (await _networkClient.GetChainTip()).Content;
+        var ttl = blocksFuture + (uint)blockSummaries.First().AbsSlot;
+        return ttl;
+    }
+
+    private ITransactionWitnessSetBuilder SetWitness()
+    {
+        var scriptPolicy = _policyManager.GetPolicyScript();
+        var witnessSet = TransactionWitnessSetBuilder.Create
+                        .AddVKeyWitness(_policyManager.GetPublicKey(), _policyManager.GetPrivateKey())
+                        .MockVKeyWitness(2);
+        return witnessSet;
+    }
+
+    private async Task<ITransactionBodyBuilder> CoinSelection(string fromAddress, string toAddress, int value)
+    {
+        var utxos = await GetUtxosWhithoutNativeAssets(fromAddress);
+        var transactionBody = TransactionBodyBuilder.Create;
+        ulong amountToTransfer = (ulong)value;
+
+        transactionBody.AddOutput(toAddress.ToAddress().GetBytes(), amountToTransfer);
+
+        var coinSelection = ((TransactionBodyBuilder)transactionBody).UseRandomImprove(utxos, fromAddress);
+
+        foreach (var i in coinSelection.Inputs)
+        {
+            transactionBody.AddInput(i.TransactionId, i.TransactionIndex);
+        }
+
+
+
+        if (coinSelection.ChangeOutputs is not null && coinSelection.ChangeOutputs.Any())
+        {
+            foreach (var output in coinSelection.ChangeOutputs)
+                transactionBody.AddOutput(new Address(fromAddress), output.Value.Coin);
+
+        }
+
+        return transactionBody;
+    }
+
+   
+
+   
 
     private async Task<List<Utxo>> GetUtxos(string address)
     {
