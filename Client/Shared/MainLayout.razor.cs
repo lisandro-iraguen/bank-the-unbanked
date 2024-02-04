@@ -18,8 +18,6 @@ namespace Client.Shared
         [Inject] protected ILocalStorageService? _localStorage { get; set; }
         [Inject] protected IState<WalletState>? walletState { get; set; }
         [Inject] protected IState<ConectedState>? walletConectedState { get; set; }
-   
-        
         [Inject] protected DialogService? _dialogService { get; set; }
 
         private bool sidebarExpanded = false;

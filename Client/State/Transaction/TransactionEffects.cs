@@ -4,6 +4,7 @@ using CardanoSharp.Wallet.Models.Addresses;
 using Data.Wallet;
 using Fluxor;
 using Newtonsoft.Json;
+using Radzen;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -13,10 +14,12 @@ namespace Client.State.Transaction
     public class Effects
     {
         private readonly HttpClient Http;
+        private readonly DialogService _dialogService;
 
-        public Effects(HttpClient http)
+        public Effects(HttpClient http, DialogService dialogService)
         {
             Http = http;
+            _dialogService = dialogService;
         }
 
         [EffectMethod]
@@ -75,6 +78,8 @@ namespace Client.State.Transaction
             {
                 dispatcher.Dispatch(new SignTransactionFailedResultAction());
             }
+
+            _dialogService.Close();
         }
 
     }

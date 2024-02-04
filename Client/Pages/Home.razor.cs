@@ -1,12 +1,15 @@
-﻿using Client.State.Connection;
+﻿using Client.Shared;
+using Client.State.Connection;
 using Client.State.Crypto;
 using Client.State.Transaction;
 using Client.State.TransactionFee;
 using Client.State.Wallet;
+using Client.State.WalletExtensions;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json.Linq;
+using Radzen;
 using Utils;
 
 
@@ -22,6 +25,8 @@ namespace Client.Pages
         [Inject] IState<ConectedState>? walletConecting { get; set; }
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
+        [Inject] protected DialogService? _dialogService { get; set; }
+
 
         private string? walletToTransfer;
         private ulong valueToTransfer = 0;
@@ -54,10 +59,11 @@ namespace Client.Pages
             return Task.CompletedTask;
         }
 
-        private Task SignAndSubmitTransaction()
+        private async Task SignAndSubmitTransaction()
         {
             dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer/ cryptoState.Value.Crypto.TotalBid));
-            return Task.CompletedTask;
+            await OpenTransactionPopUp();
+          
         }
 
         private bool CantSendStransaction()
@@ -69,6 +75,24 @@ namespace Client.Pages
             if (transactionFeeState.Value.IsLoading) return true;
 
             return false;
+        }
+        public async Task OpenTransactionPopUp()
+        {
+            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
+
+        }
+
+
+        private RenderFragment RenderWalletConnector(DialogService service)
+        {
+
+            RenderFragment fragment = builder =>
+            {
+                builder.OpenComponent(0, typeof(TransactionPopUp));
+                builder.CloseComponent();
+            };
+
+            return fragment;
         }
     }
 }
