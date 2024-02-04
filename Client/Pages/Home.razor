@@ -71,7 +71,7 @@ else
 
 
             <RadzenFormField Text="$ARS" Variant="Variant.Flat">
-                <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) />
+                <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) Disabled="transactionFeeState.Value.IsLoading" />
             </RadzenFormField>
 
             @if (transactionFeeState.Value.IsLoading)
