@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: true
           lfs: false    
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0
