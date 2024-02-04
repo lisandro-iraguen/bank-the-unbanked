@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.201
+           dotnet-version: 6.0.100
       - name: Restore and build
         run: |
           dotnet restore
