@@ -9,9 +9,9 @@ namespace Client.State.Wallet
 {
     public class WalletConnectAutomaticallyAction
     {   
-        public IEnumerable<WalletExtensionState> Wallets { get; }
-        public ILocalStorageService LocalStorageSerivce { get; }
-        public IDispatcher Dispatcher { get; }
+        public IEnumerable<WalletExtensionState>? Wallets { get; }
+        public ILocalStorageService? LocalStorageSerivce { get; }
+        public IDispatcher? Dispatcher { get; }
      
 
         private WalletConnectAutomaticallyAction() { }

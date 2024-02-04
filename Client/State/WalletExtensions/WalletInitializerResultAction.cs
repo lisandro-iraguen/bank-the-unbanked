@@ -6,9 +6,9 @@ namespace Client.State.WalletExtensions
 {
     public class WalletInitializerResultAction
     {
-        public WalletConnectorJsInterop JSInterop { get; }
-        public IEnumerable<WalletExtensionState> Extensions { get; }
-        public string Key { get; }
+        public WalletConnectorJsInterop? JSInterop { get; }
+        public IEnumerable<WalletExtensionState>? Extensions { get; }
+        public string? Key { get; }
 
         private WalletInitializerResultAction() { }
         public WalletInitializerResultAction(WalletConnectorJsInterop jsInterop, IEnumerable<WalletExtensionState> extensions)

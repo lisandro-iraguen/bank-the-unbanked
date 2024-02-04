@@ -8,8 +8,8 @@ namespace Client.State.Transaction;
 public class TransactionState
 {
     public bool IsSigningTransaction { get; }
-    public WalletExtensionState UsedWallet { get; }
-    public TxRequest TxSignData { get; }
+    public WalletExtensionState? UsedWallet { get; }
+    public TxRequest? TxSignData { get; }
 
     public TransactionState() { }
     public TransactionState(bool isSigningTransaction, WalletExtensionState wallet)

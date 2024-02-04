@@ -6,22 +6,23 @@ namespace Client.Pages
     public partial class Tokenomics
     {
         [Inject]
-        protected IJSRuntime JSRuntime { get; set; }
+        protected IJSRuntime? JSRuntime { get; set; }
         [Inject]
-        protected IConfiguration _configuration { get; set; }
+        protected IConfiguration? _configuration { get; set; }
 
 
 
-        private string tokenomicsURl;
-        private string whitePapperUrl;
+        private string? tokenomicsURl;
+        private string? whitePapperUrl;
 
 
 
 
-        protected override async Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
             tokenomicsURl = _configuration.GetValue<string>("AppSettings:TokenomicsURL");
             whitePapperUrl = _configuration.GetValue<string>("AppSettings:WhitePapperUrl");
+            return Task.CompletedTask;
         }
 
         private async Task toToTokenomics()

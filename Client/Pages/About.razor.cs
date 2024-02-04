@@ -9,10 +9,10 @@ namespace Client.Pages
     public partial class About: FluxorComponent
     {
         [Inject]
-        protected IDispatcher dispatcher { get; set; }  
+        protected IDispatcher? dispatcher { get; set; }  
 
         [Inject]
-        protected IState<DeveloperState> developersState { get; set; }
+        protected IState<DeveloperState>? developersState { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();

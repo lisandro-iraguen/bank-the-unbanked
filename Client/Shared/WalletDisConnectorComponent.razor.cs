@@ -10,23 +10,19 @@ namespace Client.Shared
     public partial class WalletDisConnectorComponent
     {
         [Inject]
-        protected DialogService _dialogService { get; set; }
-        [Inject] protected IState<WalletState> walletState { get; set; }
-        [Inject] protected IState<WalletExtensionsState> walletConectorState { get; set; }
-        [Inject] protected IDispatcher dispatcher { get; set; }
-        [Inject] protected ILocalStorageService localStorage{ get; set; }
+        protected DialogService? _dialogService { get; set; }
+        [Inject] protected IState<WalletState>? walletState { get; set; }
+        [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
+        [Inject] protected IDispatcher? dispatcher { get; set; }
+        [Inject] protected ILocalStorageService? localStorage{ get; set; }
 
 
-        public async ValueTask DisconnectWalletAsync(bool suppressEvent = false)
+        public ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
             dispatcher.Dispatch(new WalletDisconectAction(walletState.Value.Wallet, localStorage));
            _dialogService.Close();
-           StateHasChanged();
-           return;
+            return new ValueTask();
         }
-
-
-
     }
 
 

@@ -13,11 +13,11 @@ namespace Client.Shared
     public partial class WalletConnectorComponent
     {
 
-        [Inject] protected DialogService _dialogService { get; set; }    
+        [Inject] protected DialogService? _dialogService { get; set; }    
         [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
-        [Inject] protected ILocalStorageService _localStorage { get; set; }
-        [Inject] protected IDispatcher dispatcher { get; set; }
-        [Inject] protected IState<WalletExtensionsState> walletConectorState { get; set; }
+        [Inject] protected ILocalStorageService? _localStorage { get; set; }
+        [Inject] protected IDispatcher? dispatcher { get; set; }
+        [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
 
       
 

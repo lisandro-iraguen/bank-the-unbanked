@@ -4,8 +4,8 @@ namespace Client.State.Transaction
 {
     public class SignTransactionAction
     {
-        public WalletExtensionState UsedWallet { get; }
-        public string TransferTo { get; internal set; }
+        public WalletExtensionState? UsedWallet { get; }
+        public string? TransferTo { get; internal set; }
         public float TransferAmount { get; internal set; }
 
         public SignTransactionAction() { }

@@ -10,7 +10,7 @@ namespace Client.State.Crypto
     {
         public bool IsLoading { get; }
 
-        public CriptoDTO Crypto { get; }
+        public CriptoDTO? Crypto { get; }
 
         private CryptoState() { }
         public CryptoState(bool isLoading, CriptoDTO crypto)

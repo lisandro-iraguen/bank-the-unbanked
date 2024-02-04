@@ -9,8 +9,8 @@ namespace Client.State.Wallet
     public class WalletDisconectAction
     {
      
-        public WalletExtensionState Wallet { get; }        
-        public ILocalStorageService LocalStorage { get; }
+        public WalletExtensionState? Wallet { get; }        
+        public ILocalStorageService? LocalStorage { get; }
 
         public WalletDisconectAction(WalletExtensionState wallet, ILocalStorageService localStorage)
         {

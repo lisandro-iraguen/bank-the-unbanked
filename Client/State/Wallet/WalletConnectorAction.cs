@@ -9,10 +9,10 @@ namespace Client.State.Wallet
     public class WalletConnectorAction
     {
 
-        public string Key { get; }
-        public IEnumerable<WalletExtensionState> Wallets { get; }
-        public DialogService DialogService { get; }
-        public ILocalStorageService LocalStorage{ get; }
+        public string? Key { get; }
+        public IEnumerable<WalletExtensionState>? Wallets { get; }
+        public DialogService? DialogService { get; }
+        public ILocalStorageService? LocalStorage{ get; }
 
 
 

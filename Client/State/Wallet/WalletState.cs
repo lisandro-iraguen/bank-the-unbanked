@@ -7,9 +7,9 @@ namespace Client.State.Wallet
     public class WalletState
     {
        
-        public IEnumerable<WalletExtensionState> Wallets { get; }
-        public string Key { get; }
-        public WalletExtensionState Wallet { get; }
+        public IEnumerable<WalletExtensionState>? Wallets { get; }
+        public string? Key { get; }
+        public WalletExtensionState? Wallet { get; }
         private WalletState() { }
 
         public WalletState(string key, WalletExtensionState wallet, IEnumerable<WalletExtensionState> wallets)

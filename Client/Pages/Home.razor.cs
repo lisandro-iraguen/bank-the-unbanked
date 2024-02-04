@@ -15,19 +15,17 @@ namespace Client.Pages
 {
     public partial class Home : FluxorComponent
     {
-        [Inject] protected IConfiguration _configuration { get; set; }
-        [Inject] protected IDispatcher dispatcher { get; set; }
-        [Inject] IState<CryptoState> cryptoState { get; set; }
-        [Inject] IState<WalletState> walletState { get; set; }
-        [Inject] IState<ConectedState> walletConecting { get; set; }
-        [Inject] IState<TransactionState> transactionState { get; set; }
-        [Inject] IState<TransactionFeeState> transactionFeeState { get; set; }
+        [Inject] protected IConfiguration? _configuration { get; set; }
+        [Inject] protected IDispatcher? dispatcher { get; set; }
+        [Inject] IState<CryptoState>? cryptoState { get; set; }
+        [Inject] IState<WalletState>? walletState { get; set; }
+        [Inject] IState<ConectedState>? walletConecting { get; set; }
+        [Inject] IState<TransactionState>? transactionState { get; set; }
+        [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
 
-
-
-
-        private string walletToTransfer;
+        private string? walletToTransfer;
         private ulong valueToTransfer = 0;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

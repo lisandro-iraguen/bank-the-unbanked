@@ -13,14 +13,14 @@ namespace Client.Shared
     public partial class MainLayout
     {
 
-        [Inject] protected IDispatcher dispatcher { get; set; }
+        [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
-        [Inject] protected ILocalStorageService _localStorage { get; set; }
-        [Inject] protected IState<WalletState> walletState { get; set; }
-        [Inject] protected IState<ConectedState> walletConectedState { get; set; }
+        [Inject] protected ILocalStorageService? _localStorage { get; set; }
+        [Inject] protected IState<WalletState>? walletState { get; set; }
+        [Inject] protected IState<ConectedState>? walletConectedState { get; set; }
    
         
-        [Inject] protected DialogService _dialogService { get; set; }
+        [Inject] protected DialogService? _dialogService { get; set; }
 
         private bool sidebarExpanded = false;
         private bool SidebarVisible = false;

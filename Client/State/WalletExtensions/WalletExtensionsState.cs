@@ -10,8 +10,8 @@ namespace Client.State.WalletExtensions
     {
         public bool IsConnecting { get; }
 
-        public WalletConnectorJsInterop WalletConnectorJSInterop { get; }
-        public IEnumerable<WalletExtensionState> Extensions { get; }
+        public WalletConnectorJsInterop? WalletConnectorJSInterop { get; }
+        public IEnumerable<WalletExtensionState>? Extensions { get; }
       
         private WalletExtensionsState() { }
 
