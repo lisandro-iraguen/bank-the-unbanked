@@ -62,10 +62,18 @@ else
     <RadzenCard>
 
         <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-            <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer class="w-100" aria-label="Default TextBox" />
+
+            <RadzenFormField Text="Wallet A Enviar" Variant="Variant.Flat" class="w-100">
+                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer />
+            </RadzenFormField>
 
 
-            <RadzenNumeric Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) TValue="ulong" @bind-Value=@valueToTransfer InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+
+
+            <RadzenFormField Text="$ARS" Variant="Variant.Flat">
+                <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) />
+            </RadzenFormField>
+
             @if (transactionFeeState.Value.IsLoading)
             {
                 <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
