@@ -19,15 +19,6 @@ jobs:
         with:
           submodules: true
           lfs: false    
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-           dotnet-version: 8.0.100
-      - name: Restore and build
-        run: |
-          dotnet restore
-          dotnet build
-
       - name: Run unit tests
         run: dotnet test Test    
       - name: Build And Deploy
