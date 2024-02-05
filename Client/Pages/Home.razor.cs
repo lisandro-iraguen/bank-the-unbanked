@@ -76,6 +76,7 @@ namespace Client.Pages
             if ((transactionFeeState.Value.Fee == 0)) return true;
             if (transactionState.Value.IsSigningTransaction) return true;
             if (transactionFeeState.Value.IsLoading) return true;
+            if (valueInAda > walletState.Value.Wallet.Balance) return true;
 
             return false;
         }
