@@ -55,13 +55,15 @@ namespace Client.Pages
 
         private Task GetTransactionFee()
         {
-            dispatcher.Dispatch(new TransactionFeeAction(walletState.Value.Wallet, walletToTransfer,valueToTransfer));
+            ulong adaToTransfer = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
+            dispatcher.Dispatch(new TransactionFeeAction(walletState.Value.Wallet, walletToTransfer, adaToTransfer));
             return Task.CompletedTask;
         }
 
         private async Task SignAndSubmitTransaction()
         {
-            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, valueToTransfer/ cryptoState.Value.Crypto.TotalBid));
+            ulong adaToTransfer = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
+            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, adaToTransfer));
             await OpenTransactionPopUp();
           
         }
@@ -71,6 +73,7 @@ namespace Client.Pages
             if (valueToTransfer == 0) return true;            
             var valueInAda = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
             if ((transactionFeeState.Value.Fee > valueInAda)) return true;
+            if ((transactionFeeState.Value.Fee == 0)) return true;
             if (transactionState.Value.IsSigningTransaction) return true;
             if (transactionFeeState.Value.IsLoading) return true;
 
