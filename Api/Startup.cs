@@ -23,15 +23,15 @@ public class Startup : FunctionsStartup
     {
 
         var configuration = BuildConfiguration(builder.GetContext().ApplicationRootPath);
+        builder.Services.AddSingleton<IConfiguration>(configuration);
 
-
-        builder.Services.AddKoios("https://preview.koios.rest/api/v0");
+        var koiosURL = configuration["KoiosURL"];
+        builder.Services.AddKoios(configuration["KoiosURL"]);
         builder.Services.AddSingleton<IWalletData, WalletData>();
         builder.Services.AddSingleton<IWebData, WebDeveloperData>();
         builder.Services.AddSingleton<IPriceServices, PriceServices>();
-        builder.Services.AddSingleton<IPolicyManager>(x =>
-            new PolicyManager(configuration));
-        builder.Services.AddSingleton<ITransactionService, TransactionService>();
+        builder.Services.AddSingleton<IPolicyManager, PolicyManager>();
+        builder.Services.AddSingleton<ITransactionService,TransactionService>();
 
     }
 

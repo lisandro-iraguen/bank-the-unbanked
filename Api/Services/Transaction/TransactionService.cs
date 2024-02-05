@@ -1,5 +1,6 @@
 ﻿using Api.Services.Policy;
 using CardanoSharp.Koios.Client;
+using CardanoSharp.Koios.Client.Contracts;
 using CardanoSharp.Wallet.CIPs.CIP2;
 using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models;
@@ -10,6 +11,7 @@ using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using CardanoSharp.Wallet.TransactionBuilding;
 using Microsoft.Extensions.Configuration;
+using Refit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +27,9 @@ public class TransactionService : ITransactionService
     private readonly INetworkClient _networkClient;
     private readonly IEpochClient _epochClient;
     private readonly IPolicyManager _policyManager;
+    private readonly IConfiguration _configuration;
 
-    private readonly string _sendPaymentToAddress;
+  
 
     public TransactionService(IConfiguration config, IPolicyManager policyManager, IAddressClient addressClient, INetworkClient networkClient, IEpochClient epochClient)
     {
@@ -34,11 +37,12 @@ public class TransactionService : ITransactionService
         _addressClient = addressClient;
         _networkClient = networkClient;
         _epochClient = epochClient;
+        _configuration = config;
     }
 
     public async Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, ulong value)
     {
-        
+
         try
         {
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
@@ -79,7 +83,7 @@ public class TransactionService : ITransactionService
         }
 
         return null;
-      
+
     }
     public async Task<ulong> CalculateFee(string fromAddress, string toAddress, ulong value)
     {
@@ -135,11 +139,46 @@ public class TransactionService : ITransactionService
 
     }
 
+    public async Task<AddressTransaction[]> TransactionHistory(string addressFrom)
+    {
+
+        try
+        {
+            var Addresses = new List<string>()
+                {
+                    addressFrom
+                };
+
+            var KoiosURL = _configuration["KoiosURL"];
+            IAddressClient addressClient = RestService.For<IAddressClient>(KoiosURL);
+            var addressTransactionRequest = new AddressTransactionRequest();
+            addressTransactionRequest.Addresses = Addresses;
+            var addressTransactions = await addressClient.GetAddressTransactions(addressTransactionRequest, 10);
+            return addressTransactions.Content;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("build transaction'failed");
+            Console.WriteLine(ex.Message);
+        }
+
+        return null;
+
+    }
+
     private async Task<uint> BuildTTL()
     {
         uint blocksFuture = 1000;
         var blockSummaries = (await _networkClient.GetChainTip()).Content;
         var ttl = blocksFuture + (uint)blockSummaries.First().AbsSlot;
+        return ttl;
+    }
+
+    private async Task<uint> BuildHistoryTTL()
+    {
+        uint blocksFuture = 10000;
+        var blockSummaries = (await _networkClient.GetChainTip()).Content;
+        var ttl = (uint)blockSummaries.First().AbsSlot - blocksFuture;
         return ttl;
     }
 
@@ -179,23 +218,23 @@ public class TransactionService : ITransactionService
         return transactionBody;
     }
 
-   
 
-   
 
-    private async Task<List<Utxo>> GetUtxos(string address)
+
+
+    private async Task<List<CardanoSharp.Wallet.Models.Utxo>> GetUtxos(string address)
     {
         try
         {
             var addressBulkRequest = new AddressBulkRequest { Addresses = new List<string> { address } };
             var addressResponse = await _addressClient.GetAddressInformation(addressBulkRequest);
             var addressInfo = addressResponse.Content;
-            var utxos = new List<Utxo>();
+            var utxos = new List<CardanoSharp.Wallet.Models.Utxo>();
 
             foreach (var ai in addressInfo.SelectMany(x => x.UtxoSets))
             {
                 if (ai is null) continue;
-                var utxo = new Utxo()
+                var utxo = new CardanoSharp.Wallet.Models.Utxo()
                 {
                     TxIndex = ai.TxIndex,
                     TxHash = ai.TxHash,
@@ -228,20 +267,20 @@ public class TransactionService : ITransactionService
             return null;
         }
     }
-    
-    private async Task<List<Utxo>> GetUtxosWhithoutNativeAssets(string address)
+
+    private async Task<List<CardanoSharp.Wallet.Models.Utxo>> GetUtxosWhithoutNativeAssets(string address)
     {
         try
         {
             var addressBulkRequest = new AddressBulkRequest { Addresses = new List<string> { address } };
             var addressResponse = await _addressClient.GetAddressInformation(addressBulkRequest);
             var addressInfo = addressResponse.Content;
-            var utxos = new List<Utxo>();
+            var utxos = new List<CardanoSharp.Wallet.Models.Utxo>();
 
             foreach (var ai in addressInfo.SelectMany(x => x.UtxoSets))
             {
                 if (ai is null) continue;
-                var utxo = new Utxo()
+                var utxo = new CardanoSharp.Wallet.Models.Utxo()
                 {
                     TxIndex = ai.TxIndex,
                     TxHash = ai.TxHash,
