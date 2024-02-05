@@ -39,7 +39,6 @@ else
 
 
     <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-        <h4>Balance: @walletState.Value.Wallet.CoinCurrency @walletState.Value.Wallet.BalanceAda </h4>    
         @if (cryptoState.Value.IsLoading)
         {
             <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
@@ -50,7 +49,7 @@ else
         {
             <h1>$ARS @(cryptoState.Value.Crypto.TotalBid * walletState.Value.Wallet.BalanceAda2) </h1>
             <h4>BinanceP2P</h4>
-            <h4>1 ada : @cryptoState.Value.Crypto.TotalBid Dolares</h4>         
+            <h4>1 ada : @cryptoState.Value.Crypto.TotalBid Dolares</h4>
         }
 
 
@@ -81,12 +80,7 @@ else
                 <h4>Network Fee $ARS: @(cryptoState.Value.Crypto.TotalBid * transactionFeeState.Value.Fee) </h4>
             }
 
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">
-                @walletState.Value.Wallet.CoinCurrency: @(valueToTransfer / cryptoState.Value.Crypto.TotalBid)
-            </RadzenText>
-
             <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="CantSendStransaction()" />
-
 
         </RadzenStack>
         @if (transactionState.Value.IsSigningTransaction)
