@@ -5,6 +5,7 @@ using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Transactions;
 using Client.State.Connection;
+using Client.State.WalletHistory;
 using Components;
 using Data.Wallet;
 using Fluxor;
@@ -203,7 +204,7 @@ namespace Client.State.Wallet
             }
         }
 
-       
+
         private string[]? SupportedWalletListToString(IEnumerable<WalletExtensionState> valletList)
         {
             return valletList?.Select(s => s.Key)?.ToArray();

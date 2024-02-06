@@ -5,6 +5,7 @@ using Client.State.Transaction;
 using Client.State.TransactionFee;
 using Client.State.Wallet;
 using Client.State.WalletExtensions;
+using Client.State.WalletHistory;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -25,6 +26,7 @@ namespace Client.Pages
         [Inject] IState<ConectedState>? walletConecting { get; set; }
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
+        [Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
 
 
@@ -34,7 +36,7 @@ namespace Client.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            dispatcher.Dispatch(new FetchCryptoAction());
+            dispatcher.Dispatch(new FetchCryptoAction());           
             walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";            
         }
 

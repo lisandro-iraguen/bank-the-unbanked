@@ -2,6 +2,7 @@
 @page "/home"
 @using Client.State.Crypto;
 @using Radzen;
+@using CardanoSharp.Koios.Client.Contracts;
 
 
 
@@ -57,16 +58,21 @@ else
 
     <RadzenCard>
 
+        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Start">
+
+            
+            <RadzenColumn Size="5" >
+                <RadzenFormField Text="Wallet A Enviar" Variant="Variant.Text" class="w-100">
+                    <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer Variant="Variant.Text" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
         <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
 
-            <RadzenFormField Text="Wallet A Enviar" Variant="Variant.Flat" class="w-100">
-                <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer />
-            </RadzenFormField>
 
 
-
-
-            <RadzenFormField Text="$ARS" Variant="Variant.Flat">
+            <RadzenFormField Text="$ARS">
                 <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) Disabled="transactionFeeState.Value.IsLoading" />
             </RadzenFormField>
 
@@ -92,6 +98,5 @@ else
         }
 
     </RadzenCard>
-
-
+    
 }
