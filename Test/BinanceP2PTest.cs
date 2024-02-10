@@ -1,9 +1,5 @@
+
 using Api.Services.Oracle;
-using Api.Wallet;
-using Api.WebData.Developers;
-using CardanoSharp.Wallet;
-using Data.Wallet;
-using Data.Web;
 
 namespace Test
 {

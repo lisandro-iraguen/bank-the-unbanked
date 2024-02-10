@@ -1,14 +1,7 @@
 {
   "dependencies": {
-    "storage1": {
-      "type": "storage.emulator",
-      "connectionId": "AzureWebJobsStorage"
-    },
-    "secrets1": {
-      "secretStore": null,
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/bank-the-unbanked-kv",
-      "type": "secrets.keyVault",
-      "connectionId": "VaultUri"
+    "appInsights1": {
+      "type": "appInsights.sdk"
     }
   }
 }

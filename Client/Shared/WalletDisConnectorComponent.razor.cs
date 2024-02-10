@@ -11,7 +11,7 @@ namespace Client.Shared
     {
         [Inject]
         protected DialogService? _dialogService { get; set; }
-        [Inject] protected IState<WalletState>? walletState { get; set; }
+        [Inject] protected IState<WalletExtensions>? walletState { get; set; }
         [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] protected ILocalStorageService? localStorage{ get; set; }

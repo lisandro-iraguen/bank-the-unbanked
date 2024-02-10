@@ -4,15 +4,15 @@ using Fluxor;
 namespace Client.State.Wallet
 {
     [FeatureState]
-    public class WalletState
+    public class WalletExtensions
     {
        
         public IEnumerable<WalletExtensionState>? Wallets { get; }
         public string? Key { get; }
         public WalletExtensionState? Wallet { get; }
-        private WalletState() { }
+        private WalletExtensions() { }
 
-        public WalletState(string key, WalletExtensionState wallet, IEnumerable<WalletExtensionState> wallets)
+        public WalletExtensions(string key, WalletExtensionState wallet, IEnumerable<WalletExtensionState> wallets)
         {         
             Key = key;
             Wallet = wallet;

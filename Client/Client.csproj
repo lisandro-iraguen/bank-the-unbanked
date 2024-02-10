@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
@@ -13,20 +13,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 		<PackageReference Include="CardanoSharp.Koios.Client" Version="2.1.0" />
 		<PackageReference Include="CardanoSharp.Wallet" Version="5.0.3" />
 		<PackageReference Include="Fluxor" Version="5.9.1" />
 		<PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
 		<PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.25" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.25" PrivateAssets="all" />
-		<PackageReference Include="Radzen.Blazor" Version="4.24.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Data\Data.csproj" />
-		<ProjectReference Include="..\Utils\Utils.csproj" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+		<PackageReference Include="Radzen.Blazor" Version="4.24.6" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -44,7 +39,19 @@
 	<ItemGroup>
 		<None Include="Shared\Copyright.razor" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Data\Data.csproj" />
+	  <ProjectReference Include="..\Utils\Utils.csproj" />
+	</ItemGroup>
 	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Properties\launchSettings.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+	  </None>
 	</ItemGroup>
 </Project>

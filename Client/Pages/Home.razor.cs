@@ -22,7 +22,7 @@ namespace Client.Pages
         [Inject] protected IConfiguration? _configuration { get; set; }
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] IState<CryptoState>? cryptoState { get; set; }
-        [Inject] IState<WalletState>? walletState { get; set; }
+        [Inject] IState<WalletExtensions>? walletState { get; set; }
         [Inject] IState<ConectedState>? walletConecting { get; set; }
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }

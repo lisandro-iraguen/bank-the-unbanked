@@ -16,7 +16,7 @@ namespace Client.Shared
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
         [Inject] protected ILocalStorageService? _localStorage { get; set; }
-        [Inject] protected IState<WalletState>? walletState { get; set; }
+        [Inject] protected IState<WalletExtensions>? walletState { get; set; }
         [Inject] protected IState<ConectedState>? walletConectedState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
 

@@ -5,21 +5,21 @@ namespace Client.State.Wallet
     public class WalletReducers
     {
         [ReducerMethod]
-        public static WalletState ReduceWalletConnectorAction(WalletState state, WalletConnectorAction action) =>
+        public static WalletExtensions ReduceWalletConnectorAction(WalletExtensions state, WalletConnectorAction action) =>
         new(key: action.Key, wallet: null, wallets: action.Wallets);
 
         [ReducerMethod]
-        public static WalletState ReduceWalletConnectorResultAction(WalletState state, WalletConnectorResultAction action) =>
+        public static WalletExtensions ReduceWalletConnectorResultAction(WalletExtensions state, WalletConnectorResultAction action) =>
          new(key: state.Key, wallet: action.Wallet, wallets: state.Wallets);
 
         [ReducerMethod]
-        public static WalletState ReduceWalletDisconectAction(WalletState state, WalletDisconectResultAction action)
+        public static WalletExtensions ReduceWalletDisconectAction(WalletExtensions state, WalletDisconectResultAction action)
         {           
             return new(key: null, wallet: null, wallets: null);
         }
 
         [ReducerMethod]
-        public static WalletState ReduceWalletConnectAutomaticallyAction(WalletState state, WalletConnectAutomaticallyAction action)
+        public static WalletExtensions ReduceWalletConnectAutomaticallyAction(WalletExtensions state, WalletConnectAutomaticallyAction action)
         {           
             return new(key: null, wallet: null, wallets: state.Wallets);
         }
