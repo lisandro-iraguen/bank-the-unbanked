@@ -22,6 +22,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
 		<PackageReference Include="Radzen.Blazor" Version="4.24.6" />
+		<PackageReference Include="Toolbelt.Blazor.I18nText" Version="12.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,5 +54,8 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
 	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="i18ntext\Web.en.json" />
 	</ItemGroup>
 </Project>

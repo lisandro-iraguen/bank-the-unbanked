@@ -3,18 +3,27 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorLayout;
 
 
+
 <RadzenComponents />
 
 <RadzenLayout>
     <RadzenHeader>
 
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" Wrap="FlexWrap.NoWrap">
-            <RadzenSidebarToggle Click="@(() => ToggleSideBar())" />
-            <RadzenLabel Text="banco" />
+        <ChildContent>
+            <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0px">
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenSidebarToggle Click="@(() => ToggleSideBar())" />
+                        <RadzenLabel Text="banco" />
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                        <div Class="rz-display-sm-inline-flex align-items-center">                            
+                            <RadzenButton class="rz-m-2" Text="ES" Icon="language" Variant="Variant.Outlined" ></RadzenButton>
+                        </div>
 
-            <RadzenRow JustifyContent="JustifyContent.End" AlignItems="AlignItems.Normal" Gap="1" Style="width:100%">
-                <RadzenRow Gap="2rem">                    
-                    <RadzenColumn Order="7">
+
                         @if (walletConectedState.Value.IsConnecting)
                         {
                             <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
@@ -30,18 +39,19 @@
                                 <RadzenButton class="rz-m-2" Text="@walletState.Value.Wallet.Name" Icon="account_balance_wallet" Click=@OpenWalletDisconector></RadzenButton>
                             }
                         }
-                    </RadzenColumn>
-                </RadzenRow>
+                    </RadzenStack>
+                </RadzenColumn>
             </RadzenRow>
+        </ChildContent>
 
-        </RadzenStack>
+  
 
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded=@sidebarExpanded @bind-Visible=@SidebarVisible>
         <NavMenu />
     </RadzenSidebar>
-    <RadzenBody>      
-             @Body        
+    <RadzenBody>
+        @Body
     </RadzenBody>
     <RadzenFooter>
         <Copyright />

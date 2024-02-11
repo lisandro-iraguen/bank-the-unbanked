@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
 
+
 namespace Client.Shared
 {
     public partial class MainLayout
@@ -19,14 +20,17 @@ namespace Client.Shared
         [Inject] protected IState<WalletExtensions>? walletState { get; set; }
         [Inject] protected IState<ConectedState>? walletConectedState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
+        [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
         private bool sidebarExpanded = false;
         private bool SidebarVisible = false;
+        private I18nText.Web? webText;
+
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
-                sidebarExpanded = false;              
+                sidebarExpanded = false;
             }
             base.OnAfterRender(firstRender);
         }
@@ -45,8 +49,14 @@ namespace Client.Shared
         {
             base.OnInitialized();
             dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime, _localStorage, _dialogService));
+
         }
-       
+
+        protected override async Task OnInitializedAsync()
+        {
+            webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
+
+        }
         public async Task OpenWalletConnectors()
         {
             dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime, _localStorage, _dialogService));
@@ -75,7 +85,8 @@ namespace Client.Shared
         private RenderFragment RenderWalletDisConnector(DialogService service)
         {
 
-            RenderFragment fragment = builder => {
+            RenderFragment fragment = builder =>
+            {
                 builder.OpenComponent(0, typeof(WalletDisConnectorComponent));
                 builder.CloseComponent();
             };
