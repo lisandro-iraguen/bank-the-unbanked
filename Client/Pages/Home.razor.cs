@@ -29,25 +29,33 @@ namespace Client.Pages
         [Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
 
+        [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
+
+
+        private I18nText.Web? webText;
         private string? walletToTransfer;
         private ulong valueToTransfer = 0;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            dispatcher.Dispatch(new FetchCryptoAction());           
-            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";            
+            dispatcher.Dispatch(new FetchCryptoAction());
+            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";
         }
 
-       
+        protected override async Task OnInitializedAsync()
+        {
+            webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
+
+        }
 
         void OnChangeWalletAdress(string value, string name)
         {
             Console.WriteLine($"{name} value changed to {value}");
-        
+
         }
-        
+
         void OnChangeValueToBeTransfer(ulong value, string name)
         {
             Console.WriteLine($"{name} to be transfer changed to {value}");
@@ -67,12 +75,12 @@ namespace Client.Pages
             ulong adaToTransfer = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
             dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, adaToTransfer));
             await OpenTransactionPopUp();
-          
+
         }
 
         private bool CantSendStransaction()
         {
-            if (valueToTransfer == 0) return true;            
+            if (valueToTransfer == 0) return true;
             var valueInAda = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
             if ((transactionFeeState.Value.Fee > valueInAda)) return true;
             if ((transactionFeeState.Value.Fee == 0)) return true;

@@ -23,7 +23,7 @@ else
 
         <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
             <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
-                no hay wallet selecionada, hay que conectarse
+                @webText.NoWalletsCoonected
             </RadzenAlert>
         </RadzenStack>
     }
@@ -79,11 +79,11 @@ else
             @if (transactionFeeState.Value.IsLoading)
             {
                 <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
-                <h4>loading fees... </h4>
+                <h4>@webText.LoadingFees ... </h4>
             }
             else
             {
-                <h4>Network Fee $ARS: @(cryptoState.Value.Crypto.TotalBid * transactionFeeState.Value.Fee) </h4>
+                <h4>@webText.NetworkFees ... $ARS: @(cryptoState.Value.Crypto.TotalBid * transactionFeeState.Value.Fee) </h4>
             }
 
             <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="CantSendStransaction()" />

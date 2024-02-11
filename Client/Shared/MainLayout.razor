@@ -2,8 +2,6 @@
 @using Data.Wallet;
 @inherits Fluxor.Blazor.Web.Components.FluxorLayout;
 
-
-
 <RadzenComponents />
 
 <RadzenLayout>
@@ -14,13 +12,13 @@
                 <RadzenColumn Size="5">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                         <RadzenSidebarToggle Click="@(() => ToggleSideBar())" />
-                        <RadzenLabel Text="banco" />
+                        <RadzenLabel Text="@webText.Bank" />
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
                         <div Class="rz-display-sm-inline-flex align-items-center">                            
-                            <RadzenButton class="rz-m-2" Text="ES" Icon="language" Variant="Variant.Outlined" ></RadzenButton>
+                            <RadzenButton class="rz-m-2" Text="@webText.Language" Icon="language" Variant="Variant.Outlined" Click="OnChangeCurrentLang"></RadzenButton>
                         </div>
 
 
@@ -32,7 +30,7 @@
                         {
                             if (walletState.Value.Wallet == null)
                             {
-                                <RadzenButton class="rz-m-2" Text="Conectar" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
+                                <RadzenButton class="rz-m-2" Text="@webText.Connect" Icon="account_balance_wallet" Click=@OpenWalletConnectors></RadzenButton>
                             }
                             else
                             {

@@ -1,4 +1,14 @@
 ﻿{
   "Hello": "Hello Wolrd!",
-  "Bank": "Banco"
+  "Bank": "Banco",
+  "Language": "ES",
+  "Connect": "Conectar",
+  "Home": "Principal",
+  "About": "Nosotros",
+  "DeveloperListTitle": "Linkedin  de los desarrolladores",
+  "ProjectSupport": "Apoyar a el Proyecto",
+  "MakeYourDonation": "Hace Tu Donación",
+  "NoWalletsCoonected": "no hay wallet seleccionada, hay que conectarse",
+  "LoadingFees": "Calculando Tarifas",
+  "NetworkFees": "Tarifas de la Red"
 }

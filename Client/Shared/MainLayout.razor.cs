@@ -70,6 +70,22 @@ namespace Client.Shared
             var dialogResult = await _dialogService.OpenAsync("Desconectar Biletera", RenderWalletDisConnector);
 
         }
+
+        private async Task OnChangeCurrentLang()
+        {
+            var language = await I18nText.GetCurrentLanguageAsync();
+
+            if (language == "es-419")
+            {
+                await I18nText.SetCurrentLanguageAsync("en");
+            }
+            else
+            {
+                if (language == "en")
+                    await I18nText.SetCurrentLanguageAsync("es-419");
+            }
+        }
+
         private RenderFragment RenderWalletConnector(DialogService service)
         {
 

@@ -1,4 +1,14 @@
 ﻿{
   "Hello": "Hello Wolrd!",
-  "Bank": "Bank"
+  "Bank": "Bank",
+  "Language": "EN",
+  "Connect": "Connect",
+  "Home": "Home",
+  "About": "About",
+  "DeveloperListTitle": "Linkedin's Developers",
+  "ProjectSupport": "Project Support",
+  "MakeYourDonation": "Make Your Donation",
+  "NoWalletsCoonected": "There is no wallet selected, you have to connect",
+  "LoadingFees": "Loading Fees",
+  "NetworkFees": "Network Fees"
 }
