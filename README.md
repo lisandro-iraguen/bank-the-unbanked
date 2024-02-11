@@ -16,7 +16,7 @@ Do we use $ARS "Oracle" to get the pair ARS/ADA [criptoya api](https://criptoya.
 
 
 # Technology Stack
-1. .NET 6
+1. .NET 8
 2. .NET Blazor
 3. Radzen Blazor
 4. Azure
