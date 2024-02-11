@@ -10,5 +10,11 @@
   "MakeYourDonation": "Make Your Donation",
   "NoWalletsCoonected": "There is no wallet selected, you have to connect",
   "LoadingFees": "Loading Fees",
-  "NetworkFees": "Network Fees"
+  "NetworkFees": "Network Fees",
+  "ConnectWallet": "Connect Wallet",
+  "DisconnectWallet": "Disconnect Wallet",
+  "Wallet": "Wallet",
+  "Install": "Install",
+  "SigningAndSendingTransaction": "Signing And Sending Transaction",
+  "Disconnect": "Disconnect"
 }

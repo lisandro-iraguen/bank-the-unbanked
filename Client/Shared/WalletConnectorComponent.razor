@@ -20,20 +20,20 @@
                     <img class="wallet-icon" src="@extension.Icon" title="@extension.Name" style="width: 65px; height: 65px;" />
                 </div>
                 <div style="text-align:center">
-                    <span class="wallet-name">@extension.Name Wallet</span>
+                    <span class="wallet-name">@extension.Name @webText.Wallet</span>
                 </div>
                 <div>
                     @if (extension.Installed)
                     {
                         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                            <RadzenButton Click=@(args =>@ConnectWalletAsync(extension.Key))>Connect</RadzenButton>
+                            <RadzenButton Click=@(args =>@ConnectWalletAsync(extension.Key))>@webText.Connect</RadzenButton>
                         </RadzenStack>
 
                     }
                     else
                     {
                         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                            <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">Install</RadzenButton>
+                            <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="@(async () => await NavigateToNewTab(extension.Url))">@webText.Install</RadzenButton>
                         </RadzenStack>
                     }
                 </div>

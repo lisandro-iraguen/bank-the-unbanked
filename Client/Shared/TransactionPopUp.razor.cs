@@ -13,9 +13,18 @@ namespace Client.Shared
     public partial class TransactionPopUp
     {
 
-       
+
+        [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
 
+
+        private I18nText.Web? webText;
+
+        protected override async Task OnInitializedAsync()
+        {
+            webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
+
+        }
 
     }
 

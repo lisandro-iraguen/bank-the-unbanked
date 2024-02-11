@@ -17,7 +17,7 @@
                 <img class="wallet-icon" src="@walletState.Value.Wallet.Icon" title="@walletState.Value.Wallet.Name" style="width: 65px; height: 65px;" />
             </div>
             <div style="text-align:center">
-                <span class="wallet-name">@walletState.Value.Wallet.Name Wallet</span>
+                <span class="wallet-name">@walletState.Value.Wallet.Name @webText.Wallet</span>
             </div>
 
             @if (@walletState.Value.Wallet.UsedAdress is not null && @walletState.Value.Wallet.UsedAdress.Any())
@@ -30,7 +30,7 @@
                 @if (walletState.Value.Wallet.Connected)
                 {
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-m-1">
-                        <RadzenButton Click="@(async () => await DisconnectWalletAsync())">Disconnect</RadzenButton>
+                        <RadzenButton Click="@(async () => await DisconnectWalletAsync())">@webText.Disconnect</RadzenButton>
                     </RadzenStack>
                 }
 

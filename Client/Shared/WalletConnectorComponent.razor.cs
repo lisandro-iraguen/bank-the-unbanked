@@ -19,8 +19,12 @@ namespace Client.Shared
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
 
-      
 
+        [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
+
+
+
+        private I18nText.Web? webText;
 
 
         protected override void OnInitialized()
@@ -28,7 +32,13 @@ namespace Client.Shared
             base.OnInitialized();
                      
         }
-     
+
+        protected override async Task OnInitializedAsync()
+        {
+            webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
+
+        }
+
         public void ConnectWalletAsync(string key)
         {
             dispatcher.Dispatch(new WalletConnectorAction(key, walletConectorState.Value.Extensions, _dialogService, _localStorage));            

@@ -41,7 +41,7 @@ namespace Client.Pages
         {
             base.OnInitialized();
             dispatcher.Dispatch(new FetchCryptoAction());
-            walletToTransfer = "addr_test1qpx48ss8fkyuujvyrtrxlt4jv8pscslzvw6yvz68lt2gyj2yaakargznpqxp22n49ysqdlwqeuh8cdvj4heyksvuj2nshzyk62";
+            walletToTransfer = "";
         }
 
         protected override async Task OnInitializedAsync()

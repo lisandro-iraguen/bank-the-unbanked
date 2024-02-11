@@ -16,6 +16,17 @@ namespace Client.Shared
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] protected ILocalStorageService? localStorage{ get; set; }
 
+        [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
+
+
+
+        private I18nText.Web? webText;
+
+        protected override async Task OnInitializedAsync()
+        {
+            webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
+
+        }
 
         public ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {

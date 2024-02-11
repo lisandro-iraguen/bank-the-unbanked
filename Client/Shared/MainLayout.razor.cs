@@ -60,14 +60,14 @@ namespace Client.Shared
         public async Task OpenWalletConnectors()
         {
             dispatcher.Dispatch(new WalletInitializerAction(_javascriptRuntime, _localStorage, _dialogService));
-            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
+            var dialogResult = await _dialogService.OpenAsync(webText.ConnectWallet, RenderWalletConnector);
 
         }
 
         public async Task OpenWalletDisconector()
         {
 
-            var dialogResult = await _dialogService.OpenAsync("Desconectar Biletera", RenderWalletDisConnector);
+            var dialogResult = await _dialogService.OpenAsync(webText.DisconnectWallet, RenderWalletDisConnector);
 
         }
 
