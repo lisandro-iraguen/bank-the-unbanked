@@ -62,7 +62,7 @@ else
 
             
             <RadzenColumn Size="5" >
-                <RadzenFormField Text="Wallet A Enviar" Variant="Variant.Text" class="w-100">
+                <RadzenFormField Text="@webText.DestinationWallet" Variant="Variant.Text" class="w-100">
                     <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer Variant="Variant.Text" />
                 </RadzenFormField>
             </RadzenColumn>
