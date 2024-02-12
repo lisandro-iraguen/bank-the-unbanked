@@ -1,4 +1,5 @@
 ﻿using Client.Shared;
+using Client.State.Balance;
 using Client.State.Connection;
 using Client.State.Crypto;
 using Client.State.Transaction;
@@ -27,8 +28,8 @@ namespace Client.Pages
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
         [Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
+        [Inject] IState<BalanceState>? balanceState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
-
         [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
 

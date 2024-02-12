@@ -48,7 +48,12 @@ else
         }
         else
         {
-            <h1>$ARS @(cryptoState.Value.Crypto.TotalBid * walletState.Value.Wallet.BalanceAda2) </h1>
+            if (balanceState.Value.IsUpdating)
+            {
+                <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />              
+            }else{
+                <h1>$ARS @(cryptoState.Value.Crypto.TotalBid * walletState.Value.Wallet.BalanceAda2) </h1>
+            }
             <h4>BinanceP2P</h4>
             <h4>1 ada : @cryptoState.Value.Crypto.TotalBid $ARS</h4>
         }

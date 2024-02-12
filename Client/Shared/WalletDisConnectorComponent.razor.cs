@@ -14,8 +14,7 @@ namespace Client.Shared
         [Inject] protected IState<WalletExtensions>? walletState { get; set; }
         [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
         [Inject] protected IDispatcher? dispatcher { get; set; }
-        [Inject] protected ILocalStorageService? localStorage{ get; set; }
-
+      
         [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
 
@@ -30,7 +29,7 @@ namespace Client.Shared
 
         public ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
-            dispatcher.Dispatch(new WalletDisconectAction(walletState.Value.Wallet, localStorage));
+            dispatcher.Dispatch(new WalletDisconectAction(walletState.Value.Wallet));
            _dialogService.Close();
             return new ValueTask();
         }

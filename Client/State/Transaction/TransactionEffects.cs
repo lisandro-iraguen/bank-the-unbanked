@@ -1,6 +1,7 @@
 ﻿using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Addresses;
+using Client.State.Wallet;
 using Data.Wallet;
 using Fluxor;
 using Newtonsoft.Json;
@@ -58,8 +59,7 @@ namespace Client.State.Transaction
                         var transactionCbor = result.Serialize().ToStringHex();
                         var delivered = await wallet.WalletConnectorJs.SubmitTx(transactionCbor);
                         dispatcher.Dispatch(new SignTransactionResultAction(action.UsedWallet));
-
-                        
+                        dispatcher.Dispatch(new WalletBalanceUpdateAction(action.UsedWallet));
                         DisplaySucessTransactionOnScreen(action.TransferInfoSuccess, action.TransferSuccessMessage);
                     }
                     else

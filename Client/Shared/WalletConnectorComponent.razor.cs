@@ -41,7 +41,7 @@ namespace Client.Shared
 
         public void ConnectWalletAsync(string key)
         {
-            dispatcher.Dispatch(new WalletConnectorAction(key, walletConectorState.Value.Extensions, _dialogService, _localStorage));            
+            dispatcher.Dispatch(new WalletConnectorAction(key, walletConectorState.Value.Extensions, _dialogService));            
         }
 
         public async Task NavigateToNewTab(string url)

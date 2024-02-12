@@ -39,7 +39,7 @@ namespace Client.State.WalletExtensions
                     if (extensions is not null)
                     {
                         dispatcher.Dispatch(new WalletInitializerResultAction(jsInterop: walletConnectorJs, extensions: _wallets!));
-                        dispatcher.Dispatch(new WalletConnectAutomaticallyAction(_wallets, action.LocalStorageSerivce));
+                        dispatcher.Dispatch(new WalletConnectAutomaticallyAction(_wallets));
 
                     }
                 }

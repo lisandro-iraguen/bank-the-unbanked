@@ -4,6 +4,7 @@ using CardanoSharp.Wallet.Enums;
 using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Transactions;
+using Client.State.Balance;
 using Client.State.Connection;
 using Client.State.WalletHistory;
 using Components;
@@ -18,11 +19,13 @@ namespace Client.State.Wallet
     public class WalletEffects
     {
         private readonly HttpClient Http;
+        private readonly ILocalStorageService LocalStorageSerivce;
 
 
-        public WalletEffects(HttpClient http)
+        public WalletEffects(HttpClient http, ILocalStorageService localStorageSerivce)
         {
             Http = http;
+            LocalStorageSerivce = localStorageSerivce;
         }
 
         [EffectMethod]
@@ -32,7 +35,7 @@ namespace Client.State.Wallet
             dispatcher.Dispatch(new IsConnectedConectionAction());
             string key = action.Key;
             var valletList = action.Wallets;
-            var storage = action.LocalStorage;
+          
 
             var supportedWalletKeys = SupportedWalletListToString(valletList);
             if (supportedWalletKeys.Contains(key))
@@ -41,7 +44,7 @@ namespace Client.State.Wallet
                 var result = await GetConnectionResult(key, walletSelected);
                 if (result)
                 {
-                    await SetStoredWalletKeyAsync(key, storage);
+                    await SetStoredWalletKeyAsync(key);
                     walletSelected = await UpdateWallet(key, walletSelected);
                     dispatcher.Dispatch(new IsNotConnectedConectionAction());
                     dispatcher.Dispatch(new WalletConnectorResultAction(wallet: walletSelected));
@@ -60,7 +63,7 @@ namespace Client.State.Wallet
             dispatcher.Dispatch(new IsConnectedConectionAction());
             var valletList = action.Wallets;
             var supportedWalletKeys = SupportedWalletListToString(valletList);
-            var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys, action.LocalStorageSerivce);
+            var storedWalletKey = await GetStoredWalletKeyAsync(supportedWalletKeys);
             if (String.IsNullOrEmpty(storedWalletKey))
             {
                 dispatcher.Dispatch(new IsNotConnectedConectionAction());
@@ -83,11 +86,37 @@ namespace Client.State.Wallet
         }
 
         [EffectMethod]
+        public async Task HandleWalletBalanceUpdateAction(WalletBalanceUpdateAction action, IDispatcher dispatcher)
+        {
+            dispatcher.Dispatch(new IsUpdateingWalletBalance());
+            var wallet = action.Wallet;
+            var selectedWalletKey = wallet.Key;
+         
+            if (String.IsNullOrEmpty(selectedWalletKey))
+            {
+                dispatcher.Dispatch(new IsNotUpdateingWalletBalance());
+                Console.WriteLine($"Key not found {selectedWalletKey}");
+            }
+            else
+            {
+                 
+                    var result = await GetConnectionResult(selectedWalletKey, wallet);
+                    if (result)
+                    {
+                        wallet = await UpdateWallet(selectedWalletKey, wallet);
+                        dispatcher.Dispatch(new WalletConnectorResultAction(wallet: wallet));
+                        dispatcher.Dispatch(new IsNotUpdateingWalletBalance());
+                    }
+               
+            }
+        }
+
+        [EffectMethod]
         public async Task HandleWalletDisconectAction(WalletDisconectAction action, IDispatcher dispatcher)
         {
             dispatcher.Dispatch(new IsConnectedConectionAction());
             await action.Wallet.WalletConnectorJs.DisposeAsync();
-            await RemoveStoredWalletKeyAsync(action.LocalStorage);
+            await RemoveStoredWalletKeyAsync();
             dispatcher.Dispatch(new WalletDisconectResultAction());
             dispatcher.Dispatch(new IsNotConnectedConectionAction());
         }
@@ -166,15 +195,15 @@ namespace Client.State.Wallet
             return addresses;
         }
 
-        private async Task<string> GetStoredWalletKeyAsync(string[] supportedWalletKeys, ILocalStorageService localStorage)
+        private async Task<string> GetStoredWalletKeyAsync(string[] supportedWalletKeys)
         {
             var result = string.Empty;
 
             try
             {
-                if (localStorage != null && supportedWalletKeys != null)
+                if (LocalStorageSerivce != null && supportedWalletKeys != null)
                 {
-                    var walletKey = await localStorage.GetItemAsStringAsync(ComponentUtils.ConnectedWalletKey);
+                    var walletKey = await LocalStorageSerivce.GetItemAsStringAsync(ComponentUtils.ConnectedWalletKey);
 
                     if (!string.IsNullOrWhiteSpace(walletKey) && supportedWalletKeys.Any(w => w.Equals(walletKey, StringComparison.OrdinalIgnoreCase)))
                     {
@@ -189,18 +218,18 @@ namespace Client.State.Wallet
 
             return result;
         }
-        private async Task RemoveStoredWalletKeyAsync(ILocalStorageService localStorage)
+        private async Task RemoveStoredWalletKeyAsync()
         {
-            if (localStorage != null)
+            if (LocalStorageSerivce != null)
             {
-                await localStorage.RemoveItemAsync(ComponentUtils.ConnectedWalletKey);
+                await LocalStorageSerivce.RemoveItemAsync(ComponentUtils.ConnectedWalletKey);
             }
         }
-        private async Task SetStoredWalletKeyAsync(string walletKey, ILocalStorageService localStorage)
+        private async Task SetStoredWalletKeyAsync(string walletKey)
         {
-            if (localStorage != null && !string.IsNullOrWhiteSpace(walletKey))
+            if (LocalStorageSerivce != null && !string.IsNullOrWhiteSpace(walletKey))
             {
-                await localStorage.SetItemAsStringAsync(ComponentUtils.ConnectedWalletKey, walletKey.ToString());
+                await LocalStorageSerivce.SetItemAsStringAsync(ComponentUtils.ConnectedWalletKey, walletKey.ToString());
             }
         }
 
