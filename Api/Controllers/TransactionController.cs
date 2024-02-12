@@ -22,10 +22,10 @@ namespace ApiNet8.Controllers
             _transactionService = transactionService;
         }
 
-        [Function("TxBuilder")]
+        [Function("TxBuild")]
         public async Task<HttpResponseData> RunTxBuilderAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {            
-            _logger.LogInformation("C# HTTP trigger function processed a request. Transaction Function");
+            _logger.LogInformation("C# HTTP trigger function processed a request. Transaction Build Function");
             string walletFrom = req.Query["walletFrom"];
             string walletTo = req.Query["walletto"];
             string value = req.Query["value"];
@@ -56,7 +56,7 @@ namespace ApiNet8.Controllers
         [Function("TxFee")]
         public async Task<HttpResponseData> RunTxFeeAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request. Transaction Fee Function");
             string walletFrom = req.Query["walletFrom"];
             string walletTo = req.Query["walletto"];
             string value = req.Query["value"];
@@ -88,7 +88,7 @@ namespace ApiNet8.Controllers
         [Function("TxSign")]
         public async Task<HttpResponseData> RunTxSignAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request.  Transaction Sign Function");
             var response = req.CreateResponse(HttpStatusCode.OK);
 
             try

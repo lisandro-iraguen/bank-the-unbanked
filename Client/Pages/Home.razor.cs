@@ -73,7 +73,7 @@ namespace Client.Pages
         private async Task SignAndSubmitTransaction()
         {
             ulong adaToTransfer = valueToTransfer / cryptoState.Value.Crypto.TotalBid;
-            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, adaToTransfer));
+            dispatcher.Dispatch(new SignTransactionAction(walletState.Value.Wallet, walletToTransfer, adaToTransfer,webText.TransactionSuccess, webText.FiatSimbol+": "+ valueToTransfer.ToString()));
             await OpenTransactionPopUp();
 
         }
@@ -92,7 +92,7 @@ namespace Client.Pages
         }
         public async Task OpenTransactionPopUp()
         {
-            var dialogResult = await _dialogService.OpenAsync("Connectar Biletera", RenderWalletConnector);
+            var dialogResult = await _dialogService.OpenAsync(webText.ProcessingTransaction, RenderWalletConnector);
 
         }
 

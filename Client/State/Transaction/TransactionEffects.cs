@@ -15,11 +15,12 @@ namespace Client.State.Transaction
     {
         private readonly HttpClient Http;
         private readonly DialogService _dialogService;
-
-        public Effects(HttpClient http, DialogService dialogService)
+        private readonly NotificationService _notificationService;        
+        public Effects(HttpClient http, DialogService dialogService, NotificationService notificationService)
         {
             Http = http;
             _dialogService = dialogService;
+            _notificationService = notificationService;            
         }
 
         [EffectMethod]
@@ -29,10 +30,10 @@ namespace Client.State.Transaction
             string walletfromTransfer = wallet.LastUsedAddress;
             string walletToTransfer = action.TransferTo;
             string valueToTransfer = (action.TransferAmount*wallet.Lovlace).ToString();
+          
 
 
-
-            string url = $"/api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
+            string url = $"api/TxBuild?walletFrom={walletfromTransfer}&walletTo={walletToTransfer}&value={valueToTransfer}";
             try
             {
                 var response = await Http.GetAsync(url);
@@ -57,6 +58,9 @@ namespace Client.State.Transaction
                         var transactionCbor = result.Serialize().ToStringHex();
                         var delivered = await wallet.WalletConnectorJs.SubmitTx(transactionCbor);
                         dispatcher.Dispatch(new SignTransactionResultAction(action.UsedWallet));
+
+                        
+                        DisplaySucessTransactionOnScreen(action.TransferInfoSuccess, action.TransferSuccessMessage);
                     }
                     else
                     {
@@ -82,5 +86,10 @@ namespace Client.State.Transaction
             _dialogService.Close();
         }
 
+        private void DisplaySucessTransactionOnScreen(string summary, string detials)
+        {
+            var sucessMessage = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = summary, Detail = detials, Duration = 4000 };
+            _notificationService.Notify(sucessMessage);
+        }
     }
 }

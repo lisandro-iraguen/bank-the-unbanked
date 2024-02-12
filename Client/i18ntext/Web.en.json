@@ -17,5 +17,8 @@
   "DestinationWallet": "Destination Wallet",
   "Install": "Install",
   "SigningAndSendingTransaction": "Signing And Sending Transaction",
-  "Disconnect": "Disconnect"
+  "Disconnect": "Disconnect",
+  "ProcessingTransaction": "Processing transactions",
+  "TransactionSuccess": "Transaction Success",
+  "FiatSimbol": "$USD"
 }

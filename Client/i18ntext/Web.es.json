@@ -17,6 +17,8 @@
   "DestinationWallet": "Billetera Destino",
   "Install": "Instalar",
   "SigningAndSendingTransaction": "Firmado y Enviado Transacción",
-  "Disconnect": "Desconectar"
-
+  "Disconnect": "Desconectar",
+  "ProcessingTransaction": "Procesando transacciones",
+  "TransactionSuccess": "Transacción exitosa",
+  "FiatSimbol": "$ARS"
 }
