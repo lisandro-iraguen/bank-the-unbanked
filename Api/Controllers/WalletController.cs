@@ -24,7 +24,7 @@ namespace ApiNet8.Controllers
         [Function("WalletsData")]
         public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request. WalletsData Function");
             var products = await _walletData.GetWalletData();
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json");
@@ -36,7 +36,7 @@ namespace ApiNet8.Controllers
         [Function("WitnessGet")]
         public async Task<HttpResponseData> RunAsync2([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, [FromBody] AddWitnessRequest request)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request. WitnessGet Function");
 
             var transaction = request.TxCbor;
             if (transaction == null)

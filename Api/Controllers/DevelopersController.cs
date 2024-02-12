@@ -1,4 +1,5 @@
 using Api.Services.Developers;
+using Data.Web;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ namespace ApiNet8.Controllers
         [Function("Developers")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request. Developers Function");
             var webDevelopers = _webDevelopers.GetWebDevelopersData();
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json");

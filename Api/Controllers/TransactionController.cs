@@ -24,8 +24,8 @@ namespace ApiNet8.Controllers
 
         [Function("TxBuilder")]
         public async Task<HttpResponseData> RunTxBuilderAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
-        {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+        {            
+            _logger.LogInformation("C# HTTP trigger function processed a request. Transaction Function");
             string walletFrom = req.Query["walletFrom"];
             string walletTo = req.Query["walletto"];
             string value = req.Query["value"];

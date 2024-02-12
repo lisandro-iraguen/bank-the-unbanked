@@ -22,7 +22,7 @@ namespace ApiNet8.Controllers
         [Function("BinanceP2P")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request. BinanceP2P Function");
             var webDevelopers = _webPriceSerices.DollarApiCall();
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json");
