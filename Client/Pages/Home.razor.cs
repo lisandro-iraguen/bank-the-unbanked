@@ -27,7 +27,7 @@ namespace Client.Pages
         [Inject] IState<ConectedState>? walletConecting { get; set; }
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
-        [Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
+        //[Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
         [Inject] IState<BalanceState>? balanceState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
         [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }

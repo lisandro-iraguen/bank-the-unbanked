@@ -42,7 +42,7 @@ public class TransactionService : ITransactionService
         try
         {
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
-            var ppResponse = await _epochClient.GetProtocolParameters();
+            var ppResponse = await _epochClient.GetProtocolParameters(null,1);
             var protocolParameters = ppResponse.Content.FirstOrDefault();
             uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
@@ -87,8 +87,30 @@ public class TransactionService : ITransactionService
         {
 
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
-            var ppResponse = await _epochClient.GetProtocolParameters();
-            var protocolParameters = ppResponse.Content.FirstOrDefault();
+            EpochInformation epoc = null;
+
+            int IterationTryes= 0;
+            const int TOTAL_ITERATIONS= 5;
+
+            while (epoc == null && (IterationTryes <= TOTAL_ITERATIONS))
+            {
+                var epochInformations = await _epochClient.GetEpochInformation(null, 1);
+                if(epochInformations.Content is not null)
+                    epoc = epochInformations.Content[0];
+
+                IterationTryes++;
+            }
+
+            ProtocolParameters protocolParameters = null;
+            IterationTryes = 0;
+            while (protocolParameters == null && (IterationTryes <= TOTAL_ITERATIONS)) 
+            {
+                var ppResponse = await _epochClient.GetProtocolParameters(epoc.EpochNo.ToString(),1);
+                if (ppResponse.Content is not null)
+                    protocolParameters = ppResponse.Content[0];
+
+                IterationTryes++;
+            }
             uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
             ITransactionWitnessSetBuilder witnessSet = SetWitness();
@@ -102,6 +124,7 @@ public class TransactionService : ITransactionService
         catch (Exception ex)
         {
             Console.WriteLine("get fee failed:");
+            Console.WriteLine("Proraboly KIOS is failing due the free version");
             Console.WriteLine(ex.Message);
         }
 
@@ -127,7 +150,7 @@ public class TransactionService : ITransactionService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("build transaction'failed");
+            Console.WriteLine("build transaction failed:");
             Console.WriteLine(ex.Message);
         }
 
@@ -154,7 +177,7 @@ public class TransactionService : ITransactionService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("build transaction'failed");
+            Console.WriteLine("build transaction failed:");
             Console.WriteLine(ex.Message);
         }
 
