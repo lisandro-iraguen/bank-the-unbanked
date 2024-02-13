@@ -35,12 +35,6 @@ namespace Test
             transactionService = new TransactionService(configuration.Object, policyManager.Object, addressClient.Object, networkClient.Object, epochClient.Object);
         }
 
-        [Test]
-        public async Task GeTransactionFee_ShouldReturnAllWallets()
-        {
-
-     
-        }
 
     }
 }

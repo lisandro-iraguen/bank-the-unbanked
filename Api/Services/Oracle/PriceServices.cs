@@ -5,10 +5,11 @@ namespace Api.Services.Oracle
 {
     public class PriceServices:IPriceServices
     {
+        private readonly string apiUrl = "https://criptoya.com/api/binancep2p/ada/ars/1";
         public async Task<CriptoDTO> DollarApiCall()
         {
 
-            string apiUrl = "https://criptoya.com/api/binancep2p/ada/ars/1";
+            
             using (HttpClient client = new HttpClient())
             {
                 try
