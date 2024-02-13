@@ -8,6 +8,10 @@ namespace Client.State.TransactionFee
         [ReducerMethod]
         public static TransactionFeeState ReduceTransactionFeeAction(TransactionFeeState state, TransactionFeeAction action) =>
             new(isLoading:true, fee:0);
+        
+        [ReducerMethod]
+        public static TransactionFeeState ReduceTransactionFeeResetAction(TransactionFeeState state, TransactionFeeResetAction action) =>
+            new(isLoading:false, fee:0);
 
 
         [ReducerMethod]

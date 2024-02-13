@@ -42,8 +42,11 @@ public class TransactionService : ITransactionService
         try
         {
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
-            var ppResponse = await _epochClient.GetProtocolParameters(null,1);
-            var protocolParameters = ppResponse.Content.FirstOrDefault();
+
+            var epoc = await GetEpoc();
+            var protocolParameters = await GetProtocolParameters(epoc);
+
+
             uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
             ITransactionWitnessSetBuilder witnessSet = SetWitness();
@@ -87,30 +90,10 @@ public class TransactionService : ITransactionService
         {
 
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
-            EpochInformation epoc = null;
 
-            int IterationTryes= 0;
-            const int TOTAL_ITERATIONS= 5;
+            var epoc = await GetEpoc();
+            var protocolParameters= await GetProtocolParameters(epoc);
 
-            while (epoc == null && (IterationTryes <= TOTAL_ITERATIONS))
-            {
-                var epochInformations = await _epochClient.GetEpochInformation(null, 1);
-                if(epochInformations.Content is not null)
-                    epoc = epochInformations.Content[0];
-
-                IterationTryes++;
-            }
-
-            ProtocolParameters protocolParameters = null;
-            IterationTryes = 0;
-            while (protocolParameters == null && (IterationTryes <= TOTAL_ITERATIONS)) 
-            {
-                var ppResponse = await _epochClient.GetProtocolParameters(epoc.EpochNo.ToString(),1);
-                if (ppResponse.Content is not null)
-                    protocolParameters = ppResponse.Content[0];
-
-                IterationTryes++;
-            }
             uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
             ITransactionWitnessSetBuilder witnessSet = SetWitness();
@@ -157,7 +140,42 @@ public class TransactionService : ITransactionService
         return Task.FromResult<CardanoSharp.Wallet.Models.Transactions.Transaction>(null);
 
     }
+    private async Task<EpochInformation> GetEpoc()
+    {
 
+        EpochInformation epoc = null;
+        int IterationTryes = 0;
+        const int TOTAL_ITERATIONS = 5;
+
+        while (epoc == null && (IterationTryes <= TOTAL_ITERATIONS))
+        {
+            var epochInformations = await _epochClient.GetEpochInformation(null, 1);
+            if (epochInformations.Content is not null)
+                epoc = epochInformations.Content[0];
+
+            IterationTryes++;
+        }
+        return epoc;
+    }
+
+    private async Task<ProtocolParameters> GetProtocolParameters(EpochInformation epoc)
+    {
+
+
+        ProtocolParameters protocolParameters = null;
+        int IterationTryes = 0;
+        const int TOTAL_ITERATIONS = 5;
+        while (protocolParameters == null && (IterationTryes <= TOTAL_ITERATIONS))
+        {
+            var ppResponse = await _epochClient.GetProtocolParameters(epoc.EpochNo.ToString(), 1);
+            if (ppResponse.Content is not null)
+                protocolParameters = ppResponse.Content[0];
+
+            IterationTryes++;
+        }
+
+        return protocolParameters;
+    }
     public async Task<AddressTransaction[]> TransactionHistory(string addressFrom)
     {
 

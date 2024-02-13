@@ -1,6 +1,7 @@
 ﻿using CardanoSharp.Wallet.Extensions;
 using CardanoSharp.Wallet.Extensions.Models.Transactions;
 using CardanoSharp.Wallet.Models.Addresses;
+using Client.State.TransactionFee;
 using Client.State.Wallet;
 using Data.Wallet;
 using Fluxor;
@@ -60,6 +61,8 @@ namespace Client.State.Transaction
                         var delivered = await wallet.WalletConnectorJs.SubmitTx(transactionCbor);
                         dispatcher.Dispatch(new SignTransactionResultAction(action.UsedWallet));
                         dispatcher.Dispatch(new WalletBalanceUpdateAction(action.UsedWallet));
+                        dispatcher.Dispatch(new TransactionFeeResetAction());
+
                         DisplaySucessTransactionOnScreen(action.TransferInfoSuccess, action.TransferSuccessMessage);
                     }
                     else

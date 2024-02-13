@@ -94,19 +94,24 @@ namespace Client.Pages
         public async Task OpenTransactionPopUp()
         {
             var dialogResult = await _dialogService.OpenAsync(webText.ProcessingTransaction, RenderWalletConnector);
-
+            _dialogService.OnClose += CloseDialog();
         }
 
-
+        private dynamic CloseDialog()
+        {
+            valueToTransfer = 0;
+            dispatcher.Dispatch(new TransactionFeeResetAction());
+            return null;
+        }
         private RenderFragment RenderWalletConnector(DialogService service)
         {
 
             RenderFragment fragment = builder =>
             {
                 builder.OpenComponent(0, typeof(TransactionPopUp));
-                builder.CloseComponent();
+                builder.CloseComponent();                
             };
-
+            
             return fragment;
         }
     }
