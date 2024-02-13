@@ -19,8 +19,13 @@ namespace Test
         public void Setup()
         {
 
-            var configuration = new Mock<IConfiguration>();
-            policyManager = new PolicyManager(configuration.Object);
+         
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(c => c["clientId"]).Returns("mockedClientId");
+            configurationMock.Setup(c => c["clientSecret"]).Returns("mockedClientSecret");
+            configurationMock.Setup(c => c["tenantId"]).Returns("mockedTenantId");
+
+         
         }
 
 

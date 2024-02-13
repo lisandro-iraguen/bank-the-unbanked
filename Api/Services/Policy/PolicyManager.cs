@@ -38,7 +38,7 @@ public class PolicyManager : IPolicyManager
 
     private string GetNmonicFromAPI()
     {
-         string clientId = _configuration["clientId"];
+        string clientId = _configuration["clientId"];
         string clientSecret = _configuration["clientSecret"]; 
         string tenantId = _configuration["tenantId"];
 
