@@ -25,16 +25,8 @@ namespace Test
             var epochClient = new Mock<IEpochClient>();
 
 
-            var epoc = new ProtocolParameters();
-            epoc.EpochNo = 8;
-            var expectedParameters = new ProtocolParameters[] { epoc };
-            var apiResponse = new ApiResponse<ProtocolParameters[]>(new HttpResponseMessage(System.Net.HttpStatusCode.OK), expectedParameters, null);
-            epochClient.Setup(x => x.GetProtocolParameters(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
-               .ReturnsAsync(apiResponse);
-
-            transactionService = new TransactionService(configuration.Object, policyManager.Object, addressClient.Object, networkClient.Object, epochClient.Object);
+           
         }
-
 
     }
 }
