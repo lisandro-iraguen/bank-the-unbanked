@@ -5,7 +5,7 @@ In a world of unstable traditional currencies, Cardano shines as a guiding light
 
 ![image](https://github.com/lisandro-iraguen/bank-the-unbanked/assets/70443444/917aed3a-faa7-4986-a175-6c743c5e1075)
 </br>
-[Demo](www.bankedus.trade/home "Demo Url")
+[Demo](https://www.bankedus.trade)
 
 ### Comments
 This is an Argentine's wallet to use $ARS :shit: </br>
