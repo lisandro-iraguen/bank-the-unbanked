@@ -1,5 +1,6 @@
 ﻿
 using CardanoSharp.Koios.Client.Contracts;
+using Data.History;
 using System.Threading.Tasks;
 
 namespace Api.Services.Transaction
@@ -9,6 +10,6 @@ namespace Api.Services.Transaction
         Task<CardanoSharp.Wallet.Models.Transactions.Transaction> BuildTransaction(string fromAddress, string toAddress, ulong value);
         Task<CardanoSharp.Wallet.Models.Transactions.Transaction> SignTransaction(string transactionCbor, string witness);
         Task<ulong> CalculateFee(string fromAddress, string toAddress, ulong value);
-        Task<AddressTransaction[]> TransactionHistory(string addressFrom);
+        Task<TxHistory[]> TransactionHistory(string addressFrom, string caranoScanUrl);
     }
 }

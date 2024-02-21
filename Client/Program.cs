@@ -1,11 +1,12 @@
+using Blazored.LocalStorage;
+using Client;
+using Client.State.WalletHistory;
+using Fluxor;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Client;
 using Radzen;
-using Blazored.LocalStorage;
-using Fluxor;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,6 +16,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["API_Prefix"] ?? builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<DialogService>();
+
 builder.Services.AddI18nText();
 
 builder.Services.Configure<RequestLocalizationOptions>(options => {

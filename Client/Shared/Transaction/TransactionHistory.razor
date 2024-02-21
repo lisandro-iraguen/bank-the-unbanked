@@ -1,0 +1,48 @@
+﻿@using Radzen;
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
+
+@if (walletHistoryState.Value.IsLoading)
+{
+    <RadzenStack Gap="0px" Class="rz-m-12" JustifyContent="JustifyContent.Center">
+        <p>@webText.LoadingHisory ...</p>
+        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="height:5px;" />
+    </RadzenStack>
+}
+else
+{
+    @if (walletHistoryState.Value.Transactions != null && walletHistoryState.Value.Transactions.Any())
+    {
+        <RadzenDataList WrapItems="true" Data="@walletHistoryState.Value.Transactions" TItem="Data.DTOs.TxHistoryDto" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+            <Template Context="history">
+                <RadzenCard Style="width: 100%; padding: 0;">
+                    <RadzenRow Gap="0">
+                        <RadzenColumn Size="12" SizeLG="7" Class="rz-p-4 product-title">
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">To:</RadzenText>                           
+                            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="rz-color-secondary">@(history.To)</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeLG="5" Class="rz-p-4">
+                            <RadzenRow Gap="0">
+                                <RadzenColumn Size="12" SizeMD="6" SizeLG="10">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">@webText.TransactionLink</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body2"><a href="@history.Link" target="_blank">@(history.Hash)</a></RadzenText>
+                                </RadzenColumn>                         
+                                <RadzenColumn Size="12" SizeMD="6" SizeLG="2" Class="rz-text-align-start rz-text-align-lg-end">
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-mb-0">@webText.Balance</RadzenText>
+                                    <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" class="price-badge" Text=@("$ARS: "+ ((history.Balance/walletState.Value.Wallet.Lovlace) / cryptoState.Value.Crypto.TotalBid)) />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+
+                    </RadzenRow>
+                </RadzenCard>
+            </Template>
+        </RadzenDataList>
+    }
+    else
+    {
+        <RadzenStack Gap="3px" AlignItems="AlignItems.Center">
+            <p> @webText.NoHistoryTransactions</p>
+        </RadzenStack>
+    }
+}

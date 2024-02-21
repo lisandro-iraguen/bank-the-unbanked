@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using CardanoSharp.Koios.Client.Contracts;
 using Newtonsoft.Json;
+using Data.History;
 
 namespace Client.State.WalletHistory
 {
@@ -20,13 +21,13 @@ namespace Client.State.WalletHistory
         {
             
             var wallet= action.Wallet.LastUsedAddress;
-            var url = "api/TxHistory?walletFrom=" + wallet; ;
+            var url = "api/TxHistory?walletFrom=" + wallet; 
             var response = await Http.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
             {
                 var transactionsRaw = await response.Content.ReadAsStringAsync();
-                var transactions = JsonConvert.DeserializeObject<AddressTransaction[]>(transactionsRaw);
+                var transactions = JsonConvert.DeserializeObject<TxHistory[]>(transactionsRaw);
                 dispatcher.Dispatch(new WalletHistoryConnectorResultAction(transactions: transactions!));
             }
 

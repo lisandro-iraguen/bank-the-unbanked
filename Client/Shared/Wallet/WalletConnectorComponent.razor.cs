@@ -8,12 +8,12 @@ using Microsoft.JSInterop;
 using Radzen;
 
 
-namespace Client.Shared
+namespace Client.Shared.Wallet
 {
     public partial class WalletConnectorComponent
     {
 
-        [Inject] protected DialogService? _dialogService { get; set; }    
+        [Inject] protected DialogService? _dialogService { get; set; }
         [Inject] protected IJSRuntime? _javascriptRuntime { get; set; }
         [Inject] protected ILocalStorageService? _localStorage { get; set; }
         [Inject] protected IDispatcher? dispatcher { get; set; }
@@ -30,7 +30,7 @@ namespace Client.Shared
         protected override void OnInitialized()
         {
             base.OnInitialized();
-                     
+
         }
 
         protected override async Task OnInitializedAsync()
@@ -41,7 +41,7 @@ namespace Client.Shared
 
         public void ConnectWalletAsync(string key)
         {
-            dispatcher.Dispatch(new WalletConnectorAction(key, walletConectorState.Value.Extensions, _dialogService));            
+            dispatcher.Dispatch(new WalletConnectorAction(key, walletConectorState.Value.Extensions, _dialogService));
         }
 
         public async Task NavigateToNewTab(string url)

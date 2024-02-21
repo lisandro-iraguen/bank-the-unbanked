@@ -10,6 +10,7 @@ using CardanoSharp.Wallet.Models;
 using CardanoSharp.Wallet.Models.Addresses;
 using CardanoSharp.Wallet.Models.Transactions;
 using CardanoSharp.Wallet.TransactionBuilding;
+using Data.History;
 using Microsoft.Extensions.Configuration;
 using Refit;
 using CardanoSharpAsset = CardanoSharp.Wallet.Models.Asset;
@@ -25,7 +26,7 @@ public class TransactionService : ITransactionService
     private readonly IPolicyManager _policyManager;
     private readonly IConfiguration _configuration;
 
-  
+
 
     public TransactionService(IConfiguration config, IPolicyManager policyManager, IAddressClient addressClient, INetworkClient networkClient, IEpochClient epochClient)
     {
@@ -92,7 +93,7 @@ public class TransactionService : ITransactionService
             ITransactionBodyBuilder transactionBody = await CoinSelection(fromAddress, toAddress, value);
 
             var epoc = await GetEpoc();
-            var protocolParameters= await GetProtocolParameters(epoc);
+            var protocolParameters = await GetProtocolParameters(epoc);
 
             uint ttl = await BuildTTL();
             transactionBody.SetTtl(ttl);
@@ -176,7 +177,7 @@ public class TransactionService : ITransactionService
 
         return protocolParameters;
     }
-    public async Task<AddressTransaction[]> TransactionHistory(string addressFrom)
+    public async Task<TxHistory[]> TransactionHistory(string addressFrom, string caranoScanUrl)
     {
 
         try
@@ -191,7 +192,51 @@ public class TransactionService : ITransactionService
             var addressTransactionRequest = new AddressTransactionRequest();
             addressTransactionRequest.Addresses = Addresses;
             var addressTransactions = await addressClient.GetAddressTransactions(addressTransactionRequest, 10);
-            return addressTransactions.Content;
+
+
+
+
+
+            List<TxHistory> transactionsHistory = new List<TxHistory>();
+
+
+
+
+            if (addressTransactions.Content is not null)
+            {
+                foreach (var addressTx in addressTransactions.Content)
+                {
+                    var transactionRequest = new GetTransactionRequest
+                    {
+                        TxHashes = new List<string>(){
+                                addressTx.TxHash
+                            }
+                    };
+
+
+                    ITransactionClient transactionClient = RestService.For<ITransactionClient>(KoiosURL);
+                    var transactionInformationResponse = await transactionClient.GetTransactionInformation(transactionRequest, 10);
+
+                    var txInfomration = transactionInformationResponse.Content;
+
+                    foreach(var txinfo in txInfomration)
+                    {
+                        var txHistory = new TxHistory();
+                        txHistory.Hash = addressTx.TxHash;
+                        txHistory.Balance = txinfo.TotalOutput;
+                        txHistory.To = txinfo.Outputs.First().PaymentAddress.Bech32;
+                        txHistory.Link = caranoScanUrl + addressTx.TxHash;
+                        transactionsHistory.Add(txHistory);
+                    }
+                    
+
+                }
+            }
+
+          
+
+
+            return transactionsHistory.ToArray();
         }
         catch (Exception ex)
         {

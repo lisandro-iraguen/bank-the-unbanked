@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Client.Shared.Wallet;
 using Client.State.Connection;
 using Client.State.Crypto;
 using Client.State.Wallet;

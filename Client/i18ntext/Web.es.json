@@ -1,6 +1,7 @@
 ﻿{
   "Hello": "Hello Wolrd!",
   "Bank": "Banco",
+  "Balance": "Balance",
   "Language": "ES",
   "Connect": "Conectar",
   "Home": "Principal",
@@ -10,6 +11,7 @@
   "MakeYourDonation": "Hace Tu Donación",
   "NoWalletsCoonected": "no hay wallet seleccionada, hay que conectarse",
   "LoadingFees": "Calculando Tarifas",
+  "LoadingHisory": "Cargando Historial",
   "NetworkFees": "Tarifas de la Red",
   "ConnectWallet": "Conectar Billetera",
   "DisconnectWallet": "Desconectar Billetera",
@@ -20,5 +22,8 @@
   "Disconnect": "Desconectar",
   "ProcessingTransaction": "Procesando transacciones",
   "TransactionSuccess": "Transacción exitosa",
-  "FiatSimbol": "$ARS"
+  "TransactionLink": "Enlace de la Transacción",
+  "Transaction": "Transacción",
+  "FiatSimbol": "$ARS",
+  "NoHistoryTransactions": "sin historial de transacciones"
 }

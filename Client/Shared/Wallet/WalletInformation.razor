@@ -1,0 +1,22 @@
+﻿@using Radzen;
+
+
+@if (walletConecting.Value.IsConnecting)
+{
+    <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
+        <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    </RadzenStack>
+
+}
+else
+{
+    @if (walletState.Value.Wallet is null)
+    {
+
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
+            <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
+                @webText.NoWalletsCoonected
+            </RadzenAlert>
+        </RadzenStack>
+    }
+}

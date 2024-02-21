@@ -37,8 +37,7 @@ export function createWalletConnector() {
 		},
 
 		connectWallet: async function (walletkey) {
-			try {			
-				await new Promise(resolve => setTimeout(resolve, 1500));
+			try {						
 				this.connectedWallet = await window.cardano[walletkey].enable();
 				return this.connectedWallet !== null;
 			}

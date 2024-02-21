@@ -1,4 +1,5 @@
 using Api.Services.Developers;
+using Api.Services.History;
 using Api.Services.Transaction;
 using Azure;
 using Data.Wallet;
@@ -15,11 +16,13 @@ namespace ApiNet8.Controllers
     {
         private readonly ILogger _logger;
         private readonly ITransactionService _transactionService;
+        private readonly ITransactionHistory _transactionHistory;
 
-        public TransactionController(ILoggerFactory loggerFactory, ITransactionService transactionService)
+        public TransactionController(ILoggerFactory loggerFactory, ITransactionService transactionService, ITransactionHistory transactionHistory)
         {
             _logger = loggerFactory.CreateLogger<TransactionController>();
             _transactionService = transactionService;
+            _transactionHistory = transactionHistory;
         }
 
         [Function("TxBuild")]
@@ -96,6 +99,35 @@ namespace ApiNet8.Controllers
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var requestData = JsonConvert.DeserializeObject<TxRequest>(requestBody);
                 var transaction = await _transactionService.SignTransaction(requestData.transactionCbor, requestData.witness);
+                response.Headers.Add("Content-Type", "application/json");
+                response.WriteString(JsonConvert.SerializeObject(transaction));
+                return response;
+            }
+            catch (Exception e)
+            {
+                response = req.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+            return response;
+
+        }
+
+        [Function("TxHistory")]
+        public async Task<HttpResponseData> RunTxHistoryAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request. Transaction History Function");
+            string walletFrom = req.Query["walletFrom"];
+
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            if (string.IsNullOrEmpty(walletFrom)) response = req.CreateResponse(HttpStatusCode.BadRequest);
+
+
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var requestData = JsonConvert.DeserializeObject<TxRequest>(requestBody);
+                var transaction = await _transactionService.TransactionHistory(walletFrom,_transactionHistory.GetCardanoScanUrl());
                 response.Headers.Add("Content-Type", "application/json");
                 response.WriteString(JsonConvert.SerializeObject(transaction));
                 return response;

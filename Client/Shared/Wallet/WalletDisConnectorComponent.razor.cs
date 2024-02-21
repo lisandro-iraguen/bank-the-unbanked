@@ -5,7 +5,7 @@ using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 
-namespace Client.Shared
+namespace Client.Shared.Wallet
 {
     public partial class WalletDisConnectorComponent
     {
@@ -14,7 +14,7 @@ namespace Client.Shared
         [Inject] protected IState<WalletExtensions>? walletState { get; set; }
         [Inject] protected IState<WalletExtensionsState>? walletConectorState { get; set; }
         [Inject] protected IDispatcher? dispatcher { get; set; }
-      
+
         [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
 
 
@@ -30,7 +30,7 @@ namespace Client.Shared
         public ValueTask DisconnectWalletAsync(bool suppressEvent = false)
         {
             dispatcher.Dispatch(new WalletDisconectAction(walletState.Value.Wallet));
-           _dialogService.Close();
+            _dialogService.Close();
             return new ValueTask();
         }
     }

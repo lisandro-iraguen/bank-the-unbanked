@@ -1,34 +1,18 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
 @page "/home"
+@using Client.Shared.Wallet;
+@using Client.Shared.Transaction;
 @using Client.State.Crypto;
+
 @using Radzen;
 @using CardanoSharp.Koios.Client.Contracts;
 
 
 
-
-
-
-@if (walletConecting.Value.IsConnecting)
+@if (walletState.Value.Wallet is null)
 {
-    <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-        <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-    </RadzenStack>
-
+    <WalletInformation></WalletInformation>
 }
-else
-{
-    @if (walletState.Value.Wallet is null)
-    {
-
-        <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
-            <RadzenAlert AlertStyle="AlertStyle.Danger" AllowClose="false" Variant="Variant.Flat" Shade="Shade.Lighter">
-                @webText.NoWalletsCoonected
-            </RadzenAlert>
-        </RadzenStack>
-    }
-}
-
 
 
 @if (walletState.Value.Wallet is not null)
@@ -50,8 +34,10 @@ else
         {
             if (balanceState.Value.IsUpdating)
             {
-                <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />              
-            }else{
+                <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+            }
+            else
+            {
                 <h1>$ARS @(cryptoState.Value.Crypto.TotalBid * walletState.Value.Wallet.BalanceAda2) </h1>
             }
             <h4>BinanceP2P</h4>
@@ -60,48 +46,55 @@ else
 
 
     </RadzenStack>
+    <RadzenStack Orientation="Orientation.Vertical" Gap="3px" JustifyContent="JustifyContent.Normal" AlignItems="AlignItems.Normal" Wrap="FlexWrap.Wrap">
 
-    <RadzenCard>
+        <RadzenCard>
 
-        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Start">
+            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Start">
 
-            
-            <RadzenColumn Size="5" >
-                <RadzenFormField Text="@webText.DestinationWallet" Variant="Variant.Text" class="w-100">
-                    <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer Variant="Variant.Text" />
+
+                <RadzenColumn Size="5">
+                    <RadzenFormField Text="@webText.DestinationWallet" Variant="Variant.Text" class="w-100">
+                        <RadzenTextBox Change=@(args => OnChangeWalletAdress(args, "WalletAdress")) @bind-Value=@walletToTransfer Variant="Variant.Text" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
+
+
+
+                <RadzenFormField Text="$ARS">
+                    <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) Disabled="transactionFeeState.Value.IsLoading" />
                 </RadzenFormField>
-            </RadzenColumn>
-        </RadzenRow>
 
-        <RadzenStack Orientation="Orientation.Vertical" Gap="10px" JustifyContent="JustifyContent.Left" AlignItems="AlignItems.Center" Wrap="FlexWrap.NoWrap">
+                @if (transactionFeeState.Value.IsLoading)
+                {
+                    <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+                    <h4>@webText.LoadingFees ... </h4>
+                }
+                else
+                {
+                    <h4>@webText.NetworkFees ... $ARS: @(cryptoState.Value.Crypto.TotalBid * transactionFeeState.Value.Fee) </h4>
+                }
 
+                <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="CantSendStransaction()" />
 
-
-            <RadzenFormField Text="$ARS">
-                <RadzenNumeric TValue="ulong" @bind-Value=@valueToTransfer Change=@(args => OnChangeValueToBeTransfer(args, "Numeric")) Disabled="transactionFeeState.Value.IsLoading" />
-            </RadzenFormField>
-
-            @if (transactionFeeState.Value.IsLoading)
-            {
-                <RadzenProgressBarCircular Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
-                <h4>@webText.LoadingFees ... </h4>
-            }
-            else
-            {
-                <h4>@webText.NetworkFees ... $ARS: @(cryptoState.Value.Crypto.TotalBid * transactionFeeState.Value.Fee) </h4>
-            }
-
-            <RadzenButton Click=@(args => SignAndSubmitTransaction()) Text="enviar" ButtonStyle="ButtonStyle.Primary" Disabled="CantSendStransaction()" />
-
-        </RadzenStack>
-        @if (transactionState.Value.IsSigningTransaction)
-        {
-            <RadzenStack Gap="3px" Class="rz-m-12">
-                <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="height:5px;" />
             </RadzenStack>
+            @if (transactionState.Value.IsSigningTransaction)
+            {
+                <RadzenStack Gap="3px" Class="rz-m-12">
+                    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="height:5px;" />
+                </RadzenStack>
 
-        }
+            }
 
-    </RadzenCard>
-    
+        </RadzenCard>
+        <RadzenCard>
+          <TransactionHistory></TransactionHistory>
+        </RadzenCard>
+
+    </RadzenStack>
+
+
 }

@@ -5,14 +5,12 @@ using Client.State.Crypto;
 using Client.State.Transaction;
 using Client.State.TransactionFee;
 using Client.State.Wallet;
-using Client.State.WalletExtensions;
 using Client.State.WalletHistory;
+using Data.History;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json.Linq;
 using Radzen;
-using Utils;
 
 
 
@@ -24,10 +22,9 @@ namespace Client.Pages
         [Inject] protected IDispatcher? dispatcher { get; set; }
         [Inject] IState<CryptoState>? cryptoState { get; set; }
         [Inject] IState<WalletExtensions>? walletState { get; set; }
-        [Inject] IState<ConectedState>? walletConecting { get; set; }
         [Inject] IState<TransactionState>? transactionState { get; set; }
         [Inject] IState<TransactionFeeState>? transactionFeeState { get; set; }
-        //[Inject] IState<WalletHistoryState>? walletHistoryState { get; set; }
+        
         [Inject] IState<BalanceState>? balanceState { get; set; }
         [Inject] protected DialogService? _dialogService { get; set; }
         [Inject] Toolbelt.Blazor.I18nText.I18nText I18nText { get; set; }
@@ -37,18 +34,19 @@ namespace Client.Pages
         private I18nText.Web? webText;
         private string? walletToTransfer;
         private ulong valueToTransfer = 0;
-
+     
         protected override void OnInitialized()
         {
             base.OnInitialized();
             dispatcher.Dispatch(new FetchCryptoAction());
+          
             walletToTransfer = "";
         }
 
         protected override async Task OnInitializedAsync()
         {
             webText = await I18nText.GetTextTableAsync<I18nText.Web>(this);
-
+          
         }
 
         void OnChangeWalletAdress(string value, string name)

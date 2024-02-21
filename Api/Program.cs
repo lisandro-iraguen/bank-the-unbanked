@@ -1,5 +1,6 @@
 using Api;
 using Api.Services.Developers;
+using Api.Services.History;
 using Api.Services.Oracle;
 using Api.Services.Policy;
 using Api.Services.Transaction;
@@ -42,6 +43,7 @@ class Program
              builder.AddSingleton<IPriceServices, PriceServices>();
              builder.AddSingleton<IPolicyManager, PolicyManager>();
              builder.AddSingleton<ITransactionService, TransactionService>();
+             builder.AddSingleton<ITransactionHistory, TransactionHistory>();
 
          });
 
