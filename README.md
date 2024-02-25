@@ -3,7 +3,7 @@
 
 In a world of unstable traditional currencies, Cardano shines as a guiding light, bringing together those without access to banking. Its blockchain technology conducts a harmonious financial system, giving people secure identities and digital wallets. Breaking free from the exclusion of the system to take part in the economy.
 
-![image](https://github.com/lisandro-iraguen/bank-the-unbanked/assets/70443444/804cba29-6937-4af2-acad-cfe7ba826724)
+![image](https://github.com/lisandro-iraguen/bank-the-unbanked/assets/70443444/54a91914-6d97-425e-8edc-b22a78120892)
 </br>
 [Demo](https://www.bankedus.trade)
 
